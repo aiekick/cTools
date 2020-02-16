@@ -57,9 +57,7 @@ public:
 	void LogGLError(std::string vFile, std::string vFunc, int vLine, std::string vGLFunc = "");
 	void Close();
 
-public: // imgui
-	void ShowUI(ImGuiContext *vContext);
-
+public:
 	/////////////////////////////////////////////////////////////
 	///////// Returns the last Win32 error //////////////////////
 	/////////////////////////////////////////////////////////////
