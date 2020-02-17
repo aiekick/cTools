@@ -96,6 +96,14 @@ template <typename T> ::std::string toStr(const T& t)
 	return os.str();
 }
 
+#include <ios>
+template <typename T> ::std::string toHexStr(const T& t)
+{
+	::std::ostringstream os;
+	os << std::hex << t;
+	return os.str();
+}
+
 #ifdef WIN32
 typedef __int64   int64;
 typedef unsigned __int64   uint64;
