@@ -38,10 +38,14 @@
 			start = end + 1;
 			end = text.find(delimiter, start);
 		}
-		if (vInversion)
-			arr.push_front(text.substr(start));
-		else
-			arr.push_back(text.substr(start));
+		::std::string token = text.substr(start);
+		if (token.size() > 0 || (token.empty() && pushEmpty))
+		{
+			if (vInversion)
+				arr.push_front(token);
+			else
+				arr.push_back(token);
+		}
 	}
 	return arr;
 }
@@ -61,7 +65,9 @@
 			start = end + 1;
 			end = text.find(delimiter, start);
 		}
-		arr.push_back(text.substr(start));
+		::std::string token = text.substr(start);
+		if (token.size() > 0 || (token.empty() && pushEmpty))
+			arr.push_back(token);
 	}
 	return arr;
 }
