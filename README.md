@@ -8,7 +8,7 @@ need a bit of refactoring btw :)
 
 use the namespace ct
 
-## Class :
+## Class in cTools :
 
 - ct::cCyclicArray => circular list
 - ct::cActionTime => define when to do action accroding to time of last event
@@ -24,3 +24,13 @@ use the namespace ct
 - ct::variant<T> => variant class for quikc conversion between many type and string
 
 and other string conversion / extraction etc..
+
+## Method in Logger.h :
+
+Log method for check/write in auto in a log file
+
+- LogStr(n)
+- LogValue(s, n)
+- LogGlError()
+- LogGlErrorVar(var)
+- LogAssert(a,b)
