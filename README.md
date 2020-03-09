@@ -11,7 +11,7 @@ use the namespace ct
 ## Class's in cTools :
 
 - ct::cCyclicArray => circular list
-- ct::cActionTime => define when to do action accroding to time of last event
+- ct::cActionTime => define when to do action according to time of last event
 - ct::cTexture => opengl texture simple container
 - ct::cColor => color class for conversion
 - ct::vec2<T> => vec2 class for quick operation / math x,y
