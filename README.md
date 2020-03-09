@@ -20,7 +20,7 @@ use the namespace ct
 - ct::vec4<T> => vec4 class for quick operation / math x,y,z,z
 - ct::rect<T> => rect class for quick operation / math x,y,w,h
 - ct::AABB<T> => AABB 2D
-- ct::AABBCC<T> => AABB 3D
+- ct::AABBCC<T> => AABBCC 3D
 - ct::variant<T> => variant class for quikc conversion between many type and string
 
 and other string conversion / extraction etc..
