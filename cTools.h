@@ -1,9 +1,31 @@
-#ifndef _cTOOLS_H_
-#define _cTOOLS_H_
+/*
+MIT License
+
+Copyright (c) 2010-2020 Stephane Cuillerdier (aka Aiekick)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+#pragma once
 
 #ifdef WIN32
 #include <Windows.h>
-#else
 #endif
 
 #include <list>
@@ -75,7 +97,7 @@ using namespace cocos2d;
 #ifdef WIN32
 #endif
 
-typedef signed char	int8;
+typedef signed char int8;
 typedef signed short int16;
 typedef signed int int32;
 typedef unsigned char uint8;
@@ -1638,5 +1660,3 @@ size_t cRatioOfSizeT(size_t t, float r);
 std::string FormatNum(size_t vNum, int vDecimalCount);
 
 } // namespace ct => cTools
-
-#endif /* _cTOOLS_H_ */
