@@ -17,11 +17,11 @@ use the namespace ct
 - ct::vec2<T> => vec2 class for quick operation / math x,y
 - ct::mat2<T> => mat2 class for matrix 2x2
 - ct::vec3<T> => vec3 class for quick operation / math x,y,z
-- ct::vec4<T> => vec4 class for quick operation / math x,y,z,z
+- ct::vec4<T> => vec4 class for quick operation / math x,y,z,w
 - ct::rect<T> => rect class for quick operation / math x,y,w,h
 - ct::AABB<T> => AABB 2D
 - ct::AABBCC<T> => AABBCC 3D
-- ct::variant<T> => variant class for quikc conversion between many type and string
+- ct::variant<T> => variant class for quick conversion between many types and string
 
 and other string conversion / extraction etc..
 
