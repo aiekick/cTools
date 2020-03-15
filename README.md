@@ -34,3 +34,61 @@ Log method for check/write in auto in a log file
 - LogGlError()
 - LogGlErrorVar(var)
 - LogAssert(a,b)
+
+## ConfigAbstract
+
+ConfigAbstract let you load/save a config file easily from class 
+
+using lib [tinyxml2](https://github.com/leethomason/tinyxml2)
+
+Usage :
+```cpp
+class toto : public conf::ConfigAbstract
+{
+public:
+	toto()
+	{
+		LoadConfigFile("config.xml");
+	}
+
+	~toto()
+	{
+		SaveConfigFile("config.xml");
+	}
+
+	std::string getXml(const std::string& vOffset);
+	void setFromXml(tinyxml2::XMLElement* vElem, tinyxml2::XMLElement* vParent);
+};
+
+
+std::string toto::getXml(const std::string& vOffset)
+{
+	std::string str;
+
+	str += vOffset + "\t<tata value=\"" + "true" + "\"/>\n";
+	
+	return str;
+}
+
+void toto::setFromXml(tinyxml2::XMLElement* vElem, tinyxml2::XMLElement* vParent)
+{
+	// The value of this child identifies the name of this element
+	std::string strName = "";
+	std::string strValue = "";
+	std::string strParentName = "";
+
+	strName = vElem->Value();
+	if (vElem->GetText())
+		strValue = vElem->GetText();
+	if (vParent != 0)
+		strParentName = vParent->Value();
+
+	auto att = vElem->FirstAttribute();
+	if (att && std::string(att->Name()) == "value")
+	{
+		strValue = att->Value();
+		if (strName == "tata")
+			youvar = strValue;
+	}
+}
+```
