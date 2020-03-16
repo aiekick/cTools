@@ -269,8 +269,8 @@ class cCyclicArray
 {
 private:
 	::std::vector<T> m_Array;
-	int m_Count;
-	T m_DefaultValue;
+	int m_Count = 0;
+	T m_DefaultValue = (T)0;
 
 public:
 	cCyclicArray()
