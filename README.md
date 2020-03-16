@@ -35,6 +35,28 @@ Log method for check/write in auto in a log file
 - LogGlErrorVar(var)
 - LogAssert(a,b)
 
+## FileHelper
+
+this singleton is usefull for manipulate files / directory
+fully tested on win/LINUX/MACOS
+
+- convert from absolute to realtive to aantoher path
+- test aboslute or relative
+- is file exist
+- test if a file exist a list of path to search in
+- simplify a patth (like if you have toto/../toto/../toto => toto
+- get/set app path
+- get/set current directory
+- load/save file to/from string
+- parse file path name
+- destroy a file
+- open a fil in an external editor
+- open a url in a browser
+- select a file in os explorer
+- get drives (on win32)
+
+dependency : ctools, dirent/h, glfw if you want to use clipboard
+
 ## ConfigAbstract
 
 ConfigAbstract let you load/save a config file easily from class 
