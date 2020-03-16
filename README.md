@@ -1,14 +1,9 @@
-# cTools
+## cTools :
 
 a two files helper im using from more than 10 years, in all my project.
-
 Contain usefull templated things for c++ like vec2, vec3, vec4, variant, actionTime and more.
-
 need a bit of refactoring btw :)
-
 use the namespace ct
-
-## Class's in cTools :
 
 - ct::cCyclicArray => circular list
 - ct::cActionTime => define when to do action according to time of last event
@@ -25,7 +20,7 @@ use the namespace ct
 
 and other string conversion / extraction etc..
 
-## Method's in Logger :
+## Logger :
 
 Log method for check/write in auto in a log file
 
@@ -60,7 +55,6 @@ dependency : ctools, dirent/h, glfw if you want to use clipboard
 ## ConfigAbstract
 
 ConfigAbstract let you load/save a config file easily from class 
-
 using lib [tinyxml2](https://github.com/leethomason/tinyxml2)
 
 Usage :
