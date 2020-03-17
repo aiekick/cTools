@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "Logger.h"
+#include <Logger.h>
 #include <GLFW/glfw3.h>
 
 #include <imgui.h>

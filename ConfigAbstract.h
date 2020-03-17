@@ -24,7 +24,7 @@ SOFTWARE.
 
 #pragma once
 
-#include "Logger.h"
+#include <Logger.h>
 #include <string>
 #include <map>
 #include <tinyxml2/tinyxml2.h>

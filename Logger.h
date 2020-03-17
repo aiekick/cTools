@@ -28,7 +28,7 @@ SOFTWARE.
 #include "cocos2d.h"
 #endif
 
-#include "cTools.h"
+#include <cTools.h>
 
 #include <string>
 #include <stdlib.h>
