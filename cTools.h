@@ -538,10 +538,12 @@ struct vec2
 	void operator *= (vec2<T> v) { x *= v.x; y *= v.y; }
 	void operator /= (T a) { x /= a; y /= a; }
 	void operator /= (vec2<T> v) { x /= v.x; y /= v.y; }
-	T length() const { return sqrt(x * x + y * y); }
+	T length() const { return sqrt(lengthSquared()); }
 	T lengthSquared() const { return x * x + y * y; }
 	T normalize() { T _length = length(); if (_length < (T)1e-5) return (T)0.0; T _invLength = (T)1.0 / _length; x *= _invLength; y *= _invLength; return _length; }
 	vec2<T> getNormalized() { vec2<T> n = vec2<T>(x, y); n.normalize(); return n; }
+	T sum() { return x + y; }
+	T sumAbs() { return abs<T>(x) + abs<T>(y); }
 	bool empty() { if (x == (T)0 && y == (T)0) return true; else return false; }
 	std::string string(char c = ';'){ return toStr(x) + c + toStr(y); }
 	T ratioXY() { if (y > (T)0) return x / y; return (T)0; }
@@ -710,10 +712,12 @@ struct vec3
 	void operator -= (const vec3& v) { x -= v.x; y -= v.y; z -= v.z; }
 	void operator *= (T a) { x *= a; y *= a; z *= a; }
 	void operator /= (T a) { x /= a; y /= a; z /= a; }
-	T length() const { return sqrt(x * x + y * y + z * z); }
+	T length() const { return sqrtf(lengthSquared()); }
 	T lengthSquared() const { return x * x + y * y + z * z; }
 	T normalize() { T _length = length(); if (_length < (T)1e-5) return (T)0; T _invLength = (T)1 / _length; x *= _invLength; y *= _invLength; z *= _invLength; return _length; }
 	vec3<T> getNormalized() { vec3<T> n = vec3<T>(x, y, z); n.normalize(); return n; }
+	T sum() { return x + y + z; }
+	T sumAbs() { return abs<T>(x) + abs<T>(y) + abs<T>(z); }
 	bool empty() { if (x == (T)0 && y == (T)0 && z == (T)0) return true; else return false; }
 	std::string string(char c = ';'){ return toStr(x) + c + toStr(y) + c + toStr(z); }
 };
@@ -863,7 +867,8 @@ struct vec4
 	void operator -= (const vec4& v) { x -= v.x; y -= v.y; z -= v.z; w -= v.w; }
 	void operator *= (T a) { x *= a; y *= a; z *= a; w *= a; }
 	void operator /= (T a) { x /= a; y /= a; z /= a; w /= a; }
-	T length() const { return sqrtf(x * x + y * y + z * z + w * w); }
+	T length() const { return sqrtf(lengthSquared()); }
+	T lengthSquared() const { return x * x + y * y + z * z + w * w; }
 	T normalize() { T _length = length(); if (_length < (T)1e-5)return (T)0; T _invLength = (T)1 / _length; x *= _invLength; y *= _invLength; z *= _invLength; w *= _invLength; return _length; }
 	vec4<T> getNormalized() { vec4<T> n = vec4<T>(x, y, z, w); n.normalize(); return n; }
 	bool empty() { if (x == (T)0 && y == (T)0 && z == (T)0 && w == (T)0) return true; else return false; }
@@ -942,37 +947,29 @@ struct rect // bottom left to top right
 	void SnackTop(T vtop) { h -= vtop;top = h + y; }
 	void SnackBottom(T vbottom) { y = vbottom;h -= vbottom;bottom = y; }
 	bool IsContainPoint(vec2<T> pt) { if (pt.x > left)if (pt.x < right)if (pt.y > bottom)if (pt.y < top)return true;return false;}
-	bool IsIntersectedByLine(vec2<T> vStartLine, vec2<T> vEndLine)
+	bool IsIntersectedByLine(vec2<T> v0, vec2<T> v1) // only for axis aligned box
 	{
 		// https://stackoverflow.com/a/18292964/3904977
-		float x1 = vStartLine.x;
-		float y1 = vStartLine.y;
-		float x2 = vEndLine.x;
-		float y2 = vEndLine.y;
-		float minX = left;
-		float minY = bottom;
-		float maxX = right;
-		float maxY = top;
-
-		// Completely outside.
-		if ((x1 <= minX && x2 <= minX) || (y1 <= minY && y2 <= minY) || (x1 >= maxX && x2 >= maxX) || (y1 >= maxY && y2 >= maxY))
-			return false;
-
-		float m = (y2 - y1) / (x2 - x1);
-
-		float y = m * (minX - x1) + y1;
-		if (y >= minY && y <= maxY) return true;
-
-		y = m * (maxX - x1) + y1;
-		if (y >= minY && y <= maxY) return true;
-
-		float x = (minY - y1) / m + x1;
-		if (x >= minX && x <= maxX) return true;
-
-		x = (maxY - y1) / m + x1;
-		if (x >= minX && x <= maxX) return true;
-
+		if ((v0.x <= left && v1.x <= left) || 
+			(v0.y <= bottom && v1.y <= bottom) ||
+			(v0.x >= right && v1.x >= right) ||
+			(v0.y >= top && v1.y >= top))
+			return false; // Completely outside.
+		float m = (v1.y - v0.y) / (v1.x - v0.x);
+		float y = m * (left - v0.x) + v0.y;
+		if (y >= bottom && y <= top) return true;
+		y = m * (right - v0.x) + v0.y;
+		if (y >= bottom && y <= top) return true;
+		float x = (bottom - v0.y) / m + v0.x;
+		if (x >= left && x <= right) return true;
+		x = (top - v0.y) / m + v0.x;
+		if (x >= left && x <= right) return true;
 		return false;
+	}
+	bool IsIntersectedByCircle(vec2<T> vPos, T vRadius) // only for axis aligned box
+	{
+		T d = maxi<T>(abs<T>(center() - vPos) - Size() / (T)2, (T)0).lengthSquared();
+		return d < vRadius * vRadius;
 	}
 	vec2<T> Size(){return vec2<T>(w, h);}
 };
