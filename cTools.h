@@ -867,6 +867,8 @@ struct vec4
 	T normalize() { T _length = length(); if (_length < (T)1e-5)return (T)0; T _invLength = (T)1 / _length; x *= _invLength; y *= _invLength; z *= _invLength; w *= _invLength; return _length; }
 	vec4<T> getNormalized() { vec4<T> n = vec4<T>(x, y, z, w); n.normalize(); return n; }
 	bool empty() { if (x == (T)0 && y == (T)0 && z == (T)0 && w == (T)0) return true; else return false; }
+	T sum() { return x + y + z + w; }
+	T sumAbs() { return abs<T>(x) + abs<T>(y) + abs<T>(z) + abs<T>(w); }
 	std::string string(char c = ';'){ return toStr(x) + c + toStr(y) + c + toStr(z) + c + toStr(w); }
 };
 template <typename T> inline vec4<T> operator + (const vec4<T>& v, const T& f) { return vec4<T>(v.x + f, v.y + f, v.z + f, v.w + f); }
@@ -940,6 +942,38 @@ struct rect // bottom left to top right
 	void SnackTop(T vtop) { h -= vtop;top = h + y; }
 	void SnackBottom(T vbottom) { y = vbottom;h -= vbottom;bottom = y; }
 	bool IsContainPoint(vec2<T> pt) { if (pt.x > left)if (pt.x < right)if (pt.y > bottom)if (pt.y < top)return true;return false;}
+	bool IsIntersectedByLine(vec2<T> vStartLine, vec2<T> vEndLine)
+	{
+		// https://stackoverflow.com/a/18292964/3904977
+		float x1 = vStartLine.x;
+		float y1 = vStartLine.y;
+		float x2 = vEndLine.x;
+		float y2 = vEndLine.y;
+		float minX = left;
+		float minY = bottom;
+		float maxX = right;
+		float maxY = top;
+
+		// Completely outside.
+		if ((x1 <= minX && x2 <= minX) || (y1 <= minY && y2 <= minY) || (x1 >= maxX && x2 >= maxX) || (y1 >= maxY && y2 >= maxY))
+			return false;
+
+		float m = (y2 - y1) / (x2 - x1);
+
+		float y = m * (minX - x1) + y1;
+		if (y >= minY && y <= maxY) return true;
+
+		y = m * (maxX - x1) + y1;
+		if (y >= minY && y <= maxY) return true;
+
+		float x = (minY - y1) / m + x1;
+		if (x >= minX && x <= maxX) return true;
+
+		x = (maxY - y1) / m + x1;
+		if (x >= minX && x <= maxX) return true;
+
+		return false;
+	}
 	vec2<T> Size(){return vec2<T>(w, h);}
 };
 typedef rect<int> irect;
