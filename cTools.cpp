@@ -227,6 +227,31 @@ size_t ct::cGetCountOccurenceInSection(::std::string vSrcString, size_t vStartPo
 	}
 	return count;
 }
+
+// std::wstring to std::string
+// std::wstring(unicode/multibytes/char16/wchar_t) to std::string(char)
+std::string ct::wstring_to_string(const std::wstring wstr)
+{
+	std::mbstate_t state = std::mbstate_t();
+	std::size_t len = wstr.size();
+	std::vector<char> mbstr(len);
+	const wchar_t * wptr = wstr.c_str();
+	std::wcsrtombs(&mbstr[0], &wptr, mbstr.size(), &state);
+	return std::string(mbstr.data(), mbstr.size());
+}
+
+// std::string to std::wstring
+// std::string(char) to std::wstring(unicode/multibytes/char16/wchar_t)
+std::wstring ct::string_to_wstring(const std::string mbstr)
+{
+	std::mbstate_t state = std::mbstate_t();
+	std::size_t len = mbstr.size();
+	std::vector<wchar_t> wstr(len);
+	const char * ptr = mbstr.c_str();
+	std::mbsrtowcs(&wstr[0], &ptr, wstr.size(), &state);
+	return std::wstring(wstr.data(), wstr.size());
+}
+
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////

@@ -175,10 +175,7 @@ PathStruct FileHelper::ParsePathFileName(const std::string& vPathFileName)
 
 	if (vPathFileName.size() > 0)
 	{
-		std::string pfn = vPathFileName;
-		ct::replaceString(pfn, "\\", m_SlashType);
-		ct::replaceString(pfn, "/", m_SlashType);
-
+		std::string pfn = CorrectFilePathName(vPathFileName);
 		size_t lastSlash = pfn.find_last_of(m_SlashType);
 		if (lastSlash != std::string::npos)
 		{
@@ -230,6 +227,16 @@ std::string FileHelper::GetExistingFilePathForFile(const std::string& vFileName)
 	
 	return res;
 }
+
+/* correct file path between os and different slash tyupe between window and unix */
+std::string FileHelper::CorrectFilePathName(const std::string &vFilePathName)
+{
+	std::string res = vFilePathName;
+	ct::replaceString(res, "\\", m_SlashType);
+	ct::replaceString(res, "/", m_SlashType);
+	return res;
+}
+
 #ifdef _DEBUG
 void FileHelper::Test_GetRelativePathToPath()
 {
@@ -285,8 +292,8 @@ std::string FileHelper::GetRelativePathToPath(const std::string& vFilePathName, 
 		{
 			//vRootPath = "C:\\gamedev\\github\\ImGuiFontStudio_avp\\build\\Debug\\..\\..\\projects"
 			//vFilePathName = "C:\\gamedev\\github\\ImGuiFontStudio_avp\\samples_Fonts\\fontawesome-webfont.ttf"
-			auto rootArr = ct::splitStringToVector(vRootPath, m_SlashType[0]);
-			auto inArr = ct::splitStringToVector(vFilePathName, m_SlashType[0]);
+			auto rootArr = ct::splitStringToVector(CorrectFilePathName(vRootPath), m_SlashType[0]);
+			auto inArr = ct::splitStringToVector(CorrectFilePathName(vFilePathName), m_SlashType[0]);
 			if (!inArr.empty() && !rootArr.empty())
 			{
 				std::vector<std::string> outArr;
@@ -373,7 +380,7 @@ static std::string GetMacOsAppPath()
 }
 #endif
 
-void FileHelper::SetAppPath(std::string vPath)
+void FileHelper::SetAppPath(const std::string& vPath)
 {
     if (vPath.size() > 0)
     {
@@ -423,14 +430,27 @@ std::string FileHelper::GetCurDirectory()
 	return "";
 }
 
-bool FileHelper::SetCurDirectory(std::string vPath)
+bool FileHelper::SetCurDirectory(const std::string& vPath)
 {
     return SetCurrentDir(vPath.c_str()) == 0;
+}
+
+std::string FileHelper::ComposePath(const std::string& vPath, const std::string& vFileName, const std::string& vExt)
+{
+	std::string res = vPath;
+	if (!vFileName.empty())
+	{
+		if (!vPath.empty()) res += m_SlashType;
+		res += vFileName;
+		if (!vExt.empty()) res += "." + vExt;
+	}
+	return res;
 }
 
 bool FileHelper::IsFileExist(const std::string& name)
 {
     std::string fileToOpen = name;
+	fileToOpen = CorrectFilePathName(fileToOpen);
     ct::replaceString(fileToOpen, "\"", "");
     ct::replaceString(fileToOpen, "\n", "");
     ct::replaceString(fileToOpen, "\r", "");
@@ -454,8 +474,9 @@ bool FileHelper::IsDirectoryExist(const std::string& name)
 
     if (name.size() > 0)
     {
+		std::string dir = CorrectFilePathName(name);
 		DIR *pDir = 0;
-		pDir = opendir(name.c_str());
+		pDir = opendir(dir.c_str());
 		if (pDir != NULL)
 		{
 			bExists = true;
@@ -466,10 +487,11 @@ bool FileHelper::IsDirectoryExist(const std::string& name)
 	return bExists;    // this is not a directory!
 }
 
-void FileHelper::DestroyFile(const std::string& filePathName)
+void FileHelper::DestroyFile(const std::string& vFilePathName)
 {
-	if (filePathName.size() > 0)
+	if (vFilePathName.size() > 0)
 	{
+		auto filePathName = CorrectFilePathName(vFilePathName);
 		if (IsFileExist(filePathName))
 		{
 			if (remove(filePathName.c_str()))
@@ -486,19 +508,20 @@ bool FileHelper::CreateDirectoryIfNotExist(const std::string& name)
 
     if (name.size() > 0)
     {
-        if (!IsDirectoryExist(name))
+		auto filePathName = CorrectFilePathName(name);
+		if (!IsDirectoryExist(filePathName))
         {
             res = true;
 
 #ifdef WIN32
-            CreateDirectory(name.c_str(), NULL);
+            CreateDirectory(filePathName.c_str(), NULL);
 #elif defined(LINUX) or defined(APPLE)
             char buffer[MAX_PATH] = {};
-            snprintf(buffer, MAX_PATH, "mkdir -p %s", name.c_str());
+            snprintf(buffer, MAX_PATH, "mkdir -p %s", filePathName.c_str());
             const int dir_err = std::system(buffer);
             if (dir_err == -1)
             {
-                LogStr("Error creating directory " + name);
+                LogStr("Error creating directory " + filePathName);
                 res = false;
             }
 #endif
@@ -514,11 +537,11 @@ bool FileHelper::CreatePathIfNotExist(const std::string& vPath)
 
     if (vPath.size() > 0)
 	{
-		if (!IsDirectoryExist(vPath))
+		auto path = CorrectFilePathName(vPath);
+		if (!IsDirectoryExist(path))
 		{
 		    res = true;
 
-			std::string path = vPath;
 			ct::replaceString(path, "\\", "/");
 			auto arr = ct::splitStringToVector(path, '/');
 			std::string fullPath;
@@ -539,7 +562,7 @@ bool FileHelper::CreatePathIfNotExist(const std::string& vPath)
 
 std::string FileHelper::SimplifyFilePath(const std::string& vFilePath)
 {
-	std::string newPath = vFilePath;
+	std::string newPath = CorrectFilePathName(vFilePath);
 
 	// the idea is to simplify a path where there is some ..
 	// by ex : script\\kifs\\../space3d.glsl => can be simplified in /script/space3d.glsl
@@ -575,6 +598,7 @@ std::string FileHelper::SimplifyFilePath(const std::string& vFilePath)
 
 std::string FileHelper::GetID(const std::string& vPathFileName)
 {
+	auto pathFileName = CorrectFilePathName(vPathFileName);
 	return "";
 }
 
@@ -582,66 +606,66 @@ std::string FileHelper::GetID(const std::string& vPathFileName)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void FileHelper::OpenFile(std::string vShaderToOpen)
+void FileHelper::OpenFile(const std::string&vShaderToOpen)
 {
+	auto shaderToOpen = CorrectFilePathName(vShaderToOpen);
+
 #if defined(WIN32)
-	ct::replaceString(vShaderToOpen, "/", "\\");
-	int result = (int)ShellExecute(0, "", vShaderToOpen.c_str(), 0, 0, SW_SHOW);
+	int result = (int)ShellExecute(0, "", shaderToOpen.c_str(), 0, 0, SW_SHOW);
 	if (result < 32)
 	{
 		// try to open an editor
-		result = (int)ShellExecute(0, "edit", vShaderToOpen.c_str(), 0, 0, SW_SHOW);
+		result = (int)ShellExecute(0, "edit", shaderToOpen.c_str(), 0, 0, SW_SHOW);
 		if (result == SE_ERR_ASSOCINCOMPLETE || result == SE_ERR_NOASSOC)
 		{
 			// open associating dialog
-			std::string sCmdOpenWith = "shell32.dll,OpenAs_RunDLL \"" + vShaderToOpen + "\"";
+			std::string sCmdOpenWith = "shell32.dll,OpenAs_RunDLL \"" + shaderToOpen + "\"";
 			result = (int)ShellExecute(0, "", "rundll32.exe", sCmdOpenWith.c_str(), NULL, SW_NORMAL);
 		}
 		if (result < 32) // open in explorer
 		{
-			std::string sCmdExplorer = "/select,\"" + vShaderToOpen + "\"";
+			std::string sCmdExplorer = "/select,\"" + shaderToOpen + "\"";
 			ShellExecute(0, "", "explorer.exe", sCmdExplorer.c_str(), NULL, SW_NORMAL); // ce serait peut etre mieu d'utilsier la commande system comme dans SelectFile
 		}
 	}
 #elif defined(LINUX)
-	ct::replaceString(vShaderToOpen, "\\", "/");
-    int pid = fork();
+	int pid = fork();
     if (pid == 0)
     {
-        execl("/usr/bin/xdg-open", "xdg-open", vShaderToOpen.c_str(), (char *)0);
+        execl("/usr/bin/xdg-open", "xdg-open", shaderToOpen.c_str(), (char *)0);
     }
 #elif defined(APPLE)
-    ct::replaceString(vShaderToOpen, "\\", "/");
     //string command = "open -a Tincta " + vShaderToOpen;
-    string command = "open " + vShaderToOpen;
+    string command = "open " + shaderToOpen;
     std::system(command.c_str());
 #endif
 }
 
-void FileHelper::OpenUrl(std::string vUrl)
+void FileHelper::OpenUrl(const std::string& vUrl)
 {
+	auto url = CorrectFilePathName(vUrl);
+
 #ifdef WIN32
-	//ct::replaceString(vShaderToOpen, "/", "\\");
-	ShellExecute(0, 0, vUrl.c_str(), 0, 0, SW_SHOW);
+	ShellExecute(0, 0, url.c_str(), 0, 0, SW_SHOW);
 #elif defined(LINUX)
 	char buffer[MAX_PATH] = {};
-	snprintf(buffer, MAX_PATH, "<mybrowser> %s", vUrl.c_str());
+	snprintf(buffer, MAX_PATH, "<mybrowser> %s", url.c_str());
     std::system(buffer);
 #elif defined(APPLE)
     //std::string sCmdOpenWith = "open -a Firefox " + vUrl;
-    std::string sCmdOpenWith = "open " + vUrl;
+    std::string sCmdOpenWith = "open " + url;
     std::system(sCmdOpenWith.c_str());
 #endif
 }
 
-void FileHelper::SelectFile(std::string vFileToSelect)
+void FileHelper::SelectFile(const std::string& vFileToSelect)
 {
-#ifdef WIN32
-	ct::replaceString(vFileToSelect, "/", "\\");
+	auto fileToSelect = CorrectFilePathName(vFileToSelect);
 
-	if (vFileToSelect.size() > 0)
+#ifdef WIN32
+	if (fileToSelect.size() > 0)
 	{
-		std::string sCmdOpenWith = "explorer /select," + vFileToSelect;
+		std::string sCmdOpenWith = "explorer /select," + fileToSelect;
 		std::system(sCmdOpenWith.c_str());
 	}
 
@@ -664,13 +688,11 @@ void FileHelper::SelectFile(std::string vFileToSelect)
 	}*/
 
 #elif defined(LINUX)
-	ct::replaceString(vFileToSelect, "\\", "/");
 	// is there a similar command on linux ?
 #elif defined(APPLE)
-    ct::replaceString(vFileToSelect, "\\", "/");
-    if (vFileToSelect.size() > 0)
+    if (fileToSelect.size() > 0)
     {
-        std::string sCmdOpenWith = "open -R " + vFileToSelect;
+        std::string sCmdOpenWith = "open -R " + fileToSelect;
         std::system(sCmdOpenWith.c_str());
     }
 #endif
@@ -697,7 +719,7 @@ std::vector<std::string> FileHelper::GetDrives()
 	return res;
 }
 
-std::string FileHelper::getTimeStampToString(std::string vSeparator)
+std::string FileHelper::getTimeStampToString(const std::string& vSeparator)
 {
 	auto now = Clock::now();
 	std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch());
@@ -733,7 +755,7 @@ size_t FileHelper::getTimeStampToNumber()
 
 // Need GLFW
 
-void FileHelper::SaveInClipBoard(GLFWwindow *vWin, std::string vString)
+void FileHelper::SaveInClipBoard(GLFWwindow *vWin, const std::string& vString)
 {
 	if (vString.size() > 0)
 	{

@@ -218,6 +218,13 @@ bool replaceString(::std::string& str, const ::std::string& oldStr, const ::std:
 size_t cGetCountOccurence(::std::string vSrcString, ::std::string vStringToCount);
 size_t cGetCountOccurenceInSection(::std::string vSrcString, size_t vStartPos, size_t vEndpos, ::std::string vStringToCount);
 
+// std::wstring to std::string
+// std::wstring(unicode/multibytes/char16/wchar_t) to std::string(char)
+std::string wstring_to_string(const std::wstring wstr);
+// std::string to std::wstring
+// std::string(char) to std::wstring(unicode/multibytes/char16/wchar_t)
+std::wstring string_to_wstring(const std::string mbstr);
+
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////

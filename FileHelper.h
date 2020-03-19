@@ -53,17 +53,19 @@ public: // var
 
 public: // funcs
 	std::string GetExistingFilePathForFile(const std::string& vFileName);
-	
+	std::string CorrectFilePathName(const std::string &vFilePathName);
 #ifdef _DEBUG
 	void Test_GetRelativePathToPath();
 #endif
 	std::string GetRelativePathToPath(const std::string& vFilePathName, const std::string& vRootPath);
 	bool IsAbsolutePath(const std::string& vFilePathName);
 	
-	void SetAppPath(std::string vPath);
+	void SetAppPath(const std::string& vPath);
     std::string GetAppPath();
 	std::string GetCurDirectory();
-    bool SetCurDirectory(std::string vPath);
+    bool SetCurDirectory(const std::string& vPath);
+
+	std::string ComposePath(const std::string& vPath, const std::string& vFileName, const std::string& vExt);
 
 	bool IsFileExist(const std::string& name);
 	std::string GetID(const std::string& vPathFileName);
@@ -81,17 +83,17 @@ public: // funcs
     bool CreateDirectoryIfNotExist(const std::string& name);
     bool CreatePathIfNotExist(const std::string& vPath);
 
-	void OpenFile(std::string vShaderToOpen);
-	void OpenUrl(std::string vUrl);
-	void SelectFile(std::string vFileToSelect);
+	void OpenFile(const std::string& vShaderToOpen);
+	void OpenUrl(const std::string& vUrl);
+	void SelectFile(const std::string& vFileToSelect);
 
 	std::vector<std::string> GetDrives();
 
-	std::string getTimeStampToString(std::string vSeparator = "_");
+	std::string getTimeStampToString(const std::string& vSeparator = "_");
 	size_t getTimeStampToNumber();
 
 public: /* clipboard */
-	void SaveInClipBoard(GLFWwindow *vWin, std::string vString);
+	void SaveInClipBoard(GLFWwindow *vWin, const std::string& vString);
 	std::string GetFromClipBoard(GLFWwindow *vWin);
 
 public: // singleton
