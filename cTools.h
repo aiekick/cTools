@@ -1491,10 +1491,10 @@ public:
 		{
             size_t tmp = 0;
 
-#ifdef MINGW32
-            int res = sscanf(string_value.c_str(), "%zu", &tmp);
+#ifdef MSVC
+            int res = sscanf_s(string_value.c_str(), "%zu", &tmp);
 #else
-			int res = sscanf_s(string_value.c_str(), "%zu", &tmp);
+            int res = sscanf(string_value.c_str(), "%zu", &tmp);
 #endif
 			if (success)
 			{

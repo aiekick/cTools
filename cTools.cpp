@@ -53,9 +53,13 @@ SOFTWARE.
 			::std::string token = text.substr(start, end - start);
 			if (token.size() > 0 || (token.empty() && pushEmpty))
 				if (vInversion)
-					arr.push_front(token);
+                {
+                    arr.push_front(token);
+                }
 				else
-					arr.push_back(token);
+                {
+				    arr.push_back(token);
+                }
 			start = end + 1;
 			end = text.find(delimiter, start);
 		}
@@ -359,7 +363,7 @@ void ct::AppendToBuffer(char* vBuffer, size_t vBufferLen, ::std::string vStr)
 	str += vStr;
 	size_t len = ct::mini<size_t>(vBufferLen - 1, str.size());
 
-#ifndef MINGW32
+#ifdef MSVC
 	strncpy_s(vBuffer, vBufferLen, str.c_str(), len);
 #else
 	strncpy(vBuffer, str.c_str(), len);

@@ -40,12 +40,19 @@ SOFTWARE.
 #include <shellapi.h>
 #pragma comment(lib,"shlwapi.lib")
 #include <dirent.h>
-#elif defined(LINUX) or defined(APPLE)
+#elif defined(UNIX)
 #include <sys/types.h>
 #include <sys/param.h>
 #include <sys/stat.h>
 #include <sys/file.h>
 #include <sys/wait.h>
+#include <sys/syslimits.h> // PATH_MAX
+#ifndef MAX_PATH
+#define MAX_PATH PATH_MAX
+#endif
+#ifndef PATH_MAX
+#define PATH_MAX MAX_PATH
+#endif
 #include <dirent.h>
 #include <cstdlib>
 #include <stdio.h>
