@@ -962,15 +962,19 @@ struct rect // bottom left to top right
 			(v0.x >= right && v1.x >= right) ||
 			(v0.y >= top && v1.y >= top))
 			return false; // Completely outside.
-		float m = (v1.y - v0.y) / (v1.x - v0.x);
-		float y = m * (left - v0.x) + v0.y;
-		if (y >= bottom && y <= top) return true;
-		y = m * (right - v0.x) + v0.y;
-		if (y >= bottom && y <= top) return true;
-		float x = (bottom - v0.y) / m + v0.x;
-		if (x >= left && x <= right) return true;
-		x = (top - v0.y) / m + v0.x;
-		if (x >= left && x <= right) return true;
+		if (IS_FLOAT_EQUAL(v1.y, v0.y) && IS_FLOAT_EQUAL(v1.x, v0.x)) return true;
+		if (IS_FLOAT_DIFFERENT(v1.x, v0.x)) // avoid div by zero
+		{
+			float m = (v1.y - v0.y) / (v1.x - v0.x);
+			float y = m * (left - v0.x) + v0.y;
+			if (y >= bottom && y <= top) return true;
+			y = m * (right - v0.x) + v0.y;
+			if (y >= bottom && y <= top) return true;
+			float x = (bottom - v0.y) / m + v0.x;
+			if (x >= left && x <= right) return true;
+			x = (top - v0.y) / m + v0.x;
+			if (x >= left && x <= right) return true;
+		}
 		return false;
 	}
 	bool IsIntersectedByCircle(vec2<T> vPos, T vRadius) // only for axis aligned box
