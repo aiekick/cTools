@@ -965,17 +965,17 @@ struct rect // bottom left to top right
 		if (IS_FLOAT_EQUAL(v1.y, v0.y) && IS_FLOAT_EQUAL(v1.x, v0.x)) return true;
 		if (IS_FLOAT_DIFFERENT(v1.x, v0.x)) // avoid div by zero
 		{
-			float m = (v1.y - v0.y) / (v1.x - v0.x);
-			float y = m * (left - v0.x) + v0.y;
-			if (y >= bottom && y <= top) return true;
-			y = m * (right - v0.x) + v0.y;
-			if (y >= bottom && y <= top) return true;
-			if (IS_FLOAT_DIFFERENT(m, 0.0f)) // avoid div by zero
+			float _m = (v1.y - v0.y) / (v1.x - v0.x);
+			float _y = _m * (left - v0.x) + v0.y;
+			if (_y >= bottom && _y <= top) return true;
+			_y = _m * (right - v0.x) + v0.y;
+			if (_y >= bottom && _y <= top) return true;
+			if (IS_FLOAT_DIFFERENT(_m, 0.0f)) // avoid div by zero
 			{
-				float x = (bottom - v0.y) / m + v0.x;
-				if (x >= left && x <= right) return true;
-				x = (top - v0.y) / m + v0.x;
-				if (x >= left && x <= right) return true;
+				float _x = (bottom - v0.y) / _m + v0.x;
+				if (_x >= left && _x <= right) return true;
+				_x = (top - v0.y) / _m + v0.x;
+				if (_x >= left && _x <= right) return true;
 			}
 		}
 		return false;
