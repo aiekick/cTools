@@ -925,6 +925,7 @@ inline bool valid(const fvec4& a) { return floatIsValid(a.x) && floatIsValid(a.y
 
 #ifdef IMGUI
 inline ImVec2 toImVec2(const fvec2& v) { return ImVec2(v.x, v.y); }
+inline ImVec2 toImVec2(const ivec2& v) { return ImVec2((float)v.x, (float)v.y); }
 inline ImVec4 toImVec4(const fvec4& v) { return ImVec4(v.x, v.y, v.z, v.w); }
 #endif
 
