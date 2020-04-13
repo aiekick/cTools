@@ -986,7 +986,10 @@ namespace ct // cTools
 #ifdef IMGUI
 	inline ImVec2 toImVec2(const fvec2& v) { return ImVec2(v.x, v.y); }
 	inline ImVec2 toImVec2(const ivec2& v) { return ImVec2((float)v.x, (float)v.y); }
+	inline ImVec2 toImVec2(const dvec2& v) { return ImVec2((float)v.x, (float)v.y); }
 	inline ImVec4 toImVec4(const fvec4& v) { return ImVec4(v.x, v.y, v.z, v.w); }
+	inline ImVec4 toImVec4(const ivec4& v) { return ImVec4((float)v.x, (float)v.y, (float)v.z, (float)v.w); }
+	inline ImVec4 toImVec4(const dvec4& v) { return ImVec4((float)v.x, (float)v.y, (float)v.z, (float)v.w); }
 #endif
 
 	/////////////////////////////////////////////////////////////////////////
