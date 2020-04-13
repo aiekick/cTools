@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+
 /*
 MIT License
 
@@ -41,6 +44,9 @@ SOFTWARE.
 #include <functional>
 #include <algorithm> // ::std::reverse
 
+#ifdef MSVC
+#include <wchar.h>
+#endif
 ::std::list<::std::string> ct::splitStringToList(const ::std::string& text, char delimiter, bool pushEmpty, bool vInversion)
 {
 	::std::list<::std::string> arr;
@@ -202,7 +208,7 @@ bool ct::replaceString(::std::string& str, const ::std::string& oldStr, const ::
 ///////// Count Occurence ///////////////////////////////////
 /////////////////////////////////////////////////////////////
 
-size_t ct::cGetCountOccurence(::std::string vSrcString, ::std::string vStringToCount)
+size_t ct::GetCountOccurence(::std::string vSrcString, ::std::string vStringToCount)
 {
 	size_t count = 0;
 	size_t pos = 0;
@@ -213,7 +219,7 @@ size_t ct::cGetCountOccurence(::std::string vSrcString, ::std::string vStringToC
 	}
 	return count;
 }
-size_t ct::cGetCountOccurenceInSection(::std::string vSrcString, size_t vStartPos, size_t vEndpos, ::std::string vStringToCount)
+size_t ct::GetCountOccurenceInSection(::std::string vSrcString, size_t vStartPos, size_t vEndpos, ::std::string vStringToCount)
 {
 	size_t count = 0;
 	size_t pos = vStartPos;
@@ -236,7 +242,12 @@ std::string ct::wstring_to_string(const std::wstring wstr)
 	std::size_t len = wstr.size();
 	std::vector<char> mbstr(len);
 	const wchar_t * wptr = wstr.c_str();
+#ifdef MSVC
+	size_t res = 0;
+	/*errno_t err = */wcsrtombs_s(&res, &mbstr[0], len, &wptr, mbstr.size(), &state);
+#else
 	std::wcsrtombs(&mbstr[0], &wptr, mbstr.size(), &state);
+#endif
 	return std::string(mbstr.data(), mbstr.size());
 }
 
@@ -248,7 +259,12 @@ std::wstring ct::string_to_wstring(const std::string mbstr)
 	std::size_t len = mbstr.size();
 	std::vector<wchar_t> wstr(len);
 	const char * ptr = mbstr.c_str();
+#ifdef MSVC
+	size_t res = 0;
+	/*errno_t err = */mbsrtowcs_s(&res, &wstr[0], len, &ptr, wstr.size(), &state);
+#else
 	std::mbsrtowcs(&wstr[0], &ptr, wstr.size(), &state);
+#endif
 	return std::wstring(wstr.data(), wstr.size());
 }
 
@@ -258,7 +274,7 @@ std::wstring ct::string_to_wstring(const std::string mbstr)
 
 
 /////////////////////////////////////////////////////////////
-///////// cActionTime ///////////////////////////////////////
+///////// ct::ActionTime ///////////////////////////////////////
 /////////////////////////////////////////////////////////////
 ct::int64 ct::GetTicks()
 {
@@ -276,30 +292,30 @@ float ct::GetTimeInterval()
 	return interval;
 }
 
-ct::cActionTime::cActionTime()
+ct::ActionTime::ActionTime()
 {
 	lastTick = GetTicks();
 }
 
-void ct::cActionTime::Fix() // fixe le marqueur de temps
+void ct::ActionTime::Fix() // fixe le marqueur de temps
 {
 	lastTick = GetTicks();
 }
 
-void ct::cActionTime::Pause()
+void ct::ActionTime::Pause()
 {
 	pauseTick = GetTicks();
 }
 
-void ct::cActionTime::Resume()
+void ct::ActionTime::Resume()
 {
 	resumeTick = GetTicks();
 	lastTick += resumeTick - pauseTick;
 }
 
-ct::int64 ct::cActionTime::get() { return (int64)(ct::GetTicks() - lastTick); }
+ct::int64 ct::ActionTime::get() { return (int64)(ct::GetTicks() - lastTick); }
 
-bool ct::cActionTime::IsTimeToAct(long vMs, bool vFix)
+bool ct::ActionTime::IsTimeToAct(long vMs, bool vFix)
 {
 	if (get() > vMs)
 	{
@@ -311,10 +327,10 @@ bool ct::cActionTime::IsTimeToAct(long vMs, bool vFix)
 }
 
 /////////////////////////////////////////////////////////////
-///// cTexture //////////////////////////////////////////////
+///// ct::texture //////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 
-::std::string ct::cTexture::getString()
+::std::string ct::texture::getString()
 {
 	::std::string res;
 
@@ -546,7 +562,7 @@ template<typename T>
 		{
 			if (it != vec.begin())
 				res += vCharDelimiter;
-			res += (*it).getString();
+			res += (*it).string();
 		}
 	}
 	return res;
@@ -563,7 +579,7 @@ template<typename T>
 		{
 			if (it != vec.begin())
 				res += vCharDelimiter;
-			res += (*it).getString();
+			res += (*it).string();
 		}
 	}
 	return res;
@@ -580,7 +596,7 @@ template<typename T>
 		{
 			if (it != vec.begin())
 				res += vCharDelimiter;
-			res += (*it).getString();
+			res += (*it).string();
 		}
 	}
 	return res;
@@ -675,7 +691,7 @@ ct::vec4<T> ct::clamp(const ct::vec4<T>& vValue, const ct::vec4<T>& vInf, const 
 }
 
 template<typename T>
-ct::vec2<T> ct::clamp(const ct::vec2<T>& vValue, const T& vInf, const T& vSup)
+ct::vec2<T> ct::clamp(const ct::vec2<T>& vValue, T vInf, T vSup)
 {
 	ct::vec2<T> vUniform = vValue;
 	vUniform.x = ct::clamp(vUniform.x, vInf, vSup);
@@ -684,7 +700,7 @@ ct::vec2<T> ct::clamp(const ct::vec2<T>& vValue, const T& vInf, const T& vSup)
 }
 
 template<typename T>
-ct::vec3<T> ct::clamp(const ct::vec3<T>& vValue, const T& vInf, const T& vSup)
+ct::vec3<T> ct::clamp(const ct::vec3<T>& vValue, T vInf, T vSup)
 {
 	ct::vec3<T> vUniform = vValue;
 	vUniform.x = ct::clamp(vUniform.x, vInf, vSup);
@@ -694,7 +710,7 @@ ct::vec3<T> ct::clamp(const ct::vec3<T>& vValue, const T& vInf, const T& vSup)
 }
 
 template<typename T>
-ct::vec4<T> ct::clamp(const ct::vec4<T>& vValue, const T& vInf, const T& vSup)
+ct::vec4<T> ct::clamp(const ct::vec4<T>& vValue, T vInf, T vSup)
 {
 	ct::vec4<T> vUniform = vValue;
 	vUniform.x = ct::clamp(vUniform.x, vInf, vSup);
@@ -735,14 +751,14 @@ ct::vec4<T> ct::clamp(const ct::vec4<T>& vValue)
 	return vUniform;
 }
 
-// cMod
+// ct::mod
 
 template<typename T>
 ct::vec2<T> ct::mod(const ct::vec2<T>& vValue, const ct::vec2<T>& vLim)
 {
 	ct::vec2<T> vUniform = vValue;
-	vUniform.x = cMod(vUniform.x, vLim.x);
-	vUniform.y = cMod(vUniform.y, vLim.y);
+	vUniform.x = ct::mod(vUniform.x, vLim.x);
+	vUniform.y = ct::mod(vUniform.y, vLim.y);
 	return vUniform;
 }
 
@@ -750,9 +766,9 @@ template<typename T>
 ct::vec3<T> ct::mod(const ct::vec3<T>& vValue, const ct::vec3<T>& vLim)
 {
 	ct::vec3<T> vUniform = vValue;
-	vUniform.x = cMod(vUniform.x, vLim.x);
-	vUniform.y = cMod(vUniform.y, vLim.y);
-	vUniform.z = cMod(vUniform.z, vLim.z);
+	vUniform.x = ct::mod(vUniform.x, vLim.x);
+	vUniform.y = ct::mod(vUniform.y, vLim.y);
+	vUniform.z = ct::mod(vUniform.z, vLim.z);
 	return vUniform;
 }
 
@@ -760,224 +776,58 @@ template<typename T>
 ct::vec4<T> ct::mod(const ct::vec4<T>& vValue, const ct::vec4<T>& vLim)
 {
 	ct::vec4<T> vUniform = vValue;
-	vUniform.x = cMod(vUniform.x, vLim.x);
-	vUniform.y = cMod(vUniform.y, vLim.y);
-	vUniform.z = cMod(vUniform.z, vLim.z);
-	vUniform.w = cMod(vUniform.w, vLim.w);
+	vUniform.x = ct::mod(vUniform.x, vLim.x);
+	vUniform.y = ct::mod(vUniform.y, vLim.y);
+	vUniform.z = ct::mod(vUniform.z, vLim.z);
+	vUniform.w = ct::mod(vUniform.w, vLim.w);
 	return vUniform;
 }
 
 template<typename T>
-ct::vec2<T> ct::mod(const ct::vec2<T>& vValue, const T& vLim)
+ct::vec2<T> ct::mod(const ct::vec2<T>& vValue, T vLim)
 {
 	ct::vec2<T> vUniform = vValue;
-	vUniform.x = cMod(vUniform.x, vLim);
-	vUniform.y = cMod(vUniform.y, vLim);
+	vUniform.x = ct::mod(vUniform.x, vLim);
+	vUniform.y = ct::mod(vUniform.y, vLim);
 	return vUniform;
 }
 
 template<typename T>
-ct::vec3<T> ct::mod(const ct::vec3<T>& vValue, const T& vLim)
+ct::vec3<T> ct::mod(const ct::vec3<T>& vValue, T vLim)
 {
 	ct::vec3<T> vUniform = vValue;
-	vUniform.x = cMod(vUniform.x, vLim);
-	vUniform.y = cMod(vUniform.y, vLim);
-	vUniform.z = cMod(vUniform.z, vLim);
+	vUniform.x = ct::mod(vUniform.x, vLim);
+	vUniform.y = ct::mod(vUniform.y, vLim);
+	vUniform.z = ct::mod(vUniform.z, vLim);
 	return vUniform;
 }
 
 template<typename T>
-ct::vec4<T> ct::mod(const ct::vec4<T>& vValue, const T& vLim)
+ct::vec4<T> ct::mod(const ct::vec4<T>& vValue, T vLim)
 {
 	ct::vec4<T> vUniform = vValue;
-	vUniform.x = cMod(vUniform.x, vLim);
-	vUniform.y = cMod(vUniform.y, vLim);
-	vUniform.z = cMod(vUniform.z, vLim);
-	vUniform.w = cMod(vUniform.w, vLim);
+	vUniform.x = ct::mod(vUniform.x, vLim);
+	vUniform.y = ct::mod(vUniform.y, vLim);
+	vUniform.z = ct::mod(vUniform.z, vLim);
+	vUniform.w = ct::mod(vUniform.w, vLim);
 	return vUniform;
 }
 // ReRange value from range 0-MaxRange to range Sup-Inf and return new value
 // 0 ----- Inf ----- value ---- Sup ---- MaxRange
 template<typename T>
-T ct::cReRange(const T& vMaxRange,
-	const T& vNewRangeInf, const T& vNewRangeSup,
-	const T& vValue)
+T ct::cReRange(T vMaxRange,
+	T vNewRangeInf, T vNewRangeSup,
+	T vValue)
 {
 	return (vValue - vNewRangeInf) * vMaxRange / (vNewRangeSup - vNewRangeInf);
 }
 
 /// Returns 1 for non-negative values and -1 for negative values.
-size_t ct::cRatioOfSizeT(size_t t, float r)
+size_t ct::ratioOfSizeT(size_t t, float r)
 {
 	return (size_t)(t * r);
 }
 
-//////////////////////////////////////////////////////
-///////// cColor /////////////////////////////////////
-//////////////////////////////////////////////////////
-
-ct::cColor ct::cColor::RandomColor()
-{
-	int r = (rand() % (256)); // 0 � 3
-	int g = (rand() % (256)); // 0 � 3
-	int b = (rand() % (256)); // 0 � 3
-	int a = 255;
-	return ct::cColor(r, g, b, a);
-}
-ct::cColor::cColor()
-{
-	r = g = b = a = 1.0f;
-}
-ct::cColor::cColor(::std::string colorName, char c)
-{
-	if (colorName == "red") setColor(1.0f, 0.0f, 0.0f, 1.0f);
-	else if (colorName == "green") setColor(0.0f, 1.0f, 0.0f, 1.0f);
-	else if (colorName == "blue") setColor(0.0f, 0.0f, 1.0f, 1.0f);
-	else if (colorName == "purple") setColor(1.0f, 0.0f, 1.0f, 1.0f);
-	else if (colorName == "neutral") setColor(0.0f, 1.0f, 1.0f, 1.0f);
-	else //may be in format "0.2f,0.3f,0.4f"
-	{
-		::std::vector<float> result = StringToNumberVector<float>(colorName, c);
-		if (result.size() == 3) setColor(result[0], result[1], result[2], 1.0f);
-		else if (result.size() == 4) setColor(result[0], result[1], result[2], result[3]);
-	}
-}
-ct::cColor::cColor(int _r, int _g, int _b, int _a)
-{
-	setColor(_r, _g, _b, _a);
-}
-ct::cColor::cColor(float _r, float _g, float _b, float _a)
-{
-	setColor(_r, _g, _b, _a);
-}
-ct::cColor::cColor(int _rgba)
-{
-	setColor(_rgba, _rgba, _rgba, _rgba);
-}
-ct::cColor::cColor(float _rgba)
-{
-	setColor(_rgba, _rgba, _rgba, _rgba);
-}
-ct::cColor::cColor(int _rgb, int _a)
-{
-	setColor(_rgb, _rgb, _rgb, _a);
-}
-ct::cColor::cColor(float _rgb, float _a)
-{
-	setColor(_rgb, _rgb, _rgb, _a);
-}
-ct::cColor::cColor(float col[], int size, float range)
-{
-	if (range == 0.0f) range = 1.0f;
-	if (size > 0) r = col[0] / range;
-	if (size > 1) g = col[1] / range;
-	if (size > 2) b = col[2] / range;
-	if (size > 3) a = col[3] / range;
-}
-#ifdef IMGUI
-ct::cColor::cColor(ImVec4 _rgba)
-{
-	setColor(_rgba.x, _rgba.y, _rgba.z, _rgba.w);
-}
-#endif
-void ct::cColor::setColor(int _r, int _g, int _b, int _a)
-{
-	r = _r / 255.0f;
-	g = _g / 255.0f;
-	b = _b / 255.0f;
-	a = _a / 255.0f;
-}
-void ct::cColor::setColor(float _r, float _g, float _b, float _a)
-{
-	r = _r;
-	g = _g;
-	b = _b;
-	a = _a;
-}
-void ct::cColor::setColor(const ct::cColor col)
-{
-	r = col.r;
-	g = col.g;
-	b = col.b;
-	a = col.a;
-}
-void ct::cColor::getFloat3Arr(float col[3], float range)
-{
-	col[0] = r * range;
-	col[1] = g * range;
-	col[2] = b * range;
-}
-void ct::cColor::getFloat4Arr(float col[4], float range)
-{
-	col[0] = r * range;
-	col[1] = g * range;
-	col[2] = b * range;
-	col[3] = a * range;
-}
-#ifdef COCOS2D
-cocos2d::Color3B ct::cColor::getCCColor3B()
-{
-	cocos2d::Color3B col;
-	col.r = r * 255;
-	col.g = g * 255;
-	col.b = b * 255;
-	return col;
-}
-cocos2d::Color4F ct::cColor::getCCColor4F()
-{
-	cocos2d::Color4F col;
-	col.r = r;
-	col.g = g;
-	col.b = b;
-	col.a = a;
-	return col;
-}
-#endif
-void ct::cColor::setColorCanal(char canal, float value)
-{
-	if (canal == 'r') r = value;
-	if (canal == 'g') g = value;
-	if (canal == 'b') b = value;
-	if (canal == 'a') a = value;
-}
-void ct::cColor::setColorCanal(char canal, int value)
-{
-	if (canal == 'r') r = value / 255.0f;
-	if (canal == 'g') g = value / 255.0f;
-	if (canal == 'b') b = value / 255.0f;
-	if (canal == 'a') a = value / 255.0f;
-}
-#ifdef SDL2
-SDL_Color ct::cColor::getSDLColor()
-{
-	SDL_Color col;
-	col.r = uint8(r * 255.0f);
-	col.g = uint8(g * 255.0f);
-	col.b = uint8(b * 255.0f);
-	col.a = uint8(a * 255.0f);
-	return col;
-}
-#endif
-#ifdef WXWIDGETS
-wxColour ct::cColor::getWxColour()
-{
-	return wxColour(r * 255, g * 255, b * 255);
-}
-#endif
-std::string ct::cColor::getColor3String()
-{
-	return ct::toStr(r) + ";" + toStr(g) + ";" + toStr(b);
-}
-std::string ct::cColor::getColor4String()
-{
-	return ct::toStr(r) + ";" + toStr(g) + ";" + toStr(b) + ";" + toStr(a);
-}
-#ifdef IMGUI
-ImVec4 ct::cColor::ToImVec4()
-{
-	return ImVec4(r, g, b, a);
-}
-#endif
 /////////////////////////////////////////////////////////////////////////////////////////
 
 //https://stackoverflow.com/questions/2685911/is-there-a-way-to-round-numbers-into-a-reader-friendly-format-e-g-1-1k?noredirect=1&lq=1
