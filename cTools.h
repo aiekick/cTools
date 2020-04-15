@@ -245,7 +245,7 @@ namespace ct // cTools
 
 	template <typename T> inline T floor(const T& v) { return ::std::floor(v); }
 	template <typename T> inline T ceil(const T& v) { return ::std::ceil(v); }
-	template <typename T> inline T fract(const T& v) { return v - floor<const T&>(v); }
+	template <typename T> inline T fract(const T& v) { return v - floor<T>(v); }
 	template <typename T> inline T cos(const T& v) { return ::std::cos(v); }
 	template <typename T> inline T sin(const T& v) { return ::std::sin(v); }
 	template <typename T> inline T tan(const T& v) { return ::std::tan(v); }
@@ -255,19 +255,19 @@ namespace ct // cTools
 
 	// template <typename T> inline T clamp(const T& a, const T& b, const T& c) { return mini<const T&>(maxi<const T&>(a, b), c); }
 
-	template <typename T> inline T clamp(const T& n) { return n >= const T&(0) && n <= const T&(1) ? n : const T&(n > const T&(0)); } // clamp n => 0 to 1
-	template <typename T> inline T clamp(const T&  n, const T&  b) { return n >= const T&(0) && n <= b ? n : const T&(n > const T&(0))*b; } // clamp n => 0 to b
+	template <typename T> inline T clamp(const T& n) { return n >= T(0) && n <= T(1) ? n : T(n > T(0)); } // clamp n => 0 to 1
+	template <typename T> inline T clamp(const T&  n, const T&  b) { return n >= T(0) && n <= b ? n : T(n > T(0))*b; } // clamp n => 0 to b
 	template <typename T> inline T clamp(const T&  n, const T&  a, const T& b) { return n >= a && n <= b ? n : n < a ? a : b; } // clamp n => a to b
 
-	template <typename T> inline T abs(const T& a) { return a < 0 ? a * (const T&)-1 : a; }
-	template <typename T> inline T sign(const T& a) { return a < 0 ? (const T&)-1 : (const T&)1; }
-	template <typename T> inline T step(const T& a, const T& b) { return b < a ? (const T&)0 : (const T&)1; }
+	template <typename T> inline T abs(const T& a) { return a < 0 ? a * (T)-1 : a; }
+	template <typename T> inline T sign(const T& a) { return a < 0 ? (T)-1 : (T)1; }
+	template <typename T> inline T step(const T& a, const T& b) { return b < a ? (T)0 : (T)1; }
 	template <typename T> inline T mod(const T& v, const T& l) { return ::std::modf(v, l); }
 	template <typename T> inline T invMix(const T& i, const T& s, const T& r) { return (r - i) / (s - i); }
 
 	// https://twitter.com/FreyaHolmer/status/1068293398073929728
 	template <typename T> inline T lerp(const T& a, const T& b, const T& t) { return a * (1.0f - t) + b * t; }
-	template <typename T> inline T eerp(const T& a, const T& b, const T& t) { if (a == (const T&)0) return const T&(0); return pow(a * (b / a), t); }
+	template <typename T> inline T eerp(const T& a, const T& b, const T& t) { if (a == (T)0) return T(0); return pow(a * (b / a), t); }
 
 	template <typename T> inline T mix(const T& a, const T& b, const T& t) { return lerp(a, b, t); }
 
@@ -777,7 +777,7 @@ namespace ct // cTools
 		vec3<T> getNormalized() { vec3<T> n = vec3<T>(x, y, z); n.normalize(); return n; }
 		T sum() { return x + y + z; }
 		T sumAbs() { return abs<T>(x) + abs<T>(y) + abs<T>(z); }
-		bool empty() { if (x == (T)0 && y == (T)0 && z == (T)0) return true; else return false; }
+		bool empty() { return x == (T) 0 && y == (T) 0 && z == (T) 0; }
 		std::string string(char c = ';') { return toStr(x) + c + toStr(y) + c + toStr(z); }
 	};
 	template <typename T> inline vec3<T> operator + (vec3<T> v, T f) { return vec3<T>(v.x + f, v.y + f, v.z + f); }
@@ -792,9 +792,9 @@ namespace ct // cTools
 	template <typename T> inline vec3<T> operator / (vec3<T> v, T f) { return vec3<T>(v.x / f, v.y / f, v.z / f); }
 	template <typename T> inline vec3<T> operator / (T f, vec3<T> v) { return vec3<T>(f / v.x, f / v.y, f / v.z); }
 	template <typename T> inline vec3<T> operator / (vec3<T> v, vec3<T> f) { return vec3<T>(v.x / f.x, v.y / f.y, v.z / f.z); }
-	template <typename T> inline bool operator < (vec3<T> v, vec3<T> f) { return v.x < f.x  v.y < f.y  v.z < f.z; }
+	template <typename T> inline bool operator < (vec3<T> v, vec3<T> f) { return v.x < f.x && v.y < f.y && v.z < f.z; }
 	template <typename T> inline bool operator < (vec3<T> v, T f) { return v.x < f && v.y < f && v.z < f; }
-	template <typename T> inline bool operator > (vec3<T> v, vec3<T> f) { return v.x > f.x  v.y > f.y  v.z > f.z; }
+	template <typename T> inline bool operator > (vec3<T> v, vec3<T> f) { return v.x > f.x && v.y > f.y && v.z > f.z; }
 	template <typename T> inline bool operator > (vec3<T> v, T f) { return v.x > f && v.y > f && v.z > f; }
 	template <typename T> inline bool operator <= (vec3<T> v, vec3<T> f) { return v.x <= f.x && v.y <= f.y && v.z <= f.z; }
 	template <typename T> inline bool operator <= (vec3<T> v, T f) { return v.x <= f && v.y <= f && v.z <= f; }

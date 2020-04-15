@@ -58,14 +58,10 @@ SOFTWARE.
 		{
 			::std::string token = text.substr(start, end - start);
 			if (token.size() > 0 || (token.empty() && pushEmpty))
-				if (vInversion)
-                {
-                    arr.push_front(token);
-                }
-				else
-                {
-				    arr.push_back(token);
-                }
+			{
+                if (vInversion) arr.push_front(token);
+                else arr.push_back(token);
+            }
 			start = end + 1;
 			end = text.find(delimiter, start);
 		}
