@@ -46,7 +46,9 @@ SOFTWARE.
 #include <sys/stat.h>
 #include <sys/file.h>
 #include <sys/wait.h>
+#ifdef APPLE
 #include <sys/syslimits.h> // PATH_MAX
+#endif
 #ifndef MAX_PATH
 #define MAX_PATH PATH_MAX
 #endif
@@ -111,7 +113,7 @@ FileHelper::FileHelper()
 #ifdef WIN32
 	m_SlashType = "\\";
 #endif
-#ifdef LINUX
+#ifdef UNIX
 	m_SlashType = "/";
 #endif
 #ifdef _DEBUG
