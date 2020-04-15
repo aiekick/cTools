@@ -33,7 +33,7 @@ SOFTWARE.
 #include <cTools.h>
 
 // for clipboard
-#include "glfw/glfw3.h"
+#include <GLFW/glfw3.h>
 
 #ifdef WIN32
 #include <windows.h>
