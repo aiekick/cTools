@@ -523,7 +523,7 @@ bool FileHelper::CreateDirectoryIfNotExist(const std::string& name)
 
 #ifdef WIN32
             CreateDirectory(filePathName.c_str(), NULL);
-#elif defined(LINUX) or defined(APPLE)
+#elif defined(UNIX)
             char buffer[MAX_PATH] = {};
             snprintf(buffer, MAX_PATH, "mkdir -p %s", filePathName.c_str());
             const int dir_err = std::system(buffer);
@@ -738,7 +738,7 @@ std::string FileHelper::getTimeStampToString(const std::string& vSeparator)
 	struct tm *parts = 0;
 	errno_t err = localtime_s(parts, &now_c);
 	if (!err && parts)
-#elif
+#else
 	struct tm *parts = std::localtime(&now_c);
 	if (parts)
 #endif
@@ -766,7 +766,7 @@ size_t FileHelper::getTimeStampToNumber()
 	struct tm *parts = 0;
 	errno_t err = localtime_s(parts, &now_c);
 	if (!err && parts)
-#elif
+#else
 	struct tm *parts = std::localtime(&now_c);
 	if (parts)
 #endif
