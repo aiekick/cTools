@@ -243,6 +243,7 @@ namespace ct // cTools
 		return (v.i & 0x7f800000) != 0x7f800000;
 	}
 
+	template <typename T> inline T round(const T& v) { return ::std::round(v); }
 	template <typename T> inline T floor(const T& v) { return ::std::floor(v); }
 	template <typename T> inline T ceil(const T& v) { return ::std::ceil(v); }
 	template <typename T> inline T fract(const T& v) { return v - floor<T>(v); }
