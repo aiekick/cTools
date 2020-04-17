@@ -34,10 +34,8 @@ struct PathStruct
 
 	bool isOk = false;
 
-	PathStruct()
-	{
-		isOk = false;
-	}
+	PathStruct();
+	std::string GetFilePathWithNameExt(const std::string& vName, const std::string& vExt);
 };
 
 struct GLFWwindow;

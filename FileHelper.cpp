@@ -101,6 +101,31 @@ typedef std::chrono::system_clock Clock;
 #define SetCurrentDir chdir
 #endif
 
+PathStruct::PathStruct()
+{
+	isOk = false;
+}
+
+std::string PathStruct::GetFilePathWithNameExt(const std::string& vName, const std::string& vExt) // need a refactoring
+{
+	if (path[0] == FileHelper::Instance()->m_SlashType[0])
+	{
+#ifdef WIN32
+		// if it happening on window this seem that this path msut be a relative path but with an error
+
+		path = path.substr(1); // bad formated path go relative
+#endif
+	}
+	else
+	{
+#ifdef UNIX
+		path = "/" + path; // make it absolute
+#endif
+	}
+
+	return path + FileHelper::Instance()->m_SlashType + vName + vExt;
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
