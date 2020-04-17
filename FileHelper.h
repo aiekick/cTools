@@ -62,6 +62,8 @@ public: // funcs
 	
 	void SetAppPath(const std::string& vPath);
     std::string GetAppPath();
+	std::string GetPathRelativeToApp(const std::string& vFilePathName);
+	
 	std::string GetCurDirectory();
     bool SetCurDirectory(const std::string& vPath);
 

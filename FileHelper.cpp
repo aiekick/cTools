@@ -395,6 +395,11 @@ void FileHelper::SetAppPath(const std::string& vPath)
     }
 }
 
+std::string FileHelper::GetPathRelativeToApp(const std::string& vFilePathName)
+{
+	return GetRelativePathToPath(vFilePathName, GetAppPath());
+}
+
 std::string FileHelper::GetAppPath()
 {
 	if (FileHelper::AppPath.empty())
