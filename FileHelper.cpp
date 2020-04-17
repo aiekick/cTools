@@ -359,6 +359,7 @@ bool FileHelper::IsAbsolutePath(const std::string& vFilePathName)
 #elif defined(UNIX)
 	if (vFilePathName[0] == m_SlashType[0]) // absolute path for linux / apple
 #endif
+
 	{
 		return true;
 	}
@@ -418,7 +419,7 @@ std::string FileHelper::GetAppPath()
         std::string::size_type pos = path.find_last_of("\\/");
 		FileHelper::AppPath = path.substr(0, pos);
 #endif
-#if defined(WIN32) or defined(LINUX)
+#if defined(WIN32) || defined(LINUX)
 		std::string::size_type pos = std::string(buffer).find_last_of("\\/");
 		FileHelper::AppPath = std::string(buffer).substr(0, pos);
 #endif
@@ -462,10 +463,10 @@ bool FileHelper::IsFileExist(const std::string& name)
     ct::replaceString(fileToOpen, "\n", "");
     ct::replaceString(fileToOpen, "\r", "");
 
-	FILE *file = fopen(fileToOpen.c_str(), "r");
-	if (file)
+	std::ifstream docFile(fileToOpen, std::ios::in);
+	if (docFile.is_open())
 	{
-		fclose(file);
+		docFile.close();
 		return true;
 	}
 	else
@@ -728,36 +729,58 @@ std::vector<std::string> FileHelper::GetDrives()
 
 std::string FileHelper::getTimeStampToString(const std::string& vSeparator)
 {
+	std::string res;
+
 	auto now = Clock::now();
 	std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch());
 	std::time_t now_c = Clock::to_time_t(now);
+#ifdef MSVC
+	struct tm *parts = 0;
+	errno_t err = localtime_s(parts, &now_c);
+	if (!err && parts)
+#elif
 	struct tm *parts = std::localtime(&now_c);
+	if (parts)
+#endif
+	{
+		float time_seconds = (float)(parts->tm_hour * 3600 + parts->tm_min * 60 + parts->tm_sec + (float)(ms.count() % 1000) / 1000.0f);
 
-	float time_seconds = (float)(parts->tm_hour * 3600 + parts->tm_min * 60 + parts->tm_sec + (float)(ms.count() % 1000) / 1000.0f);
+		float year = ct::fract((float)(1900 + parts->tm_year) / 100.0f) * 100.0f;
+		float month = (float)(1 + parts->tm_mon);
+		float day = (float)(parts->tm_mday);
+		float seconds = time_seconds;
 
-	float year = ct::fract((float)(1900 + parts->tm_year) / 100.0f) * 100.0f;
-	float month = (float)(1 + parts->tm_mon);
-	float day = (float)(parts->tm_mday);
-	float seconds = time_seconds;
-
-	return ct::toStr(year) + vSeparator + ct::toStr(month) + vSeparator + ct::toStr(day) + vSeparator + ct::toStr(seconds);
+		res = ct::toStr(year) + vSeparator + ct::toStr(month) + vSeparator + ct::toStr(day) + vSeparator + ct::toStr(seconds);
+	}
+	return res;
 }
 
 size_t FileHelper::getTimeStampToNumber()
 {
+	size_t timeStamp = 0;
+
 	auto now = Clock::now();
 	std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch());
 	std::time_t now_c = Clock::to_time_t(now);
+#ifdef MSVC
+	struct tm *parts = 0;
+	errno_t err = localtime_s(parts, &now_c);
+	if (!err && parts)
+#elif
 	struct tm *parts = std::localtime(&now_c);
+	if (parts)
+#endif
+	{
+		int year = 1900 + parts->tm_year - 2000;
+		int month = 1 + parts->tm_mon;
+		int day = parts->tm_mday;
+		int seconds = parts->tm_hour * 3600 + parts->tm_min * 60 + parts->tm_sec;
 
-	int year = 1900 + parts->tm_year - 2000;
-	int month = 1 + parts->tm_mon;
-	int day = parts->tm_mday;
-	int seconds = parts->tm_hour * 3600 + parts->tm_min * 60 + parts->tm_sec;
+		std::string res = ct::toStr(year) + ct::toStr(month) + ct::toStr(day) + ct::toStr(seconds);
 
-	std::string res = ct::toStr(year) + ct::toStr(month) + ct::toStr(day) + ct::toStr(seconds);
-
-	return ct::uvariant(res).getU();
+		timeStamp = ct::uvariant(res).getU();
+	}
+	return timeStamp;
 }
 
 // Need GLFW
