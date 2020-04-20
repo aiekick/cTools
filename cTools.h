@@ -114,7 +114,6 @@ typedef uint8 byte;
 
 namespace ct // cTools
 {
-
 	template <typename T> ::std::string toStr(T t)
 	{
 		::std::ostringstream os;
@@ -127,6 +126,12 @@ namespace ct // cTools
 	{
 		::std::ostringstream os;
 		os << std::hex << t;
+		return os.str();
+	}
+	template <typename T> ::std::string toDecStr(T t)
+	{
+		::std::ostringstream os;
+		os << std::dec << t;
 		return os.str();
 	}
 
