@@ -64,7 +64,7 @@ void Logger::LogString(std::string str)
 		int64 ticks = ct::GetTicks(); 
 		float time = (ticks - lastTick) / 1000.0f;
 		std::cout << "t:" << time << "s " << str << std::endl;
-		if (debugLogFile->bad() == false)
+		if (!debugLogFile->bad())
 			*debugLogFile << "t:" << time << "s " << str << std::endl;
 	}
 }
@@ -80,7 +80,7 @@ void Logger::LogString(std::string vFile, std::string vFunction, std::string vLi
 		int64 ticks = ct::GetTicks();
 		float time = (ticks - lastTick) / 1000.0f;
 		std::cout << "t:" << time << "s " << str << std::endl;
-		if (debugLogFile->bad() == false)
+		if (!debugLogFile->bad())
 			*debugLogFile << "t:" << time << "s " << str << std::endl;
 	}
 }
@@ -113,7 +113,7 @@ void Logger::LogGLError(std::string vFile, std::string vFunc, int vLine, std::st
 			int64 ticks = ct::GetTicks();
 			float time = (ticks - lastTick) / 1000.0f;
 			std::cout << "t:" << time << "s : " << error << std::endl;
-			if (debugLogFile->bad() == false)
+			if (!debugLogFile->bad())
 				*debugLogFile << "t:" << time << "s : " << error << std::endl;
 		}
 	}

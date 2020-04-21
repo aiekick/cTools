@@ -70,7 +70,7 @@ namespace conf
 			fileStream += "</config>\n";
 
 			std::ofstream configFileWriter(vFilePathName, std::ios::out);
-			if (configFileWriter.bad() == false)
+			if (!configFileWriter.bad())
 			{
 				configFileWriter << fileStream;
 				configFileWriter.close();
@@ -94,8 +94,7 @@ namespace conf
 
 				if (err == tinyxml2::XMLError::XML_SUCCESS)
 				{
-					res = true;
-					res = res && RecursParsingConfig(doc.FirstChildElement("config"), 0);
+					res = RecursParsingConfig(doc.FirstChildElement("config"), 0);
 				}
 			}
 			catch (std::exception& ex)
@@ -108,11 +107,9 @@ namespace conf
 
 		bool RecursParsingConfig(tinyxml2::XMLElement* vElem, tinyxml2::XMLElement* vParent)
 		{
-			bool res = false;
+			bool res = true;
 
 			setFromXml(vElem, vParent);
-
-			res = true;
 
 			// CHILDS 
 			// parse through all childs elements

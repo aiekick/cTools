@@ -185,7 +185,7 @@ std::string FileHelper::LoadFileToString(const std::string& vFilePathName)
 void FileHelper::SaveStringToFile(const std::string& vString, const std::string& vFilePathName)
 {
 	std::ofstream fileWriter(vFilePathName, std::ios::out);
-	if (fileWriter.bad() == false)
+	if (!fileWriter.bad())
 	{
 		fileWriter << vString;
 		fileWriter.close();
@@ -430,13 +430,12 @@ std::string FileHelper::GetAppPath()
 	if (FileHelper::AppPath.empty())
 	{
         char buffer[MAX_PATH] = {};
-        int bytes = 0;
 #ifdef WIN32
-        bytes = GetModuleFileName(NULL, buffer, MAX_PATH);
+        GetModuleFileName(NULL, buffer, MAX_PATH);
 #elif defined(LINUX)
         char szTmp[32];
         sprintf(szTmp, "/proc/%d/exe", getpid());
-        bytes = ct::mini<int>(readlink(szTmp, buffer, MAX_PATH), MAX_PATH - 1);
+        int bytes = ct::mini<int>(readlink(szTmp, buffer, MAX_PATH), MAX_PATH - 1);
         if(bytes >= 0)
             buffer[bytes] = '\0';
 #elif defined(APPLE)
@@ -508,7 +507,7 @@ bool FileHelper::IsDirectoryExist(const std::string& name)
     if (name.size() > 0)
     {
 		std::string dir = CorrectFilePathName(name);
-		DIR *pDir = 0;
+		DIR *pDir = nullptr;
 		pDir = opendir(dir.c_str());
 		if (pDir != NULL)
 		{
@@ -600,7 +599,6 @@ std::string FileHelper::SimplifyFilePath(const std::string& vFilePath)
 	// the idea is to simplify a path where there is some ..
 	// by ex : script\\kifs\\../space3d.glsl => can be simplified in /script/space3d.glsl
 
-	// todo : wrok for on occurence only, to put in while for all .. patterns
 	size_t dpt = 0;
 	while((dpt = newPath.find("..")) != std::string::npos)
 	{
@@ -721,7 +719,7 @@ void FileHelper::SelectFile(const std::string& vFileToSelect)
 	}*/
 
 #elif defined(LINUX)
-	// is there a similar command on linux ?
+	//todo: is there a similar command on linux ?
 #elif defined(APPLE)
     if (fileToSelect.size() > 0)
     {
