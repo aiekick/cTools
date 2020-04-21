@@ -430,13 +430,12 @@ std::string FileHelper::GetAppPath()
 	if (FileHelper::AppPath.empty())
 	{
         char buffer[MAX_PATH] = {};
-        int bytes = 0;
 #ifdef WIN32
-        bytes = GetModuleFileName(NULL, buffer, MAX_PATH);
+        GetModuleFileName(NULL, buffer, MAX_PATH);
 #elif defined(LINUX)
         char szTmp[32];
         sprintf(szTmp, "/proc/%d/exe", getpid());
-        bytes = ct::mini<int>(readlink(szTmp, buffer, MAX_PATH), MAX_PATH - 1);
+        int bytes = ct::mini<int>(readlink(szTmp, buffer, MAX_PATH), MAX_PATH - 1);
         if(bytes >= 0)
             buffer[bytes] = '\0';
 #elif defined(APPLE)
