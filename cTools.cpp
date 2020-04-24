@@ -47,7 +47,9 @@ SOFTWARE.
 #ifdef MSVC
 #include <wchar.h>
 #endif
-::std::list<::std::string> ct::splitStringToList(const ::std::string& text, char delimiter, bool pushEmpty, bool vInversion)
+
+::std::list<::std::string> ct::splitStringToList(
+	const ::std::string& text, char delimiter, bool pushEmpty, bool vInversion)
 {
 	::std::list<::std::string> arr;
 	if (text.size() > 0)
@@ -59,9 +61,9 @@ SOFTWARE.
 			::std::string token = text.substr(start, end - start);
 			if (token.size() > 0 || (token.empty() && pushEmpty))
 			{
-                if (vInversion) arr.push_front(token);
-                else arr.push_back(token);
-            }
+				if (vInversion) arr.push_front(token);
+				else arr.push_back(token);
+			}
 			start = end + 1;
 			end = text.find(delimiter, start);
 		}
@@ -77,7 +79,40 @@ SOFTWARE.
 	return arr;
 }
 
-::std::vector<::std::string> ct::splitStringToVector(const ::std::string& text, char delimiter, bool pushEmpty)
+// same as before but will use all delimiter chars in "delimiters"
+::std::list<::std::string> ct::splitStringToListByManyDelimiters(
+	const ::std::string& text, std::string delimiters, bool pushEmpty, bool vInversion)
+{
+	::std::list<::std::string> arr;
+	if (text.size() > 0)
+	{
+		::std::string::size_type start = 0;
+		::std::string::size_type end = text.find_first_of(delimiters, start);
+		while (end != ::std::string::npos)
+		{
+			::std::string token = text.substr(start, end - start);
+			if (token.size() > 0 || (token.empty() && pushEmpty))
+			{
+				if (vInversion) arr.push_front(token);
+				else arr.push_back(token);
+			}
+			start = end + 1;
+			end = text.find_first_of(delimiters, start);
+		}
+		::std::string token = text.substr(start);
+		if (token.size() > 0 || (token.empty() && pushEmpty))
+		{
+			if (vInversion)
+				arr.push_front(token);
+			else
+				arr.push_back(token);
+		}
+	}
+	return arr;
+}
+
+::std::vector<::std::string> ct::splitStringToVector(
+	const ::std::string& text, char delimiter, bool pushEmpty)
 {
 	::std::vector<::std::string> arr;
 	if (text.size() > 0)
@@ -99,6 +134,29 @@ SOFTWARE.
 	return arr;
 }
 
+// same as before but will use all delimiter chars in "delimiters"
+::std::vector<::std::string> ct::splitStringToVectorByManyDelimiters(
+	const ::std::string& text, ::std::string delimiters, bool pushEmpty)
+{
+	::std::vector<::std::string> arr;
+	if (text.size() > 0)
+	{
+		::std::string::size_type start = 0;
+		::std::string::size_type end = text.find_first_of(delimiters, start);
+		while (end != ::std::string::npos)
+		{
+			::std::string token = text.substr(start, end - start);
+			if (token.size() > 0 || (token.empty() && pushEmpty))
+				arr.push_back(token);
+			start = end + 1;
+			end = text.find_first_of(delimiters, start);
+		}
+		::std::string token = text.substr(start);
+		if (token.size() > 0 || (token.empty() && pushEmpty))
+			arr.push_back(token);
+	}
+	return arr;
+}
 /////////////////////////////////////////////////////////////
 ///////// StringToVector ////////////////////////////////////
 /////////////////////////////////////////////////////////////

@@ -176,8 +176,14 @@ namespace ct // cTools
 ///////// splitStringToVector ///////////////////////////////////////
 /////////////////////////////////////////////////////////////
 
-	::std::list<::std::string> splitStringToList(const ::std::string& text, char delimiter, bool pushEmpty = false, bool vInversion = false);
-	::std::vector<::std::string> splitStringToVector(const ::std::string& text, char delimiter, bool pushEmpty = false);
+	::std::list<::std::string> splitStringToList(
+		const ::std::string& text, char delimiter, bool pushEmpty = false, bool vInversion = false);
+	::std::list<::std::string> splitStringToListByManyDelimiters(
+		const ::std::string& text, ::std::string delimiters, bool pushEmpty = false, bool vInversion = false);
+	::std::vector<::std::string> splitStringToVector(
+		const ::std::string& text, char delimiter, bool pushEmpty = false);
+	::std::vector<::std::string> splitStringToVectorByManyDelimiters(
+		const ::std::string& text, ::std::string delimiters, bool pushEmpty = false);
 
 	/////////////////////////////////////////////////////////////
 	///////// StringToFloatVector ///////////////////////////////
