@@ -44,21 +44,33 @@ SOFTWARE.
 #include <chrono>
 
 #ifdef COCOS2D
+#ifndef USE_OPENGL
+#define USE_OPENGL
+#endif
 #include <cocos2d.h>
 using namespace cocos2d;
 #else
 #ifdef GLEW
+#ifndef USE_OPENGL
+#define USE_OPENGL
+#endif
 #include <GL/glew.h>
 #include <GL/wglew.h>
 #define SAFE_DELETE_GL_BUFFER(a) if (a > 0) glDeleteBuffers(1, &a), a = 0
 #define SAFE_DELETE_GL_VERTEX_ARRAY(a) if (a > 0) glDeleteVertexArrays(1, &a), a = 0
 #endif
 #ifdef GL3W
+#ifndef USE_OPENGL
+#define USE_OPENGL
+#endif
 #include <glad/glad.h>
 #define SAFE_DELETE_GL_BUFFER(a) if (a > 0) glDeleteBuffers(1, &a), a = 0
 #define SAFE_DELETE_GL_VERTEX_ARRAY(a) if (a > 0) glDeleteVertexArrays(1, &a), a = 0
 #endif
 #ifdef GLAD
+#ifndef USE_OPENGL
+#define USE_OPENGL
+#endif
 #include <glad/glad.h>
 #define SAFE_DELETE_GL_BUFFER(a) if (a > 0) glDeleteBuffers(1, &a), a = 0
 #define SAFE_DELETE_GL_VERTEX_ARRAY(a) if (a > 0) glDeleteVertexArrays(1, &a), a = 0
@@ -395,7 +407,7 @@ namespace ct // cTools
 	/////////////////////////////////////////////////////////////
 	///////// texture //////////////////////////////////////////
 	/////////////////////////////////////////////////////////////
-
+#ifdef USE_OPENGL
 	struct texture
 	{
 	public:
@@ -471,7 +483,7 @@ namespace ct // cTools
 
 		::std::vector<GLuint> glTexLayered;
 	};
-
+#endif
 	/////////////////////////////////////////////////////////////
 	///////// Color /////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////
