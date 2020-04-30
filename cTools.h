@@ -1545,7 +1545,9 @@ namespace ct // cTools
 		long long_value = 0;
 		size_t size_t_value = 0;
 		Color<T> color_value;
+#ifdef USE_OPENGL
 		texture texture_value;
+#endif
 		vec2<T> point_value;
 		vec3<T> v3_value;
 		vec4<T> rect_value;
@@ -1573,7 +1575,9 @@ namespace ct // cTools
 		variant(const ::std::string& v) { string_value = v; inputtype = "string"; datatype = inputtype; }
 		variant(const bool& v) { bool_value = v; inputtype = "bool"; datatype = inputtype; }
 		variant(const Color<T>& c) { color_value = c; inputtype = "Color"; datatype = inputtype; }
+#ifdef USE_OPENGL
 		variant(const texture& c) { texture_value = c; inputtype = "texture"; datatype = inputtype; }
+#endif
 		variant(const vec2<T>& c) { point_value = c; inputtype = "vec2"; datatype = inputtype; }
 		variant(const vec3<T>& c) { v3_value = c; inputtype = "vec3"; datatype = inputtype; }
 		variant(const vec4<T>& c) { rect_value = c; inputtype = "vec4"; datatype = inputtype; }
@@ -1646,10 +1650,12 @@ namespace ct // cTools
 			if (inputtype == "string") return Color<T>(string_value, c);
 			return color_value;
 		}
+#ifdef USE_OPENGL
 		texture getTexture()
 		{
 			return texture_value;
 		}
+#endif
 		vec2<T> getV2(char c = ';')
 		{
 			if (inputtype == "string") return vec2<T>(string_value, c);
