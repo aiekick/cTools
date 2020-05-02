@@ -26,7 +26,7 @@ SOFTWARE.
 #include "cTools.h"
 #include <glad/glad.h>
 
-#ifdef WIN32
+#ifdef MSVC
 #include <Windows.h>
 #include <strsafe.h>
 #else
