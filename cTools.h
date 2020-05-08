@@ -1630,8 +1630,7 @@ namespace ct // cTools
 #endif
 				if (success)
 				{
-					if (res <= 0) *success = false;
-					else *success = true;
+                    *success = res > 0;
 				}
 
 				//tmp = StringToNumber<size_t>(string_value);
