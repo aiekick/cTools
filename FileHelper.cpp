@@ -35,15 +35,20 @@ SOFTWARE.
 // for clipboard
 #include <GLFW/glfw3.h>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdio.h>
+#include <errno.h>
+#ifdef WIN32
+#define stat _stat
+#endif
+
 #ifdef WIN32
 #include <windows.h>
 #include <shellapi.h>
 #pragma comment(lib,"shlwapi.lib")
-#include <dirent.h>
 #elif defined(UNIX)
-#include <sys/types.h>
 #include <sys/param.h>
-#include <sys/stat.h>
 #include <sys/file.h>
 #include <sys/wait.h>
 #ifdef APPLE
@@ -507,16 +512,12 @@ bool FileHelper::IsDirectoryExist(const std::string& name)
     if (name.size() > 0)
     {
 		std::string dir = CorrectFilePathName(name);
-		DIR *pDir = nullptr;
-		pDir = opendir(dir.c_str());
-		if (pDir != NULL)
-		{
-			bExists = true;
-			(void)closedir(pDir);
-		}
+		struct stat sb;
+		if (stat(dir.c_str(), &sb))
+			bExists = (sb.st_mode & _S_IFDIR);
     }
 
-	return bExists;    // this is not a directory!
+	return bExists; // this is not a directory!
 }
 
 void FileHelper::DestroyFile(const std::string& vFilePathName)

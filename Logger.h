@@ -30,6 +30,7 @@ SOFTWARE.
 
 #include <cTools.h>
 
+#include <cassert>
 #include <string>
 #include <stdlib.h>
 #include <iostream>

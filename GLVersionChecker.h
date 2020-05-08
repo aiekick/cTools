@@ -30,9 +30,7 @@ SOFTWARE.
 #include <Windows.h>
 #include <strsafe.h>
 #else
-
 #endif
-
 
 #include <string>
 #include <map>
