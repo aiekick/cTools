@@ -30,6 +30,7 @@ SOFTWARE.
 
 #include <cTools.h>
 
+#include <cassert>
 #include <string>
 #include <stdlib.h>
 #include <iostream>
@@ -47,8 +48,10 @@ typedef long long int64;
 #define LogStr(n) Logger::Instance()->LogString(std::string(__FILE__), std::string(__FUNCTION__), ct::toStr(__LINE__), (n))
 //#define LogStr(n) Logger::Instance()->LogString(std::string(__FILE__) + " " + std::string(__FUNCTION__) + " " + ct::toStr(__LINE__) + " " + (n))
 #define LogValue(s, n) Logger::Instance()->LogString(/*std::string(__FILE__) + " " + */std::string(__FUNCTION__) + " " + ct::toStr(__LINE__) + " : " + (s) + " = " + ct::toStr(n))
+#ifdef USE_OPENGL
 #define LogGlError() Logger::Instance()->LogGLError(""/*__FILE__*/,__FUNCTION__,__LINE__, "")
 #define LogGlErrorVar(var) Logger::Instance()->LogGLError(""/*__FILE__*/,__FUNCTION__,__LINE__,var)
+#endif
 #define LogAssert(a,b) if (!(a)) { LogStr(b); assert(a); }
 
 struct ImGuiContext;
@@ -77,7 +80,9 @@ public:
 	void LogString(std::string vFile, std::string vFunction, std::string vLine, std::string vMsg);
 	void LogString(std::string str);
 	void LogString(wstring str);
+#ifdef USE_OPENGL
 	void LogGLError(std::string vFile, std::string vFunc, int vLine, std::string vGLFunc = "");
+#endif
 	void Close();
 
 public:

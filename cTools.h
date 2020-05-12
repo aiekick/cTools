@@ -1552,8 +1552,11 @@ namespace ct // cTools
 		double double_value = 0.0;
 		long long_value = 0;
 		size_t size_t_value = 0;
+		uint64_t uint64_t_value = 0;
 		Color<T> color_value;
+#ifdef USE_OPENGL
 		texture texture_value;
+#endif
 		vec2<T> point_value;
 		vec3<T> v3_value;
 		vec4<T> rect_value;
@@ -1574,6 +1577,7 @@ namespace ct // cTools
 		}
 		variant(const int& v) { int_value = v; inputtype = "int"; datatype = inputtype; }
 		variant(const long& v) { long_value = v; inputtype = "long"; datatype = inputtype; }
+		variant(const uint64_t& v) { uint64_t_value = v; inputtype = "uint64_t"; datatype = inputtype; }
 		variant(const size_t& v) { size_t_value = v; inputtype = "size_t"; datatype = inputtype; }
 		variant(const float& v) { float_value = v; inputtype = "float"; datatype = inputtype; }
 		variant(const double& v) { double_value = v; inputtype = "double"; datatype = inputtype; }
@@ -1581,7 +1585,9 @@ namespace ct // cTools
 		variant(const ::std::string& v) { string_value = v; inputtype = "string"; datatype = inputtype; }
 		variant(const bool& v) { bool_value = v; inputtype = "bool"; datatype = inputtype; }
 		variant(const Color<T>& c) { color_value = c; inputtype = "Color"; datatype = inputtype; }
+#ifdef USE_OPENGL
 		variant(const texture& c) { texture_value = c; inputtype = "texture"; datatype = inputtype; }
+#endif
 		variant(const vec2<T>& c) { point_value = c; inputtype = "vec2"; datatype = inputtype; }
 		variant(const vec3<T>& c) { v3_value = c; inputtype = "vec3"; datatype = inputtype; }
 		variant(const vec4<T>& c) { rect_value = c; inputtype = "vec4"; datatype = inputtype; }
@@ -1594,6 +1600,30 @@ namespace ct // cTools
 		void setCustomDataType(::std::string vDataType) { datatype = vDataType; }
 
 		std::string GetInputType() { return inputtype; }
+
+		uint64_t getU64(bool *success = 0)
+		{
+			if (inputtype == "string")
+			{
+				uint64_t tmp = 0;
+
+#ifdef MSVC
+				int res = sscanf_s(string_value.c_str(), "%lu64", &tmp);
+#else
+				int res = sscanf(string_value.c_str(), "%lu64", &tmp);
+#endif
+				if (success)
+				{
+					if (res <= 0) *success = false;
+					else *success = true;
+				}
+
+				//tmp = StringToNumber<size_t>(string_value);
+				return tmp;
+			}
+			return uint64_t_value;
+		}
+
 
 		size_t getU(bool *success = 0)
 		{
@@ -1608,8 +1638,7 @@ namespace ct // cTools
 #endif
 				if (success)
 				{
-					if (res <= 0) *success = false;
-					else *success = true;
+                    *success = res > 0;
 				}
 
 				//tmp = StringToNumber<size_t>(string_value);
@@ -1654,10 +1683,12 @@ namespace ct // cTools
 			if (inputtype == "string") return Color<T>(string_value, c);
 			return color_value;
 		}
+#ifdef USE_OPENGL
 		texture getTexture()
 		{
 			return texture_value;
 		}
+#endif
 		vec2<T> getV2(char c = ';')
 		{
 			if (inputtype == "string") return vec2<T>(string_value, c);

@@ -28,12 +28,6 @@ SOFTWARE.
 #include <Logger.h>
 #include <GLFW/glfw3.h>
 
-#include <imgui.h>
-#ifndef IMGUI_DEFINE_MATH_OPERATORS
-#define IMGUI_DEFINE_MATH_OPERATORS
-#endif
-#include "imgui_internal.h"
-
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -85,6 +79,7 @@ void Logger::LogString(std::string vFile, std::string vFunction, std::string vLi
 	}
 }
 
+#ifdef USE_OPENGL
 void Logger::LogGLError(std::string vFile, std::string vFunc, int vLine, std::string vGLFunc)
 {
 	if (!Logger::Instance()->ConsoleVerbose)
@@ -118,7 +113,7 @@ void Logger::LogGLError(std::string vFile, std::string vFunc, int vLine, std::st
 		}
 	}
 }
-
+#endif
 void Logger::LogString(wstring str)
 {
 	if (str.size() > 0)
