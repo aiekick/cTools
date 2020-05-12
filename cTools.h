@@ -42,6 +42,7 @@ SOFTWARE.
 #include <iostream>
 #include <float.h>
 #include <chrono>
+#include <iomanip> // std::setprecision
 
 #ifdef COCOS2D
 #ifndef USE_OPENGL
@@ -255,6 +256,13 @@ namespace ct // cTools
 	/////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////
+
+	inline std::string round_n(double vvalue, int n)
+	{
+		std::stringstream tmp;
+		tmp << std::setprecision(n) << std::fixed << vvalue;
+		return tmp.str();
+	}
 
 	/// This function is used to ensure that a floating point number is not a NaN or infinity.
 	inline bool floatIsValid(float32 x)
