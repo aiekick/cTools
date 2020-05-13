@@ -37,18 +37,21 @@ SOFTWARE.
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <stdio.h>
-#include <errno.h>
 #ifdef WIN32
 #define stat _stat
-#define __S_IFDIR _S_IFDIR  
+#define S_IFDIR _S_IFDIR 
+#elif defined(APPLE)
+#elif defined(LINUX)
+#define S_IFDIR __S_IFDIR
 #endif
 
+#include <stdio.h>
+#include <errno.h>
 #ifdef WIN32
 #include <windows.h>
 #include <shellapi.h>
 #pragma comment(lib,"shlwapi.lib")
-#elif defined(UNIX)
+ #elif defined(UNIX)
 #include <sys/param.h>
 #include <sys/file.h>
 #include <sys/wait.h>
@@ -515,7 +518,7 @@ bool FileHelper::IsDirectoryExist(const std::string& name)
 		std::string dir = CorrectFilePathName(name);
 		struct stat sb;
 		if (stat(dir.c_str(), &sb))
-			bExists = (sb.st_mode & __S_IFDIR);
+			bExists = (sb.st_mode & S_IFDIR);
     }
 
 	return bExists; // this is not a directory!
