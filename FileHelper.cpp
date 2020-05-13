@@ -41,6 +41,7 @@ SOFTWARE.
 #include <errno.h>
 #ifdef WIN32
 #define stat _stat
+#define S_ISDIR _S_IFDIR  
 #endif
 
 #ifdef WIN32
@@ -514,7 +515,7 @@ bool FileHelper::IsDirectoryExist(const std::string& name)
 		std::string dir = CorrectFilePathName(name);
 		struct stat sb;
 		if (stat(dir.c_str(), &sb))
-			bExists = (sb.st_mode & _S_IFDIR);
+			bExists = (sb.st_mode & S_ISDIR);
     }
 
 	return bExists; // this is not a directory!
