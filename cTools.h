@@ -1552,7 +1552,7 @@ namespace ct // cTools
 		double double_value = 0.0;
 		long long_value = 0;
 		size_t size_t_value = 0;
-		uint64_t uint64_t_value = 0;
+		//uint64_t uint64_t_value = 0;
 		Color<T> color_value;
 #ifdef USE_OPENGL
 		texture texture_value;
@@ -1577,7 +1577,7 @@ namespace ct // cTools
 		}
 		variant(const int& v) { int_value = v; inputtype = "int"; datatype = inputtype; }
 		variant(const long& v) { long_value = v; inputtype = "long"; datatype = inputtype; }
-		variant(const uint64_t& v) { uint64_t_value = v; inputtype = "uint64_t"; datatype = inputtype; }
+		//variant(const uint64_t& v) { uint64_t_value = v; inputtype = "uint64_t"; datatype = inputtype; }
 		variant(const size_t& v) { size_t_value = v; inputtype = "size_t"; datatype = inputtype; }
 		variant(const float& v) { float_value = v; inputtype = "float"; datatype = inputtype; }
 		variant(const double& v) { double_value = v; inputtype = "double"; datatype = inputtype; }
@@ -1601,7 +1601,7 @@ namespace ct // cTools
 
 		std::string GetInputType() { return inputtype; }
 
-		uint64_t getU64(bool *success = 0)
+		/*uint64_t getU64(bool *success = 0)
 		{
 			if (inputtype == "string")
 			{
@@ -1622,8 +1622,7 @@ namespace ct // cTools
 				return tmp;
 			}
 			return uint64_t_value;
-		}
-
+		}*/
 
 		size_t getU(bool *success = 0)
 		{
