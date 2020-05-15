@@ -201,6 +201,38 @@ void FileHelper::SaveStringToFile(const std::string& vString, const std::string&
 	}
 }
 
+std::vector<uint8_t> FileHelper::LoadFileToBytes(const std::string& vFilePathName)
+{
+	std::vector<uint8_t> bytes;
+
+	FILE* intput_file = NULL;
+#if defined(MSVC)
+	fopen_s(&intput_file, vFilePathName.c_str(), "rb");
+#else
+	intput_file = fopen(vFilePathName.c_str(), "rb");
+#endif
+	if (intput_file != reinterpret_cast<FILE*>(NULL))
+	{
+		long fileSize = 0;
+		
+		// obtain file size:
+		fseek(intput_file, 0, SEEK_END);
+		fileSize = ftell(intput_file);
+		rewind(intput_file);
+
+		bytes.resize(fileSize);
+
+		// copy the file into the buffer:
+		size_t result = fread(bytes.data(), 1, fileSize, intput_file);
+		if (result != fileSize) { fputs("Reading error", stderr); exit(3); }
+
+		// terminate
+		fclose(intput_file);
+	}
+
+	return bytes;
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

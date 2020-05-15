@@ -75,6 +75,8 @@ public: // funcs
 	std::string LoadFileToString(const std::string& vFilePathName);
 	void SaveStringToFile(const std::string& vString, const std::string& vFilePathName);
 
+	std::vector<uint8_t> LoadFileToBytes(const std::string& vFilePathName);
+
 	PathStruct ParsePathFileName(const std::string& vPathFileName);
 
 	void DestroyFile(const std::string& filePathName);
