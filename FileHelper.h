@@ -25,6 +25,7 @@ SOFTWARE.
 
 #include <string>
 #include <vector>
+#include <map>
 
 struct PathStruct
 {
@@ -38,6 +39,8 @@ struct PathStruct
 	std::string GetFilePathWithNameExt(const std::string& vName, const std::string& vExt);
 };
 
+typedef int FileLocation;
+
 struct GLFWwindow;
 class FileHelper
 {
@@ -45,11 +48,14 @@ public: // static
 	static std::string AppPath;
 
 public: // var
+	std::map<FileLocation, std::string> m_RegisteredPaths;
 	std::string m_SlashType;
 	std::string m_AppFileName;
 	std::vector<std::string> m_SearchPaths;
 
 public: // funcs
+	void RegisterPath(FileLocation vLoc, const std::string& vPath);
+
 	std::string GetExistingFilePathForFile(const std::string& vFileName);
 	std::string CorrectFilePathName(const std::string &vFilePathName);
 #ifdef _DEBUG
@@ -76,7 +82,6 @@ public: // funcs
 	void SaveStringToFile(const std::string& vString, const std::string& vFilePathName);
 
 	std::vector<uint8_t> LoadFileToBytes(const std::string& vFilePathName);
-
 	PathStruct ParsePathFileName(const std::string& vPathFileName);
 
 	void DestroyFile(const std::string& filePathName);
@@ -93,6 +98,15 @@ public: // funcs
 
 	std::string getTimeStampToString(const std::string& vSeparator = "_");
 	size_t getTimeStampToNumber();
+
+	std::vector<std::string> GetAbsolutePathForFileLocation(const std::vector<std::string>& vRelativeFilePathNames, FileLocation vFileType);
+	std::string GetAbsolutePathForFileLocation(const std::string& vRelativeFilePathName, FileLocation vFileType);
+	
+	std::string LoadFile(const std::string& vFilePathName, FileLocation vFileType);
+	void SaveToFile(const std::string& vCode, const std::string& vFilePathName, FileLocation vFileType);
+
+	// specific function
+	std::string GetRelativePathToParent(const std::string& vFilePath, const std::string& vParentPath);
 
 public: /* clipboard */
 	void SaveInClipBoard(GLFWwindow *vWin, const std::string& vString);

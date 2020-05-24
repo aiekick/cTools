@@ -48,40 +48,7 @@ SOFTWARE.
 #include <wchar.h>
 #endif
 
-::std::list<::std::string> ct::splitStringToList(
-	const ::std::string& text, char delimiter, bool pushEmpty, bool vInversion)
-{
-	::std::list<::std::string> arr;
-	if (text.size() > 0)
-	{
-		::std::string::size_type start = 0;
-		::std::string::size_type end = text.find(delimiter, start);
-		while (end != ::std::string::npos)
-		{
-			::std::string token = text.substr(start, end - start);
-			if (token.size() > 0 || (token.empty() && pushEmpty))
-			{
-				if (vInversion) arr.push_front(token);
-				else arr.push_back(token);
-			}
-			start = end + 1;
-			end = text.find(delimiter, start);
-		}
-		::std::string token = text.substr(start);
-		if (token.size() > 0 || (token.empty() && pushEmpty))
-		{
-			if (vInversion)
-				arr.push_front(token);
-			else
-				arr.push_back(token);
-		}
-	}
-	return arr;
-}
-
-// same as before but will use all delimiter chars in "delimiters"
-::std::list<::std::string> ct::splitStringToListByManyDelimiters(
-	const ::std::string& text, std::string delimiters, bool pushEmpty, bool vInversion)
+::std::list<::std::string> ct::splitStringToList(const ::std::string& text, std::string delimiters, bool pushEmpty, bool vInversion)
 {
 	::std::list<::std::string> arr;
 	if (text.size() > 0)
@@ -93,9 +60,9 @@ SOFTWARE.
 			::std::string token = text.substr(start, end - start);
 			if (token.size() > 0 || (token.empty() && pushEmpty))
 			{
-				if (vInversion) arr.push_front(token);
-				else arr.push_back(token);
-			}
+                if (vInversion) arr.emplace_front(token);
+                else arr.emplace_back(token);
+            }
 			start = end + 1;
 			end = text.find_first_of(delimiters, start);
 		}
@@ -103,40 +70,15 @@ SOFTWARE.
 		if (token.size() > 0 || (token.empty() && pushEmpty))
 		{
 			if (vInversion)
-				arr.push_front(token);
+				arr.emplace_front(token);
 			else
-				arr.push_back(token);
+				arr.emplace_back(token);
 		}
 	}
 	return arr;
 }
 
-::std::vector<::std::string> ct::splitStringToVector(
-	const ::std::string& text, char delimiter, bool pushEmpty)
-{
-	::std::vector<::std::string> arr;
-	if (text.size() > 0)
-	{
-		::std::string::size_type start = 0;
-		::std::string::size_type end = text.find(delimiter, start);
-		while (end != ::std::string::npos)
-		{
-			::std::string token = text.substr(start, end - start);
-			if (token.size() > 0 || (token.empty() && pushEmpty))
-				arr.push_back(token);
-			start = end + 1;
-			end = text.find(delimiter, start);
-		}
-		::std::string token = text.substr(start);
-		if (token.size() > 0 || (token.empty() && pushEmpty))
-			arr.push_back(token);
-	}
-	return arr;
-}
-
-// same as before but will use all delimiter chars in "delimiters"
-::std::vector<::std::string> ct::splitStringToVectorByManyDelimiters(
-	const ::std::string& text, ::std::string delimiters, bool pushEmpty)
+::std::vector<::std::string> ct::splitStringToVector(const ::std::string& text, std::string delimiters, bool pushEmpty)
 {
 	::std::vector<::std::string> arr;
 	if (text.size() > 0)
@@ -147,35 +89,117 @@ SOFTWARE.
 		{
 			::std::string token = text.substr(start, end - start);
 			if (token.size() > 0 || (token.empty() && pushEmpty))
-				arr.push_back(token);
+				arr.emplace_back(token);
 			start = end + 1;
 			end = text.find_first_of(delimiters, start);
 		}
 		::std::string token = text.substr(start);
 		if (token.size() > 0 || (token.empty() && pushEmpty))
-			arr.push_back(token);
+			arr.emplace_back(token);
 	}
 	return arr;
 }
+
+::std::set<::std::string> ct::splitStringToSet(const ::std::string& text, std::string delimiters, bool pushEmpty)
+{
+	::std::set<::std::string> arr;
+	if (text.size() > 0)
+	{
+		::std::string::size_type start = 0;
+		::std::string::size_type end = text.find_first_of(delimiters, start);
+		while (end != ::std::string::npos)
+		{
+			::std::string token = text.substr(start, end - start);
+			if (token.size() > 0 || (token.empty() && pushEmpty))
+				arr.emplace(token);
+			start = end + 1;
+			end = text.find_first_of(delimiters, start);
+		}
+		::std::string token = text.substr(start);
+		if (token.size() > 0 || (token.empty() && pushEmpty))
+			arr.emplace(token);
+	}
+	return arr;
+}
+
+::std::list<::std::string> ct::splitStringToList(const ::std::string& text, char delimiter, bool pushEmpty, bool vInversion)
+{
+	::std::list<::std::string> arr;
+	if (text.size() > 0)
+	{
+		::std::string::size_type start = 0;
+		::std::string::size_type end = text.find(delimiter, start);
+		while (end != ::std::string::npos)
+		{
+			::std::string token = text.substr(start, end - start);
+			if (token.size() > 0 || (token.empty() && pushEmpty))
+			{
+				if (vInversion) arr.emplace_front(token);
+				else arr.emplace_back(token);
+			}
+			start = end + 1;
+			end = text.find(delimiter, start);
+		}
+		::std::string token = text.substr(start);
+		if (token.size() > 0 || (token.empty() && pushEmpty))
+		{
+			if (vInversion)
+				arr.emplace_front(token);
+			else
+				arr.emplace_back(token);
+		}
+	}
+	return arr;
+}
+
+::std::vector<::std::string> ct::splitStringToVector(const ::std::string& text, char delimiter, bool pushEmpty)
+{
+	::std::vector<::std::string> arr;
+	if (text.size() > 0)
+	{
+		::std::string::size_type start = 0;
+		::std::string::size_type end = text.find(delimiter, start);
+		while (end != ::std::string::npos)
+		{
+			::std::string token = text.substr(start, end - start);
+			if (token.size() > 0 || (token.empty() && pushEmpty))
+				arr.emplace_back(token);
+			start = end + 1;
+			end = text.find(delimiter, start);
+		}
+		::std::string token = text.substr(start);
+		if (token.size() > 0 || (token.empty() && pushEmpty))
+			arr.emplace_back(token);
+	}
+	return arr;
+}
+
+::std::set<::std::string> ct::splitStringToSet(const ::std::string& text, char delimiter, bool pushEmpty)
+{
+	::std::set<::std::string> arr;
+	if (text.size() > 0)
+	{
+		::std::string::size_type start = 0;
+		::std::string::size_type end = text.find(delimiter, start);
+		while (end != ::std::string::npos)
+		{
+			::std::string token = text.substr(start, end - start);
+			if (token.size() > 0 || (token.empty() && pushEmpty))
+				arr.emplace(token);
+			start = end + 1;
+			end = text.find(delimiter, start);
+		}
+		::std::string token = text.substr(start);
+		if (token.size() > 0 || (token.empty() && pushEmpty))
+			arr.emplace(token);
+	}
+	return arr;
+}
+
 /////////////////////////////////////////////////////////////
 ///////// StringToVector ////////////////////////////////////
 /////////////////////////////////////////////////////////////
 
-::std::vector<::std::string> ct::StringToStringVector(const ::std::string& text, char delimiter)
-{
-	::std::vector<::std::string> arr;
-	::std::string::size_type start = 0;
-	::std::string::size_type end = text.find(delimiter, start);
-	while (end != ::std::string::npos)
-	{
-		::std::string token = text.substr(start, end - start);
-		arr.push_back(token);
-		start = end + 1;
-		end = text.find(delimiter, start);
-	}
-	arr.push_back(text.substr(start));
-	return arr;
-}
 /*
 #ifndef MINGW32
 bool ct::StringToFloat(const ::std::string &vWord, float *vFloat)
@@ -234,7 +258,7 @@ bool ct::StringToInt(::std::string vWord, int *vInt)
 	::std::string::size_type loc = 0;
 	while ((loc = text.find(word, loc)) != ::std::string::npos)
 	{
-		result.push_back(loc);
+		result.emplace_back(loc);
 		loc += word.size();
 	}
 
@@ -323,13 +347,9 @@ std::wstring ct::string_to_wstring(const std::string mbstr)
 }
 
 /////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////
+///////// ct::ActionTime ////////////////////////////////////
 /////////////////////////////////////////////////////////////
 
-
-/////////////////////////////////////////////////////////////
-///////// ct::ActionTime ///////////////////////////////////////
-/////////////////////////////////////////////////////////////
 ct::int64 ct::GetTicks()
 {
 	return std::chrono::duration_cast<std::chrono::milliseconds>
