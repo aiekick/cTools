@@ -36,12 +36,14 @@ SOFTWARE.
 #include <string>
 #include <map>
 #include <vector>
+#include <set>
 #include <cmath>
 #include <stdarg.h>  // For va_start, etc.
 #include <sstream>
 #include <iostream>
 #include <float.h>
 #include <chrono>
+#include <iomanip> // std::setprecision
 
 #ifdef COCOS2D
 #ifndef USE_OPENGL
@@ -188,20 +190,16 @@ namespace ct // cTools
 ///////// splitStringToVector ///////////////////////////////////////
 /////////////////////////////////////////////////////////////
 
-	::std::list<::std::string> splitStringToList(
-		const ::std::string& text, char delimiter, bool pushEmpty = false, bool vInversion = false);
-	::std::list<::std::string> splitStringToListByManyDelimiters(
-		const ::std::string& text, ::std::string delimiters, bool pushEmpty = false, bool vInversion = false);
-	::std::vector<::std::string> splitStringToVector(
-		const ::std::string& text, char delimiter, bool pushEmpty = false);
-	::std::vector<::std::string> splitStringToVectorByManyDelimiters(
-		const ::std::string& text, ::std::string delimiters, bool pushEmpty = false);
+	::std::list<::std::string> splitStringToList(const ::std::string& text, std::string delimiters, bool pushEmpty = false, bool vInversion = false);
+	::std::vector<::std::string> splitStringToVector(const ::std::string& text, std::string delimiters, bool pushEmpty = false);
+	::std::set<::std::string> splitStringToSet(const ::std::string& text, std::string delimiters, bool pushEmpty = false);
+	::std::list<::std::string> splitStringToList(const ::std::string& text, char delimiter, bool pushEmpty = false, bool vInversion = false);
+	::std::vector<::std::string> splitStringToVector(const ::std::string& text, char delimiter, bool pushEmpty = false);
+	::std::set<::std::string> splitStringToSet(const ::std::string& text, char delimiter, bool pushEmpty = false);
 
 	/////////////////////////////////////////////////////////////
 	///////// StringToFloatVector ///////////////////////////////
 	/////////////////////////////////////////////////////////////
-
-	::std::vector<::std::string> StringToStringVector(const ::std::string& text, char delimiter);
 
 	template <typename T> T StringToNumber(const ::std::string& text)
 	{
@@ -219,11 +217,11 @@ namespace ct // cTools
 		{
 			::std::string token = text.substr(start, end - start);
 
-			arr.push_back(StringToNumber<T>(token));
+			arr.emplace_back(StringToNumber<T>(token));
 			start = end + 1;
 			end = text.find(delimiter, start);
 		}
-		arr.push_back(StringToNumber<T>(text.substr(start).c_str()));
+		arr.emplace_back(StringToNumber<T>(text.substr(start).c_str()));
 		return arr;
 	}
 
@@ -255,6 +253,13 @@ namespace ct // cTools
 	/////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////
+
+	inline std::string round_n(double vvalue, int n)
+	{
+		std::stringstream tmp;
+		tmp << std::setprecision(n) << std::fixed << vvalue;
+		return tmp.str();
+	}
 
 	/// This function is used to ensure that a floating point number is not a NaN or infinity.
 	inline bool floatIsValid(float32 x)
@@ -320,14 +325,14 @@ namespace ct // cTools
 
 			for (int i = 0; i < m_Count; i++)
 			{
-				m_Array.push_back(m_DefaultValue);
+				m_Array.emplace_back(m_DefaultValue);
 			}
 		}
 
 		void AddValue(T vValue)
 		{
 			m_Array.erase(m_Array.begin());
-			m_Array.push_back(vValue);
+			m_Array.emplace_back(vValue);
 		}
 
 		T GetMean()
@@ -1544,7 +1549,7 @@ namespace ct // cTools
 		double double_value = 0.0;
 		long long_value = 0;
 		size_t size_t_value = 0;
-		uint64_t uint64_t_value = 0;
+		//uint64_t uint64_t_value = 0;
 		Color<T> color_value;
 #ifdef USE_OPENGL
 		texture texture_value;
@@ -1555,7 +1560,7 @@ namespace ct // cTools
 		AABB<T> aabb_value;
 		::std::vector<float> vector_float_value;
 		::std::vector<::std::string> vector_string_value;
-
+		::std::set<::std::string> set_string_value;
 	public:
 
 		variant()
@@ -1569,7 +1574,7 @@ namespace ct // cTools
 		}
 		variant(const int& v) { int_value = v; inputtype = "int"; datatype = inputtype; }
 		variant(const long& v) { long_value = v; inputtype = "long"; datatype = inputtype; }
-		variant(const uint64_t& v) { uint64_t_value = v; inputtype = "uint64_t"; datatype = inputtype; }
+		//variant(const uint64_t& v) { uint64_t_value = v; inputtype = "uint64_t"; datatype = inputtype; }
 		variant(const size_t& v) { size_t_value = v; inputtype = "size_t"; datatype = inputtype; }
 		variant(const float& v) { float_value = v; inputtype = "float"; datatype = inputtype; }
 		variant(const double& v) { double_value = v; inputtype = "double"; datatype = inputtype; }
@@ -1586,6 +1591,8 @@ namespace ct // cTools
 		variant(const AABB<T>& c) { aabb_value = c; inputtype = "AABB"; datatype = inputtype; }
 		variant(const ::std::vector<float>& c) { vector_float_value = c; inputtype = "vectorFloat"; datatype = inputtype; }
 		variant(const ::std::vector<::std::string>& c) { vector_string_value = c; inputtype = "vectorString"; datatype = inputtype; }
+		variant(const ::std::set<::std::string>& c) { set_string_value = c; inputtype = "setString"; datatype = inputtype; }
+
 
 		::std::string getInputType() { return inputtype; }
 		::std::string getDataType() { return datatype; }
@@ -1593,7 +1600,7 @@ namespace ct // cTools
 
 		std::string GetInputType() { return inputtype; }
 
-		uint64_t getU64(bool *success = 0)
+		/*uint64_t getU64(bool *success = 0)
 		{
 			if (inputtype == "string")
 			{
@@ -1614,8 +1621,7 @@ namespace ct // cTools
 				return tmp;
 			}
 			return uint64_t_value;
-		}
-
+		}*/
 
 		size_t getU(bool *success = 0)
 		{
@@ -1708,10 +1714,14 @@ namespace ct // cTools
 		}
 		::std::vector<::std::string> getVectorString(char c = ';')
 		{
-			if (inputtype == "string") return StringToStringVector(string_value, c);
+			if (inputtype == "string") return splitStringToVector(string_value, c);
 			return vector_string_value;
 		}
-		float getF()
+		::std::set<::std::string> getSetString(char c = ';')
+		{
+			if (inputtype == "string") return splitStringToSet(string_value, c);
+			return vector_string_value;
+		}		float getF()
 		{
 			if (inputtype == "string") return (float)atof(string_value.c_str());
 			return float_value;
