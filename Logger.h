@@ -30,6 +30,8 @@ SOFTWARE.
 
 #include <cTools.h>
 
+#include <stdarg.h>     /* va_list, va_start, va_arg, va_end */
+
 #include <cassert>
 #include <string>
 #include <stdlib.h>
@@ -80,6 +82,7 @@ public:
 	void LogString(std::string vFile, std::string vFunction, std::string vLine, std::string vMsg);
 	void LogString(std::string str);
 	void LogString(wstring str);
+	void LogString(const char* fmt, ...);
 #ifdef USE_OPENGL
 	void LogGLError(std::string vFile, std::string vFunc, int vLine, std::string vGLFunc = "");
 #endif

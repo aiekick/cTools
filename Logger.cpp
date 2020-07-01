@@ -114,6 +114,7 @@ void Logger::LogGLError(std::string vFile, std::string vFunc, int vLine, std::st
 	}
 }
 #endif
+
 void Logger::LogString(wstring str)
 {
 	if (str.size() > 0)
@@ -124,6 +125,28 @@ void Logger::LogString(wstring str)
 		//if (wdebugLogFile->bad() == false)
 		//	*wdebugLogFile << "t:" << time << "s " << str << std::endl;
 	}
+}
+
+void Logger::LogString(const char* fmt, ...)
+{
+	va_list args;
+	va_start(args, fmt);
+	char TempBuffer[1024 * 3 + 1];
+	int w = vsnprintf(TempBuffer, 1024 * 3 + 1, fmt, args);
+	if (w)
+	{
+		std::string msg = std::string(TempBuffer, w);
+		m_ConsoleMap["App"][""][""].push_back(msg);
+
+		GLFWwindow* currentWindow = glfwGetCurrentContext();
+		std::string str = "thread(" + ct::toStr(currentWindow) + ") " + " " + msg;
+		int64 ticks = ct::GetTicks();
+		float time = (ticks - lastTick) / 1000.0f;
+		std::cout << "t:" << time << "s " << str << std::endl;
+		if (!debugLogFile->bad())
+			*debugLogFile << "t:" << time << "s " << str << std::endl;
+	}
+	va_end(args);
 }
 
 void Logger::Close()
