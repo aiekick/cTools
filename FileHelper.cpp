@@ -45,8 +45,8 @@ SOFTWARE.
 #define S_IFDIR __S_IFDIR
 #endif
 
-#include <stdio.h>
-#include <errno.h>
+#include <cstdio>
+#include <cerrno>
 #ifdef WIN32
 #include <windows.h>
 #include <shellapi.h>
@@ -99,7 +99,7 @@ SOFTWARE.
 #include <ctime>
 //typedef std::chrono::high_resolution_clock Clock;
 typedef std::chrono::system_clock Clock;
-#include <stdio.h>  /* defines FILENAME_MAX */
+#include <cstdio>  /* defines FILENAME_MAX */
 #ifdef _WINDOWS
 #include <direct.h>
 #define GetCurrentDir _getcwd
@@ -155,10 +155,7 @@ FileHelper::FileHelper()
 #endif
 }
 
-FileHelper::~FileHelper()
-{
-	
-}
+FileHelper::~FileHelper() = default;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

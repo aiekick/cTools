@@ -32,6 +32,7 @@ SOFTWARE.
 #define CTOOLS
 #endif
 
+#include <cassert>
 #include <list>
 #include <string>
 #include <map>
@@ -1720,7 +1721,7 @@ namespace ct // cTools
 		::std::set<::std::string> getSetString(char c = ';')
 		{
 			if (inputtype == "string") return splitStringToSet(string_value, c);
-			return vector_string_value;
+			return set_string_value;
 		}		float getF()
 		{
 			if (inputtype == "string") return (float)atof(string_value.c_str());
