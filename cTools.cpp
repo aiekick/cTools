@@ -43,6 +43,7 @@ SOFTWARE.
 #include <chrono>
 #include <functional>
 #include <algorithm> // ::std::reverse
+#include <cstring>
 
 #ifdef MSVC
 #include <wchar.h>
