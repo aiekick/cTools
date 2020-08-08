@@ -38,6 +38,32 @@ namespace conf
 		virtual void setFromXml(tinyxml2::XMLElement* vElem, tinyxml2::XMLElement* vParent) = 0;
 
 	public:
+		// replace patterns (who can break a xml code) by corresponding escaped pattern
+		std::string escapeXmlCode(std::string vDatas)
+		{
+			// escape some patterns 
+			// https://stackoverflow.com/questions/1091945/what-characters-do-i-need-to-escape-in-xml-documents/46637835#46637835
+			ct::replaceString(vDatas, "&", "&amp;"); // do that in first :) else it will modify the others code who are starting by &
+			ct::replaceString(vDatas, "<", "&lt;");
+			ct::replaceString(vDatas, "\"", "&quot;");
+			ct::replaceString(vDatas, "'", "&apos;");
+			ct::replaceString(vDatas, ">", "&gt;");
+			return vDatas;
+		}
+
+		// replace xml excaped pattern by corresponding good pattern
+		std::string unEscapeXmlCode(std::string vDatas)
+		{
+			// unescape some patterns 
+			// https://stackoverflow.com/questions/1091945/what-characters-do-i-need-to-escape-in-xml-documents/46637835#46637835
+			ct::replaceString(vDatas, "&lt;", "<");
+			ct::replaceString(vDatas, "&amp;", "&");
+			ct::replaceString(vDatas, "&quot;", "\"");
+			ct::replaceString(vDatas, "&apos;", "'");
+			ct::replaceString(vDatas, "&gt;", ">");
+			return vDatas;
+		}
+
 		bool LoadConfigFile(const std::string& vFilePathName)
 		{
 			bool res = false;
@@ -61,18 +87,11 @@ namespace conf
 		{
 			bool res = false;
 
-			std::string fileStream;
-
-			fileStream += "<config>\n";
-
-			fileStream += getXml("\t");
-
-			fileStream += "</config>\n";
-
+			std::string data = "<config>\n" + getXml("\t") + "</config>\n";
 			std::ofstream configFileWriter(vFilePathName, std::ios::out);
 			if (!configFileWriter.bad())
 			{
-				configFileWriter << fileStream;
+				configFileWriter << data;
 				configFileWriter.close();
 				res = true;
 			}
@@ -80,17 +99,16 @@ namespace conf
 			return res;
 		}
 
-		bool parseConfigDatas(const std::string& vDatas)
+		bool parseConfigDatas(std::string vDatas)
 		{
 			bool res = false;
 
 			try
 			{
-				std::string data = vDatas;
-				ct::replaceString(data, "\r\n", "\n");
+				ct::replaceString(vDatas, "\r\n", "\n");
 
 				tinyxml2::XMLDocument doc;
-				tinyxml2::XMLError err = doc.Parse(data.c_str(), vDatas.size());
+				tinyxml2::XMLError err = doc.Parse(vDatas.c_str(), vDatas.size());
 
 				if (err == tinyxml2::XMLError::XML_SUCCESS)
 				{
