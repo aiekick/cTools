@@ -1656,27 +1656,33 @@ namespace ct // cTools
 				toStr(rect_value.y) + c +
 				toStr(rect_value.z) + c +
 				toStr(rect_value.w);
-			else if (inputtype == "vec3")
+			if (inputtype == "vec3")
 				return
 				toStr(v3_value.x) + c +
 				toStr(v3_value.y) + c +
 				toStr(v3_value.z);
-			else if (inputtype == "vec2")
+			if (inputtype == "vec2")
 				return
 				toStr(point_value.x) + c +
 				toStr(point_value.y);
-			else if (inputtype == "AABB")
+			if (inputtype == "AABB")
 				return
 				toStr(aabb_value.lowerBound.x) + c +
 				toStr(aabb_value.lowerBound.y) + c +
 				toStr(aabb_value.upperBound.x) + c +
 				toStr(aabb_value.upperBound.y);
-			else if (inputtype == "bool")
+			if (inputtype == "bool")
 				return (bool_value ? "true" : "false");
-			else if (inputtype == "float")
+			if (inputtype == "float")
 				return toStr(float_value);
-			else if (inputtype == "int")
+			if (inputtype == "double")
+				return toStr(double_value);
+			if (inputtype == "int")
 				return toStr(int_value);
+			if (inputtype == "long")
+				return toStr(long_value);
+			if (inputtype == "size_t")
+				return toStr(size_t_value);
 			return string_value;
 		}
 		Color<T> getColor(char c = ';')
