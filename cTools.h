@@ -1603,6 +1603,36 @@ namespace ct // cTools
 
 		std::string GetInputType() { return inputtype; }
 
+		bool operator == (variant<T> v)
+		{
+			bool res = false;
+
+			if (inputtype == v.inputtype)
+			{
+				if (inputtype == "vec4")
+					return rect_value == v.rect_value;
+				if (inputtype == "vec3")
+					return v3_value == v.v3_value;
+				if (inputtype == "vec2")
+					return point_value == v.point_value;
+				//if (inputtype == "AABB") == acreer pour AABB
+				//	return aabb_value == v.aabb_value;
+				if (inputtype == "bool")
+					return bool_value == v.bool_value;
+				if (inputtype == "float")
+					return float_value == v.float_value;
+				if (inputtype == "double")
+					return double_value == v.double_value;
+				if (inputtype == "int")
+					return int_value == v.int_value;
+				if (inputtype == "long")
+					return long_value == v.long_value;
+				if (inputtype == "size_t")
+					return size_t_value == v.size_t_value;
+				return string_value == v.string_value;
+			}
+		}
+
 		/*uint64_t getU64(bool *success = 0)
 		{
 			if (inputtype == "string")
