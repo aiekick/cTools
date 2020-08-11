@@ -1564,6 +1564,7 @@ namespace ct // cTools
 		::std::vector<float> vector_float_value;
 		::std::vector<::std::string> vector_string_value;
 		::std::set<::std::string> set_string_value;
+
 	public:
 
 		variant()
@@ -1605,8 +1606,6 @@ namespace ct // cTools
 
 		bool operator == (variant<T> v)
 		{
-			bool res = false;
-
 			if (inputtype == v.inputtype)
 			{
 				if (inputtype == "vec4")
