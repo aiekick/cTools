@@ -47,9 +47,12 @@ using namespace std;
 
 typedef long long int64;
 
-#define LogStr(n) Logger::Instance()->LogString(std::string(__FILE__), std::string(__FUNCTION__), ct::toStr(__LINE__), (n))
-//#define LogStr(n) Logger::Instance()->LogString(std::string(__FILE__) + " " + std::string(__FUNCTION__) + " " + ct::toStr(__LINE__) + " " + (n))
-#define LogValue(s, n) Logger::Instance()->LogString(/*std::string(__FILE__) + " " + */std::string(__FUNCTION__) + " " + ct::toStr(__LINE__) + " : " + (s) + " = " + ct::toStr(n))
+#ifdef MSVC
+#define __PRETTY_FUNCTION__ __FUNCSIG__
+#endif
+#define LogStr(n) Logger::Instance()->LogString(std::string(__FILE__), std::string(__PRETTY_FUNCTION__), ct::toStr(__LINE__), (n))
+#define LogVar(s, ...) Logger::Instance()->LogString(std::string(__PRETTY_FUNCTION__), ct::toStr(__LINE__), s, __VA_ARGS__);
+#define LogValue(s, n) Logger::Instance()->LogString(/*std::string(__FILE__) + " " + */std::string(__PRETTY_FUNCTION__) + " " + ct::toStr(__LINE__) + " : " + (s) + " = " + ct::toStr(n))
 #ifdef USE_OPENGL
 #define LogGlError() Logger::Instance()->LogGLError(""/*__FILE__*/,__FUNCTION__,__LINE__, "")
 #define LogGlErrorVar(var) Logger::Instance()->LogGLError(""/*__FILE__*/,__FUNCTION__,__LINE__,var)
@@ -83,6 +86,7 @@ public:
 	void LogString(std::string str);
 	void LogString(wstring str);
 	void LogString(const char* fmt, ...);
+	void LogString(std::string vPrettyFunction, std::string vLine, const char* fmt, ...);
 #ifdef USE_OPENGL
 	void LogGLError(std::string vFile, std::string vFunc, int vLine, std::string vGLFunc = "");
 #endif

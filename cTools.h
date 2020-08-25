@@ -634,6 +634,7 @@ namespace ct // cTools
 		T sum() { return x + y; }
 		T sumAbs() { return abs<T>(x) + abs<T>(y); }
 		bool empty() { if (x == (T)0 && y == (T)0) return true; else return false; }
+		bool emptyOR() { if (x == (T)0 || y == (T)0) return true; else return false; }
 		std::string string(char c = ';') { return toStr(x) + c + toStr(y); }
 		T ratioXY() { if (y > (T)0) return x / y; return (T)0; }
 		T ratioYX() { if (x > (T)0) return y / x; return (T)0; }
@@ -678,9 +679,17 @@ namespace ct // cTools
 	typedef vec2<double> dvec2;
 	typedef vec2<float> fvec2;
 	typedef vec2<bool> bvec2;
-	typedef vec2<int> ivec2;
-	typedef vec2<size_t> uvec2;
-	
+	typedef vec2<int8_t> i8vec2;
+	typedef vec2<int16_t> i16vec2;
+	typedef vec2<int32_t> ivec2;
+	typedef vec2<int32_t> i32vec2;
+	typedef vec2<int64_t> i64vec2;
+	typedef vec2<uint8_t> u8vec2;
+	typedef vec2<uint16_t> u16vec2;
+	typedef vec2<uint32_t> uvec2;
+	typedef vec2<uint32_t> u32vec2;
+	typedef vec2<uint64_t> u64vec2;
+
 	// convert
 	inline fvec2 convert(const ivec2& v) { return fvec2((float)v.x, (float)v.y); }
 	inline ivec2 convert(const fvec2& v) { return ivec2((int)v.x, (int)v.y); }
@@ -1845,7 +1854,13 @@ namespace ct // cTools
 	template<typename T> vec2<T> clamp(const vec2<T>& vValue, const vec2<T>& vInf, const vec2<T>& vSup);
 	template<typename T> vec3<T> clamp(const vec3<T>& vValue, const vec3<T>& vInf, const vec3<T>& vSup);
 	template<typename T> vec4<T> clamp(const vec4<T>& vValue, const vec4<T>& vInf, const vec4<T>& vSup);
-	template<typename T> vec2<T> clamp(const vec2<T>& vValue, T vInf, T vSup);
+	template<typename T> vec2<T> clamp(const vec2<T>& vValue, T vInf, T vSup)
+	{
+		ct::vec2<T> vUniform = vValue;
+		vUniform.x = ct::clamp(vUniform.x, vInf, vSup);
+		vUniform.y = ct::clamp(vUniform.y, vInf, vSup);
+		return vUniform;
+	}
 	template<typename T> vec3<T> clamp(const vec3<T>& vValue, T vInf, T vSup);
 	template<typename T> vec4<T> clamp(const vec4<T>& vValue, T vInf, T vSup);
 	template<typename T> vec2<T> clamp(const vec2<T>& vValue);
