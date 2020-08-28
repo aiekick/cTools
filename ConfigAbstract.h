@@ -24,10 +24,13 @@ SOFTWARE.
 
 #pragma once
 
-#include <Logger.h>
+#include <tinyxml2/tinyxml2.h>
+#include <ctools/cTools.h>
+
+#include <fstream> // ifstream
+#include <sstream> // stringstream
 #include <string>
 #include <map>
-#include <tinyxml2/tinyxml2.h>
 
 namespace conf
 {
@@ -68,10 +71,10 @@ namespace conf
 		{
 			bool res = false;
 
-			ifstream docFile(vFilePathName, ios::in);
+			std::ifstream docFile(vFilePathName, std::ios::in);
 			if (docFile.is_open())
 			{
-				stringstream strStream;
+				std::stringstream strStream;
 
 				strStream << docFile.rdbuf();//read the file
 
@@ -117,7 +120,7 @@ namespace conf
 			}
 			catch (std::exception& ex)
 			{
-				LogStr("parse error => " + string(ex.what()));
+				printf("parse error => %s", std::string(ex.what()).c_str());
 			}
 
 			return res;

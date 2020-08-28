@@ -30,84 +30,76 @@ SOFTWARE.
 
 #include "FileHelper.h"
 
-#include <cTools.h>
+#include "cTools.h"
 
 // for clipboard
 #include <GLFW/glfw3.h>
 
+// general
+#include <fstream>
+#include <sstream>
 #include <sys/types.h>
 #include <sys/stat.h>
-#ifdef WIN32
-#define stat _stat
-#define S_IFDIR _S_IFDIR 
-#elif defined(APPLE)
-#elif defined(LINUX)
-#define S_IFDIR __S_IFDIR
-#endif
-
-#include <cstdio>
 #include <cerrno>
-#ifdef WIN32
-#include <windows.h>
-#include <shellapi.h>
-#pragma comment(lib,"shlwapi.lib")
- #elif defined(UNIX)
-#include <sys/param.h>
-#include <sys/file.h>
-#include <sys/wait.h>
-#ifdef APPLE
-#include <sys/syslimits.h> // PATH_MAX
-#endif
-#ifndef MAX_PATH
-#define MAX_PATH PATH_MAX
-#endif
-#ifndef PATH_MAX
-#define PATH_MAX MAX_PATH
-#endif
-#include <dirent.h>
-#include <cstdlib>
-#include <stdio.h>
-#ifdef STDC_HEADERS
-# include <stdlib.h>
-# include <stddef.h>
-#else
-# ifdef HAVE_STDLIB_H
-#  include <stdlib.h>
-# endif
-#endif /* STDC_HEADERS */
-#ifdef HAVE_STRING_H
-# include <string.h>
-#else
-# ifdef HAVE_STRINGS_H
-#  include <strings.h>
-# endif
-#endif /* HAVE_STRING_H */
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif /* HAVE_UNISTD_H */
-#include <ctype.h>
-#include <pwd.h>
-#include <time.h>
-#include <signal.h>
-#include <errno.h>
-#include <fcntl.h>
-#ifdef APPLE
-#include <dlfcn.h>
-#endif
-#endif
 #include <chrono>
 #include <ctime>
-//typedef std::chrono::high_resolution_clock Clock;
-typedef std::chrono::system_clock Clock;
 #include <cstdio>  /* defines FILENAME_MAX */
-#ifdef _WINDOWS
-#include <direct.h>
-#define GetCurrentDir _getcwd
-#define SetCurrentDir _chdir
-#else
-#include <unistd.h>
-#define GetCurrentDir getcwd
-#define SetCurrentDir chdir
+
+// specific
+#ifdef WIN32
+	// includes
+	#include <windows.h>
+	#include <shellapi.h>
+	#pragma comment(lib,"shlwapi.lib")
+	#include <direct.h>
+	// defines
+	#define stat _stat
+	#define S_IFDIR _S_IFDIR
+	#define GetCurrentDir _getcwd
+	#define SetCurrentDir _chdir
+#elif defined(UNIX)
+	// includes
+	#include <unistd.h>
+	#include <sys/param.h>
+	#include <sys/file.h>
+	#include <sys/wait.h>
+	#include <ctype.h>
+	#include <pwd.h>
+	#include <time.h>
+	#include <signal.h>
+	#include <errno.h>
+	#include <fcntl.h>
+	#include <dirent.h>
+	#include <cstdlib>
+	#include <stdio.h>
+	#ifdef APPLE
+		#include <dlfcn.h>
+		#include <sys/syslimits.h> // PATH_MAX
+	#endif
+	#ifdef STDC_HEADERS
+		#include <stdlib.h>
+		#include <stddef.h>
+	#else
+		#ifdef HAVE_STDLIB_H
+			#include <stdlib.h>
+		#endif
+	#endif /* STDC_HEADERS */
+	#ifdef HAVE_STRING_H
+		#include <string.h>
+	#endif /* HAVE_STRING_H */
+	#ifdef HAVE_UNISTD_H
+		#include <unistd.h>
+	#endif
+	// defines
+	#define GetCurrentDir getcwd
+	#define SetCurrentDir chdir
+	#define S_IFDIR __S_IFDIR
+	#ifndef MAX_PATH
+		#define MAX_PATH PATH_MAX
+	#endif
+	#ifndef PATH_MAX
+		#define PATH_MAX MAX_PATH
+	#endif
 #endif
 
 PathStruct::PathStruct()
@@ -179,10 +171,7 @@ std::string FileHelper::LoadFileToString(const std::string& vFilePathName)
 	}
 	else
 	{
-		if (Logger::Instance()->ConsoleVerbose)
-		{
-			LogStr("File " + vFilePathName + " Not Found !");
-		}
+		printf("File %s Not Found !\n", vFilePathName.c_str());
 	}
 
 	return fileCode;
@@ -287,11 +276,8 @@ std::string FileHelper::GetExistingFilePathForFile(const std::string& vFileName)
 		}
 	}
 
-	if (Logger::Instance()->ConsoleVerbose)
-	{
 		if (res.empty())
-			LogStr("Cant found file " + vFileName);
-	}
+			printf("Cant found file %s\n", vFileName.c_str());
 	
 	return res;
 }
@@ -536,8 +522,9 @@ bool FileHelper::IsFileExist(const std::string& name)
 	}
 	else
     {
-	    LogStr("fail to found file : " + name);
+	    printf("fail to found file %s\n", name.c_str());
     }
+
 	return false;
 }
 
@@ -565,7 +552,7 @@ void FileHelper::DestroyFile(const std::string& vFilePathName)
 		{
 			if (remove(filePathName.c_str()))
 			{
-				LogStr(filePathName + "  Cant be deleted !");
+				printf("%s Cant be deleted !\n", vFilePathName.c_str());
 			}
 		}
 	}
@@ -792,9 +779,9 @@ std::string FileHelper::getTimeStampToString(const std::string& vSeparator)
 {
 	std::string res;
 
-	auto now = Clock::now();
+	auto now = std::chrono::system_clock::now();
 	std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch());
-	std::time_t now_c = Clock::to_time_t(now);
+	std::time_t now_c = std::chrono::system_clock::to_time_t(now);
 #ifdef MSVC
 	struct tm *parts = 0;
 	errno_t err = localtime_s(parts, &now_c);
@@ -820,9 +807,9 @@ size_t FileHelper::getTimeStampToNumber()
 {
 	size_t timeStamp = 0;
 
-	auto now = Clock::now();
+	auto now = std::chrono::system_clock::now();
 	std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch());
-	std::time_t now_c = Clock::to_time_t(now);
+	std::time_t now_c = std::chrono::system_clock::to_time_t(now);
 #ifdef MSVC
 	struct tm *parts = 0;
 	errno_t err = localtime_s(parts, &now_c);
@@ -891,10 +878,10 @@ std::string FileHelper::LoadFile(const std::string& vFilePathName, FileLocation 
 
 	filePathName = GetAbsolutePathForFileLocation(vFilePathName, vFileType);
 
-	ifstream docFile(filePathName, ios::in);
+	std::ifstream docFile(filePathName, std::ios::in);
 	if (docFile.is_open())
 	{
-		stringstream strStream;
+		std::stringstream strStream;
 		strStream << docFile.rdbuf();//read the file
 
 		file = strStream.str();
@@ -951,11 +938,9 @@ std::string FileHelper::GetRelativePathToParent(const std::string& vFilePath, co
 			}
 			else
 			{
-				if (Logger::Instance()->ConsoleVerbose)
-				{
-					// error
-					LogStr("File " + newPath + " Not Found !");
-				}
+				// error
+				printf("File %s Not Found !\n", newPath.c_str());
+
 				newPath.clear();
 			}
 		}

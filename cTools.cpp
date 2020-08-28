@@ -501,7 +501,7 @@ void ct::ResetBuffer(char* vBuffer)
 // in : lst, offset
 // out : return, BufferSize
 template<typename T>
-T* ct::getNewBufferFromList(list<T> &lst, int offsetBefore, int offsetAfter, int *BufferSize)
+T* ct::getNewBufferFromList(::std::list<T> &lst, int offsetBefore, int offsetAfter, int *BufferSize)
 {
 	int count = (int)lst.size();
 	if (count > 0)
