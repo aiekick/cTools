@@ -1637,6 +1637,7 @@ namespace ct // cTools
 					return size_t_value == v.size_t_value;
 				return string_value == v.string_value;
 			}
+			return false;
 		}
 
 		/*uint64_t getU64(bool *success = 0)
