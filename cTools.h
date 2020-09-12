@@ -1885,4 +1885,102 @@ namespace ct // cTools
 	// format 2500000 to 2.5M by ex
 	std::string FormatNum(size_t vNum, int vDecimalCount);
 
+	/////////////////////////////////////////////////////////////
+	///////// DeleteObjectsAndClearPointerList //////////////////
+	/////////////////////////////////////////////////////////////
+
+	template<typename T> 
+	ct::rect<T> GetScreenRectWithSize(ct::ivec2 vItemSize, ct::ivec2 vMaxSize)
+	{
+		ct::rect<T> rc;
+
+		ct::fvec2 visibleSize = ct::fvec2((float)vMaxSize.x, (float)vMaxSize.y);
+		if (visibleSize.x > 0.0f && visibleSize.y > 0.0f)
+		{
+			ct::fvec2 visibleOrigin;
+			ct::fvec2 texSize = ct::fvec2((float)vItemSize.x, (float)vItemSize.y);
+
+			// float visibleRatio = visibleSize.x / visibleSize.y;
+			float refRatio = texSize.x / texSize.y;
+
+			float newX = visibleSize.y * refRatio;
+			float newY = visibleSize.x / refRatio;
+
+			if (newX < visibleSize.x)
+			{
+				// pos
+				rc.x = visibleOrigin.x + (visibleSize.x - newX) * 0.5f;
+				rc.y = visibleOrigin.y;
+
+				// size
+				rc.w = newX;
+				rc.h = visibleSize.y;
+			}
+			else
+			{
+				// pos
+				rc.x = visibleOrigin.x;
+				rc.y = visibleOrigin.y + (visibleSize.y - newY) * 0.5f;
+
+				// size
+				rc.w = visibleSize.x;
+				rc.h = newY;
+			}
+
+			rc = ct::floor(rc);
+
+			float newRatio = rc.w / rc.h;
+			if (fabs(newRatio - refRatio) > _epsilon)
+				printf("GetScreenRectWithRatio : the new ratios is not the same as ref ratio\n");
+		}
+
+		return rc;
+	}
+
+	template<typename T>
+	ct::rect<T> GetScreenRectWithRatio(float vRatio, ct::ivec2 vMaxSize)
+	{
+		ct::rect<T> rc;
+
+		ct::fvec2 visibleSize = ct::fvec2((float)vMaxSize.x, (float)vMaxSize.y);
+		if (visibleSize.x > 0.0f && visibleSize.y > 0.0f)
+		{
+			ct::fvec2 visibleOrigin;
+
+			float refRatio = vRatio;
+
+			float newX = visibleSize.y * refRatio;
+			float newY = visibleSize.x / refRatio;
+
+			if (newX < visibleSize.x)
+			{
+				// pos
+				rc.x = visibleOrigin.x + (visibleSize.x - newX) * 0.5f;
+				rc.y = visibleOrigin.y;
+
+				// size
+				rc.w = newX;
+				rc.h = visibleSize.y;
+			}
+			else
+			{
+				// pos
+				rc.x = visibleOrigin.x;
+				rc.y = visibleOrigin.y + (visibleSize.y - newY) * 0.5f;
+
+				// size
+				rc.w = visibleSize.x;
+				rc.h = newY;
+			}
+
+			rc = ct::floor(rc);
+
+			float newRatio = rc.w / rc.h;
+			if (fabs(newRatio - refRatio) > _epsilon)
+				printf("GetScreenRectWithRatio : the new ratios is not the same as ref ratio\n");
+		}
+
+		return rc;
+	}
+
 } // namespace ct => cTools
