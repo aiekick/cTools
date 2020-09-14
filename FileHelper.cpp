@@ -31,6 +31,7 @@ SOFTWARE.
 #include "FileHelper.h"
 
 #include "cTools.h"
+#include "Logger.h"
 
 // for clipboard
 #include <GLFW/glfw3.h>
