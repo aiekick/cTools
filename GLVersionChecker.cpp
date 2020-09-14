@@ -24,7 +24,7 @@ SOFTWARE.
 */
 
 #include "GLVersionChecker.h"
-
+#include "Logger.h"
 #include "imgui/imgui.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -240,6 +240,7 @@ void OpenglInfosStruct::fill()
 	}
 }
 
+#ifdef USE_IMGUI
 void OpenglInfosStruct::drawImGui()
 {
 	if (ImGui::BeginMenu("Opengl Infos"))
@@ -438,7 +439,7 @@ void OpenglInfosStruct::drawImGui()
 		ImGui::EndMenu();
 	}
 }
-
+#endif
 ////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -456,7 +457,7 @@ GLVersionChecker::~GLVersionChecker()
 
 }
 
-OpenGlVersionStruct* GLVersionChecker::GetOpenglVersionStruct(string vVersion)
+OpenGlVersionStruct* GLVersionChecker::GetOpenglVersionStruct(std::string vVersion)
 {
 	if (OpenGlVersionsMap.find(vVersion) != OpenGlVersionsMap.end())
 	{

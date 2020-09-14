@@ -137,7 +137,9 @@ struct OpenglInfosStruct
 	}
 
 	void fill();
+#ifdef USE_IMGUI
 	void drawImGui();
+#endif
 };
 
 struct OpenGlVersionStruct
@@ -216,8 +218,8 @@ protected:
 	~GLVersionChecker(); // Prevent unwanted destruction
 
 public:
-	OpenGlVersionStruct* GetOpenglVersionStruct(string vVersion);
-	std::map<string, OpenGlVersionStruct>* GetOpenglVersionMap() { return &OpenGlVersionsMap; }
+	OpenGlVersionStruct* GetOpenglVersionStruct(std::string vVersion);
+	std::map<std::string, OpenGlVersionStruct>* GetOpenglVersionMap() { return &OpenGlVersionsMap; }
 	std::string GetOpenglVersion() { return m_OpenglVersion; }
 	int GetGlslVersionInt() { return m_DefaultGlslVersionInt; }
 	std::string GetGlslVersionHeader() { return m_DefaultGlslVersionHeader; }
