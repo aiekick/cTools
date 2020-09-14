@@ -94,7 +94,9 @@ SOFTWARE.
 	// defines
 	#define GetCurrentDir getcwd
 	#define SetCurrentDir chdir
-	#define S_IFDIR __S_IFDIR
+	#ifndef S_IFDIR
+		#define S_IFDIR __S_IFDIR
+	#endif
 	#ifndef MAX_PATH
 		#define MAX_PATH PATH_MAX
 	#endif
