@@ -398,12 +398,17 @@ namespace ct // cTools
 		int64 lastTick = 0;
 		int64 pauseTick = 0;
 		int64 resumeTick = 0;
+		bool play = true;
+
 	public:
 		ActionTime();
 		void Fix(); // fixe the time marking
 		void Pause();
 		void Resume();
 		int64 get();
+		float getFloatTime();
+		void setFloatTime(float vValue);
+
 		// verifie si vMs millisecond depuis le dernier fix et donc si on peut agir
 		// vFix permet de fixer le temps pour la prochaine action 
 		// on pourrait vouloir interroger sans vouloir permettre la prochaine action
