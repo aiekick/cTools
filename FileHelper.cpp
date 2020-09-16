@@ -670,18 +670,18 @@ void FileHelper::OpenFile(const std::string&vShaderToOpen)
 	auto shaderToOpen = CorrectFilePathName(vShaderToOpen);
 
 #if defined(WIN32)
-	int result = (int)ShellExecute(0, "", shaderToOpen.c_str(), 0, 0, SW_SHOW);
-	if (result < 32)
+	auto result = ShellExecute(0, "", shaderToOpen.c_str(), 0, 0, SW_SHOW);
+	if (result < (HINSTANCE)32)
 	{
 		// try to open an editor
-		result = (int)ShellExecute(0, "edit", shaderToOpen.c_str(), 0, 0, SW_SHOW);
-		if (result == SE_ERR_ASSOCINCOMPLETE || result == SE_ERR_NOASSOC)
+		result = ShellExecute(0, "edit", shaderToOpen.c_str(), 0, 0, SW_SHOW);
+		if (result == (HINSTANCE)SE_ERR_ASSOCINCOMPLETE || result == (HINSTANCE)SE_ERR_NOASSOC)
 		{
 			// open associating dialog
 			std::string sCmdOpenWith = "shell32.dll,OpenAs_RunDLL \"" + shaderToOpen + "\"";
-			result = (int)ShellExecute(0, "", "rundll32.exe", sCmdOpenWith.c_str(), NULL, SW_NORMAL);
+			result = ShellExecute(0, "", "rundll32.exe", sCmdOpenWith.c_str(), NULL, SW_NORMAL);
 		}
-		if (result < 32) // open in explorer
+		if (result < (HINSTANCE)32) // open in explorer
 		{
 			std::string sCmdExplorer = "/select,\"" + shaderToOpen + "\"";
 			ShellExecute(0, "", "explorer.exe", sCmdExplorer.c_str(), NULL, SW_NORMAL); // ce serait peut etre mieu d'utilsier la commande system comme dans SelectFile
