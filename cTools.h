@@ -1895,7 +1895,7 @@ namespace ct // cTools
 	/////////////////////////////////////////////////////////////
 
 	template<typename T> 
-	ct::rect<T> GetScreenRectWithSize(ct::ivec2 vItemSize, ct::ivec2 vMaxSize)
+	ct::rect<T> GetScreenRectWithSize(ct::ivec2 vItemSize, ct::ivec2 vMaxSize, bool vLogError = true)
 	{
 		ct::rect<T> rc;
 
@@ -1935,15 +1935,16 @@ namespace ct // cTools
 			rc = ct::floor<T>(rc);
 
 			float newRatio = (float)rc.w / (float)rc.h;
-			if (IS_FLOAT_DIFFERENT(newRatio, refRatio))
-				printf("GetScreenRectWithRatio : the new ratio is not the same as the ref ratio\n");
+			if (vLogError)
+				if (IS_FLOAT_DIFFERENT(newRatio, refRatio))
+					printf("GetScreenRectWithRatio : the new ratio is not the same as the ref ratio\n");
 		}
 
 		return rc;
 	}
 
 	template<typename T>
-	ct::rect<T> GetScreenRectWithRatio(float vRatio, ct::ivec2 vMaxSize)
+	ct::rect<T> GetScreenRectWithRatio(float vRatio, ct::ivec2 vMaxSize, bool vLogError = true)
 	{
 		ct::rect<T> rc;
 
@@ -1981,8 +1982,9 @@ namespace ct // cTools
 			rc = ct::floor<T>(rc);
 
 			float newRatio = (float)rc.w / (float)rc.h;
-			if (IS_FLOAT_DIFFERENT(newRatio, refRatio))
-				printf("GetScreenRectWithRatio : the new ratio is not the same as the ref ratio\n");
+			if (vLogError)
+				if (IS_FLOAT_DIFFERENT(newRatio, refRatio))
+					printf("GetScreenRectWithRatio : the new ratio is not the same as the ref ratio\n");
 		}
 
 		return rc;
