@@ -361,8 +361,9 @@ static ct::int64 lastTick = ct::GetTicks();
 
 float ct::GetTimeInterval()
 {
-	int64 ticks = GetTicks();
-	float interval = (ticks - lastTick) / 1000.0f;
+	ct::int64 ticks = GetTicks();
+	static float secMult = 1.0f / 1000.0f;
+	float interval = (ticks - lastTick) * secMult;
 	lastTick = ticks;
 	return interval;
 }
@@ -380,15 +381,32 @@ void ct::ActionTime::Fix() // fixe le marqueur de temps
 void ct::ActionTime::Pause()
 {
 	pauseTick = GetTicks();
+	play = false;
 }
 
 void ct::ActionTime::Resume()
 {
 	resumeTick = GetTicks();
 	lastTick += resumeTick - pauseTick;
+	play = true;
 }
 
-ct::int64 ct::ActionTime::get() { return (int64)(ct::GetTicks() - lastTick); }
+ct::int64 ct::ActionTime::get() 
+{ 
+	return (ct::int64)(ct::GetTicks() - lastTick);
+}
+
+float ct::ActionTime::getFloatTime()
+{
+	static float secMult = 1.0f / 1000.0f;
+	return (ct::GetTicks() - lastTick) * secMult;
+}
+
+void ct::ActionTime::setFloatTime(float vValue)
+{
+	ct::int64 v = (ct::int64)(vValue * 1000.0f);
+	lastTick = ct::GetTicks() - v;
+}
 
 bool ct::ActionTime::IsTimeToAct(long vMs, bool vFix)
 {

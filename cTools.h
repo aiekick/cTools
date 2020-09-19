@@ -398,12 +398,17 @@ namespace ct // cTools
 		int64 lastTick = 0;
 		int64 pauseTick = 0;
 		int64 resumeTick = 0;
+		bool play = true;
+
 	public:
 		ActionTime();
 		void Fix(); // fixe the time marking
 		void Pause();
 		void Resume();
 		int64 get();
+		float getFloatTime();
+		void setFloatTime(float vValue);
+
 		// verifie si vMs millisecond depuis le dernier fix et donc si on peut agir
 		// vFix permet de fixer le temps pour la prochaine action 
 		// on pourrait vouloir interroger sans vouloir permettre la prochaine action
@@ -1909,29 +1914,29 @@ namespace ct // cTools
 			if (newX < visibleSize.x)
 			{
 				// pos
-				rc.x = visibleOrigin.x + (visibleSize.x - newX) * 0.5f;
-				rc.y = visibleOrigin.y;
+				rc.x = (T)(visibleOrigin.x + (visibleSize.x - newX) * 0.5f);
+				rc.y = (T)visibleOrigin.y;
 
 				// size
-				rc.w = newX;
-				rc.h = visibleSize.y;
+				rc.w = (T)newX;
+				rc.h = (T)visibleSize.y;
 			}
 			else
 			{
 				// pos
-				rc.x = visibleOrigin.x;
-				rc.y = visibleOrigin.y + (visibleSize.y - newY) * 0.5f;
+				rc.x = (T)visibleOrigin.x;
+				rc.y = (T)(visibleOrigin.y + (visibleSize.y - newY) * 0.5f);
 
 				// size
-				rc.w = visibleSize.x;
-				rc.h = newY;
+				rc.w = (T)visibleSize.x;
+				rc.h = (T)newY;
 			}
 
-			rc = ct::floor(rc);
+			rc = ct::floor<T>(rc);
 
-			float newRatio = rc.w / rc.h;
-			if (fabs(newRatio - refRatio) > _epsilon)
-				printf("GetScreenRectWithRatio : the new ratios is not the same as ref ratio\n");
+			float newRatio = (float)rc.w / (float)rc.h;
+			if (IS_FLOAT_DIFFERENT(newRatio, refRatio))
+				printf("GetScreenRectWithRatio : the new ratio is not the same as the ref ratio\n");
 		}
 
 		return rc;
@@ -1955,29 +1960,29 @@ namespace ct // cTools
 			if (newX < visibleSize.x)
 			{
 				// pos
-				rc.x = visibleOrigin.x + (visibleSize.x - newX) * 0.5f;
-				rc.y = visibleOrigin.y;
+				rc.x = (T)(visibleOrigin.x + (visibleSize.x - newX) * 0.5f);
+				rc.y = (T)visibleOrigin.y;
 
 				// size
-				rc.w = newX;
-				rc.h = visibleSize.y;
+				rc.w = (T)newX;
+				rc.h = (T)visibleSize.y;
 			}
 			else
 			{
 				// pos
-				rc.x = visibleOrigin.x;
-				rc.y = visibleOrigin.y + (visibleSize.y - newY) * 0.5f;
+				rc.x = (T)visibleOrigin.x;
+				rc.y = (T)(visibleOrigin.y + (visibleSize.y - newY) * 0.5f);
 
 				// size
-				rc.w = visibleSize.x;
-				rc.h = newY;
+				rc.w = (T)visibleSize.x;
+				rc.h = (T)newY;
 			}
 
-			rc = ct::floor(rc);
+			rc = ct::floor<T>(rc);
 
-			float newRatio = rc.w / rc.h;
-			if (fabs(newRatio - refRatio) > _epsilon)
-				printf("GetScreenRectWithRatio : the new ratios is not the same as ref ratio\n");
+			float newRatio = (float)rc.w / (float)rc.h;
+			if (IS_FLOAT_DIFFERENT(newRatio, refRatio))
+				printf("GetScreenRectWithRatio : the new ratio is not the same as the ref ratio\n");
 		}
 
 		return rc;
