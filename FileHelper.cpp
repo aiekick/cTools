@@ -190,7 +190,7 @@ void FileHelper::SaveStringToFile(const std::string& vString, const std::string&
 	}
 }
 
-std::vector<uint8_t> FileHelper::LoadFileToBytes(const std::string& vFilePathName)
+std::vector<uint8_t> FileHelper::LoadFileToBytes(const std::string& vFilePathName, int *vError)
 {
 	std::vector<uint8_t> bytes;
 
@@ -200,6 +200,8 @@ std::vector<uint8_t> FileHelper::LoadFileToBytes(const std::string& vFilePathNam
 #else
 	intput_file = fopen(vFilePathName.c_str(), "rb");
 #endif
+	if (vError)
+		*vError = errno;
 	if (intput_file != reinterpret_cast<FILE*>(NULL))
 	{
 		long fileSize = 0;
@@ -216,6 +218,10 @@ std::vector<uint8_t> FileHelper::LoadFileToBytes(const std::string& vFilePathNam
 
 		// terminate
 		fclose(intput_file);
+	}
+	else
+	{
+
 	}
 
 	return bytes;
