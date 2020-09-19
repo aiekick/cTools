@@ -201,7 +201,7 @@ std::vector<uint8_t> FileHelper::LoadFileToBytes(const std::string& vFilePathNam
 	intput_file = fopen(vFilePathName.c_str(), "rb");
 #endif
 	if (vError)
-		*vError = (int)errno;
+		*vError = errno;
 	if (intput_file != reinterpret_cast<FILE*>(NULL))
 	{
 		long fileSize = 0;
