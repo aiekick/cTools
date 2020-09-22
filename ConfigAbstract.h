@@ -38,7 +38,8 @@ namespace conf
 	{
 	public:
 		virtual std::string getXml(const std::string& vOffset) = 0;
-		virtual void setFromXml(tinyxml2::XMLElement* vElem, tinyxml2::XMLElement* vParent) = 0;
+		// return true for continue xml parsing of childs in this node or false for interupt the child exploration
+		virtual bool setFromXml(tinyxml2::XMLElement* vElem, tinyxml2::XMLElement* vParent) = 0;
 
 	public:
 		// replace patterns (who can break a xml code) by corresponding escaped pattern
@@ -130,13 +131,14 @@ namespace conf
 		{
 			bool res = true;
 
-			setFromXml(vElem, vParent);
-
-			// CHILDS 
-			// parse through all childs elements
-			for (tinyxml2::XMLElement* child = vElem->FirstChildElement(); child != 0; child = child->NextSiblingElement())
+			if (setFromXml(vElem, vParent))
 			{
-				res = res && RecursParsingConfig(child->ToElement(), vElem);
+				// CHILDS 
+				// parse through all childs elements
+				for (tinyxml2::XMLElement* child = vElem->FirstChildElement(); child != 0; child = child->NextSiblingElement())
+				{
+					res &= RecursParsingConfig(child->ToElement(), vElem);
+				}
 			}
 
 			return res;

@@ -55,14 +55,7 @@ else ()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -std=c++11") ## -std=gnu++0x
 endif ()
 
-set(SOURCE ${CTOOLS_SRC})
-if(USE_GL_VERSION_CHECKER)
-	set(SOURCE ${SOURCE} ${GLVERSIONCHECKER_SRC})
-endif()
-if(USE_CONFIG_SYSTEM)
-	set(SOURCE ${SOURCE} ${CONFIG_SYSTEM_SRC})
-endif()
-add_library(ctools STATIC ${SOURCE})
+add_library(ctools STATIC ${CTOOLS_SRC} ${CONFIG_SYSTEM_SRC} ${GLVERSIONCHECKER_SRC})
 
 include_directories(.)
 
