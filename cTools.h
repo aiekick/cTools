@@ -45,6 +45,7 @@ SOFTWARE.
 #include <float.h>
 #include <chrono>
 #include <iomanip> // std::setprecision
+#include <type_traits> // std::is_same
 
 #ifdef COCOS2D
 #ifndef USE_OPENGL
@@ -1932,7 +1933,8 @@ namespace ct // cTools
 				rc.h = (T)newY;
 			}
 
-			rc = ct::floor<T>(rc);
+			if (std::is_same<T, float>::value || std::is_same<T, double>::value)
+				rc = ct::floor<T>(rc);
 
 			float newRatio = (float)rc.w / (float)rc.h;
 			if (vLogError)
@@ -1979,7 +1981,8 @@ namespace ct // cTools
 				rc.h = (T)newY;
 			}
 
-			rc = ct::floor<T>(rc);
+			if (std::is_same<T, float>::value || std::is_same<T, double>::value)
+				rc = ct::floor<T>(rc);
 
 			float newRatio = (float)rc.w / (float)rc.h;
 			if (vLogError)
