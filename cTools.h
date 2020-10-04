@@ -815,7 +815,7 @@ namespace ct // cTools
 		void operator -= (const vec3& v) { x -= v.x; y -= v.y; z -= v.z; }
 		void operator *= (T a) { x *= a; y *= a; z *= a; }
 		void operator /= (T a) { x /= a; y /= a; z /= a; }
-		T length() const { return (T)sqrtf(lengthSquared()); }
+		T length() const { return (T)sqrtf((float)lengthSquared()); }
 		T lengthSquared() const { return x * x + y * y + z * z; }
 		T normalize() { T _length = length(); if (_length < (T)1e-5) return (T)0; T _invLength = (T)1 / _length; x *= _invLength; y *= _invLength; z *= _invLength; return _length; }
 		vec3<T> getNormalized() { vec3<T> n = vec3<T>(x, y, z); n.normalize(); return n; }
