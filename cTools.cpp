@@ -410,7 +410,7 @@ void ct::ActionTime::setFloatTime(float vValue)
 
 bool ct::ActionTime::IsTimeToAct(long vMs, bool vFix)
 {
-	if (get() > vMs)
+	if (Get() > vMs)
 	{
 		if (vFix)
 			Fix();

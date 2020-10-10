@@ -1615,8 +1615,6 @@ namespace ct // cTools
 		::std::string GetDataType() { return datatype; }
 		void setCustomDataType(::std::string vDataType) { datatype = vDataType; }
 
-		std::string GetInputType() { return inputtype; }
-
 		bool operator == (variant<T> v)
 		{
 			if (inputtype == v.inputtype)

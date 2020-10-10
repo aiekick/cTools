@@ -835,7 +835,7 @@ size_t FileHelper::GetTimeStampToNumber()
 
 		std::string res = ct::toStr(year) + ct::toStr(month) + ct::toStr(day) + ct::toStr(seconds);
 
-		timeStamp = ct::uvariant(res).getU();
+		timeStamp = ct::uvariant(res).GetU();
 	}
 	return timeStamp;
 }
