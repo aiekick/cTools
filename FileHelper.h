@@ -96,8 +96,8 @@ public: // funcs
 
 	std::vector<std::string> GetDrives();
 
-	std::string getTimeStampToString(const std::string& vSeparator = "_");
-	size_t getTimeStampToNumber();
+	std::string GetTimeStampToString(const std::string& vSeparator = "_");
+	size_t GetTimeStampToNumber();
 
 	std::vector<std::string> GetAbsolutePathForFileLocation(const std::vector<std::string>& vRelativeFilePathNames, FileLocation vFileType);
 	std::string GetAbsolutePathForFileLocation(const std::string& vRelativeFilePathName, FileLocation vFileType);

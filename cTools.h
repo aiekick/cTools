@@ -406,8 +406,8 @@ namespace ct // cTools
 		void Fix(); // fixe the time marking
 		void Pause();
 		void Resume();
-		int64 get();
-		float getFloatTime();
+		int64 Get();
+		float GetFloatTime();
 		void setFloatTime(float vValue);
 
 		// verifie si vMs millisecond depuis le dernier fix et donc si on peut agir
@@ -458,7 +458,7 @@ namespace ct // cTools
 		}
 
 	public:
-		::std::string getString();
+		::std::string GetString();
 
 		::std::string format;
 		::std::string relativPath;
@@ -558,11 +558,11 @@ namespace ct // cTools
 			}
 		}
 		void setColor(const Color<T> col){r = col.r;g = col.g;b = col.b;a = col.a;}
-		void get3Arr(T col[3], T range = (T)1){col[0] = r * range;col[1] = g * range;col[2] = b * range;}
-		void get4Arr(T col[4], T range = (T)1){col[0] = r * range;col[1] = g * range;col[2] = b * range;col[3] = a * range;}
+		void Get3Arr(T col[3], T range = (T)1){col[0] = r * range;col[1] = g * range;col[2] = b * range;}
+		void Get4Arr(T col[4], T range = (T)1){col[0] = r * range;col[1] = g * range;col[2] = b * range;col[3] = a * range;}
 #ifdef COCOS2D
-		cocos2d::Color3B getCCColor3B(){cocos2d::Color3B col;col.r = r * 255;col.g = g * 255;col.b = b * 255;return col;}
-		cocos2d::Color4F getCCColor4F(){cocos2d::Color4F col;col.r = r;col.g = g;col.b = b;col.a = a;return col;}
+		cocos2d::Color3B GetCCColor3B(){cocos2d::Color3B col;col.r = r * 255;col.g = g * 255;col.b = b * 255;return col;}
+		cocos2d::Color4F GetCCColor4F(){cocos2d::Color4F col;col.r = r;col.g = g;col.b = b;col.a = a;return col;}
 #endif
 		void setColorCanal(char canal, float value)
 		{
@@ -579,13 +579,13 @@ namespace ct // cTools
 			if (canal == 'a') a = value / 255.0f;
 		}
 #ifdef SDL2
-		SDL_Color getSDLColor(){SDL_Color col;col.r = uint8(r * 255.0f);col.g = uint8(g * 255.0f);col.b = uint8(b * 255.0f);col.a = uint8(a * 255.0f);return col;}
+		SDL_Color GetSDLColor(){SDL_Color col;col.r = uint8(r * 255.0f);col.g = uint8(g * 255.0f);col.b = uint8(b * 255.0f);col.a = uint8(a * 255.0f);return col;}
 #endif
 #ifdef WXWIDGETS
-		wxColour getWxColour(){return wxColour(r * 255, g * 255, b * 255);}
+		wxColour GetWxColour(){return wxColour(r * 255, g * 255, b * 255);}
 #endif
-		std::string getColor3String(){return toStr(r) + ";" + toStr(g) + ";" + toStr(b);}
-		std::string getColor4String(){return toStr(r) + ";" + toStr(g) + ";" + toStr(b) + ";" + toStr(a);}
+		std::string GetColor3String(){return toStr(r) + ";" + toStr(g) + ";" + toStr(b);}
+		std::string GetColor4String(){return toStr(r) + ";" + toStr(g) + ";" + toStr(b) + ";" + toStr(a);}
 #ifdef IMGUI
 		ImVec4 ToImVec4(){return ImVec4(r, g, b, a);}
 #endif
@@ -634,7 +634,7 @@ namespace ct // cTools
 		T length() const { return sqrt(lengthSquared()); }
 		T lengthSquared() const { return x * x + y * y; }
 		T normalize() { T _length = length(); if (_length < (T)1e-5) return (T)0.0; T _invLength = (T)1.0 / _length; x *= _invLength; y *= _invLength; return _length; }
-		vec2<T> getNormalized() { vec2<T> n = vec2<T>(x, y); n.normalize(); return n; }
+		vec2<T> GetNormalized() { vec2<T> n = vec2<T>(x, y); n.normalize(); return n; }
 		T sum() { return x + y; }
 		T sumAbs() { return abs<T>(x) + abs<T>(y); }
 		bool empty() { if (x == (T)0 && y == (T)0) return true; else return false; }
@@ -819,7 +819,7 @@ namespace ct // cTools
 		T length() const { return (T)sqrtf((float)lengthSquared()); }
 		T lengthSquared() const { return x * x + y * y + z * z; }
 		T normalize() { T _length = length(); if (_length < (T)1e-5) return (T)0; T _invLength = (T)1 / _length; x *= _invLength; y *= _invLength; z *= _invLength; return _length; }
-		vec3<T> getNormalized() { vec3<T> n = vec3<T>(x, y, z); n.normalize(); return n; }
+		vec3<T> GetNormalized() { vec3<T> n = vec3<T>(x, y, z); n.normalize(); return n; }
 		T sum() { return x + y + z; }
 		T sumAbs() { return abs<T>(x) + abs<T>(y) + abs<T>(z); }
 		bool empty() { return x == (T) 0 && y == (T) 0 && z == (T) 0; }
@@ -979,7 +979,7 @@ namespace ct // cTools
 		T length() const { return sqrtf(lengthSquared()); }
 		T lengthSquared() const { return x * x + y * y + z * z + w * w; }
 		T normalize() { T _length = length(); if (_length < (T)1e-5)return (T)0; T _invLength = (T)1 / _length; x *= _invLength; y *= _invLength; z *= _invLength; w *= _invLength; return _length; }
-		vec4<T> getNormalized() { vec4<T> n = vec4<T>(x, y, z, w); n.normalize(); return n; }
+		vec4<T> GetNormalized() { vec4<T> n = vec4<T>(x, y, z, w); n.normalize(); return n; }
 		bool empty() { if (x == (T)0 && y == (T)0 && z == (T)0 && w == (T)0) return true; else return false; }
 		T sum() { return x + y + z + w; }
 		T sumAbs() { return abs<T>(x) + abs<T>(y) + abs<T>(z) + abs<T>(w); }
@@ -1611,8 +1611,8 @@ namespace ct // cTools
 		variant(const ::std::set<::std::string>& c) { set_string_value = c; inputtype = "setString"; datatype = inputtype; }
 
 
-		::std::string getInputType() { return inputtype; }
-		::std::string getDataType() { return datatype; }
+		::std::string GetInputType() { return inputtype; }
+		::std::string GetDataType() { return datatype; }
 		void setCustomDataType(::std::string vDataType) { datatype = vDataType; }
 
 		std::string GetInputType() { return inputtype; }
@@ -1646,7 +1646,7 @@ namespace ct // cTools
 			return false;
 		}
 
-		/*uint64_t getU64(bool *success = 0)
+		/*uint64_t GetU64(bool *success = 0)
 		{
 			if (inputtype == "string")
 			{
@@ -1669,7 +1669,7 @@ namespace ct // cTools
 			return uint64_t_value;
 		}*/
 
-		size_t getU(bool *success = 0)
+		size_t GetU(bool *success = 0)
 		{
 			if (inputtype == "string")
 			{
@@ -1691,7 +1691,7 @@ namespace ct // cTools
 			return size_t_value;
 		}
 
-		::std::string getS(char c = ';')
+		::std::string GetS(char c = ';')
 		{
 			if (inputtype == "vec4")
 				return
@@ -1728,72 +1728,72 @@ namespace ct // cTools
 				return toStr(size_t_value);
 			return string_value;
 		}
-		Color<T> getColor(char c = ';')
+		Color<T> GetColor(char c = ';')
 		{
 			if (inputtype == "string") return Color<T>(string_value, c);
 			return color_value;
 		}
 #ifdef USE_OPENGL
-		texture getTexture()
+		texture GetTexture()
 		{
 			return texture_value;
 		}
 #endif
-		vec2<T> getV2(char c = ';')
+		vec2<T> GetV2(char c = ';')
 		{
 			if (inputtype == "string") return vec2<T>(string_value, c);
 			return point_value;
 		}
-		vec3<T> getV3(char c = ';')
+		vec3<T> GetV3(char c = ';')
 		{
 			if (inputtype == "string") return vec3<T>(string_value, c);
 			return v3_value;
 		}
-		vec4<T> getV4(char c = ';')
+		vec4<T> GetV4(char c = ';')
 		{
 			if (inputtype == "string") return vec4<T>(string_value, c, 4, 0);
 			return rect_value;
 		}
-		AABB<T> getAABB(char c = ';')
+		AABB<T> GetAABB(char c = ';')
 		{
 			if (inputtype == "string") return AABB<T>(string_value, c);
 			return aabb_value;
 		}
-		std::vector<float> getVectorFloat(char c = ';')
+		std::vector<float> GetVectorFloat(char c = ';')
 		{
 			if (inputtype == "string") return StringToNumberVector<float>(string_value, c);
 			return vector_float_value;
 		}
-		::std::vector<::std::string> getVectorString(char c = ';')
+		::std::vector<::std::string> GetVectorString(char c = ';')
 		{
 			if (inputtype == "string") return splitStringToVector(string_value, c);
 			return vector_string_value;
 		}
-		::std::set<::std::string> getSetString(char c = ';')
+		::std::set<::std::string> GetSetString(char c = ';')
 		{
 			if (inputtype == "string") return splitStringToSet(string_value, c);
 			return set_string_value;
-		}		float getF()
+		}		float GetF()
 		{
 			if (inputtype == "string") return (float)atof(string_value.c_str());
 			return float_value;
 		}
-		double getD()
+		double GetD()
 		{
 			if (inputtype == "string") return (double)atof(string_value.c_str());
 			return double_value;
 		}
-		int getI()
+		int GetI()
 		{
 			if (inputtype == "string") return atoi(string_value.c_str());
 			return int_value;
 		}
-		long getL()
+		long GetL()
 		{
 			if (inputtype == "string") return atol(string_value.c_str());
 			return long_value;
 		}
-		bool getB()
+		bool GetB()
 		{
 			if (inputtype == "string")
 			{
@@ -1808,22 +1808,22 @@ namespace ct // cTools
 	typedef variant<int> ivariant;
 
 	/////////////////////////////////////////////////////////////
-	///////// getNewBufferFromList //////////////////////////////
+	///////// GetNewBufferFromList //////////////////////////////
 	/////////////////////////////////////////////////////////////
 
 	// Buffer a destroy apres utilisationBufferSize
 	// in : lst, offset
 	// out : return, BufferSize
-	template<typename T> T* getNewBufferFromList(::std::list<T> &lst, int offsetBefore, int offsetAfter, int *BufferSize);
+	template<typename T> T* GetNewBufferFromList(::std::list<T> &lst, int offsetBefore, int offsetAfter, int *BufferSize);
 
 	/////////////////////////////////////////////////////////////
-	///////// getNewBufferFromMap ///////////////////////////////
+	///////// GetNewBufferFromMap ///////////////////////////////
 	/////////////////////////////////////////////////////////////
 
 	// Buffer a destroy apres utilisationBufferSize
 	// in : lst, offset
 	// out : return, BufferSize
-	template<typename T, typename P> P* getNewBufferFromMap(::std::map<T, P> &mp, int offsetBefore, int offsetAfter, int *BufferSize);
+	template<typename T, typename P> P* GetNewBufferFromMap(::std::map<T, P> &mp, int offsetBefore, int offsetAfter, int *BufferSize);
 
 	/////////////////////////////////////////////////////////////
 	///////// DeleteObjectsAndClearPointerList //////////////////
@@ -1841,14 +1841,14 @@ namespace ct // cTools
 
 	// return "vParamName=\"" + toStr(vValue) + "\" si vValue est different de vValueDiff;
 	template<typename T> ::std::string ParamToXMLStringDiff(::std::string vParamName, T vValue, T vValueDiff);
-	// Mix : get value based on ratio and inf and sup limit // https://www.opengl.org/sdk/docs/man/html/mix.xhtml
+	// Mix : Get value based on ratio and inf and sup limit // https://www.opengl.org/sdk/docs/man/html/mix.xhtml
 	// ex : mix(2.0f, 6.0f, 0.5f) => 4.0f
 
 	template<typename T> vec2<T> mix(const vec2<T>& vInf, const vec2<T>& vSup, const vec2<T>& vRatio);
 	template<typename T> vec3<T> mix(const vec3<T>& vInf, const vec3<T>& vSup, const vec3<T>& vRatio);
 	template<typename T> vec4<T> mix(const vec4<T>& vInf, const vec4<T>& vSup, const vec4<T>& vRatio);
 
-	// get ratio based on value and inf and sup limit
+	// Get ratio based on value and inf and sup limit
 	// ex : cRatio(2.0f, 6.0f, 4.0f) => 0.5f
 
 	template<typename T> vec2<T> invMix(const vec2<T>& vInf, const vec2<T>& vSup, const vec2<T>& vValue);

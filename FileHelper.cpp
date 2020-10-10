@@ -470,7 +470,7 @@ std::string FileHelper::GetAppPath()
         GetModuleFileName(NULL, buffer, MAX_PATH);
 #elif defined(LINUX)
         char szTmp[32];
-        sprintf(szTmp, "/proc/%d/exe", getpid());
+        sprintf(szTmp, "/proc/%d/exe", Getpid());
         int bytes = ct::mini<int>(readlink(szTmp, buffer, MAX_PATH), MAX_PATH - 1);
         if(bytes >= 0)
             buffer[bytes] = '\0';
@@ -784,7 +784,7 @@ std::vector<std::string> FileHelper::GetDrives()
 	return res;
 }
 
-std::string FileHelper::getTimeStampToString(const std::string& vSeparator)
+std::string FileHelper::GetTimeStampToString(const std::string& vSeparator)
 {
 	std::string res;
 
@@ -812,7 +812,7 @@ std::string FileHelper::getTimeStampToString(const std::string& vSeparator)
 	return res;
 }
 
-size_t FileHelper::getTimeStampToNumber()
+size_t FileHelper::GetTimeStampToNumber()
 {
 	size_t timeStamp = 0;
 

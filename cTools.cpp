@@ -391,12 +391,12 @@ void ct::ActionTime::Resume()
 	play = true;
 }
 
-ct::int64 ct::ActionTime::get() 
+ct::int64 ct::ActionTime::Get() 
 { 
 	return (ct::int64)(ct::GetTicks() - lastTick);
 }
 
-float ct::ActionTime::getFloatTime()
+float ct::ActionTime::GetFloatTime()
 {
 	static float secMult = 1.0f / 1000.0f;
 	return (ct::GetTicks() - lastTick) * secMult;
@@ -423,7 +423,7 @@ bool ct::ActionTime::IsTimeToAct(long vMs, bool vFix)
 ///// ct::texture //////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 #ifdef USE_OPENGL
-::std::string ct::texture::getString()
+::std::string ct::texture::GetString()
 {
 	::std::string res;
 
@@ -512,14 +512,14 @@ void ct::ResetBuffer(char* vBuffer)
 }
 
 /////////////////////////////////////////////////////////////
-///////// getNewBufferFromList //////////////////////////////
+///////// GetNewBufferFromList //////////////////////////////
 /////////////////////////////////////////////////////////////
 
 // Buffer a destroy apres utilisationBufferSize
 // in : lst, offset
 // out : return, BufferSize
 template<typename T>
-T* ct::getNewBufferFromList(::std::list<T> &lst, int offsetBefore, int offsetAfter, int *BufferSize)
+T* ct::GetNewBufferFromList(::std::list<T> &lst, int offsetBefore, int offsetAfter, int *BufferSize)
 {
 	int count = (int)lst.size();
 	if (count > 0)
@@ -548,14 +548,14 @@ T* ct::getNewBufferFromList(::std::list<T> &lst, int offsetBefore, int offsetAft
 }
 
 /////////////////////////////////////////////////////////////
-///////// getNewBufferFromMap ///////////////////////////////
+///////// GetNewBufferFromMap ///////////////////////////////
 /////////////////////////////////////////////////////////////
 
 // Buffer a destroy apres utilisationBufferSize
 // in : lst, offset
 // out : return, BufferSize
 template<typename T, typename P>
-P* ct::getNewBufferFromMap(::std::map<T, P> &mp, int offsetBefore, int offsetAfter, int *BufferSize)
+P* ct::GetNewBufferFromMap(::std::map<T, P> &mp, int offsetBefore, int offsetAfter, int *BufferSize)
 {
 	int count = (int)mp.size();
 	if (count > 0)
@@ -710,7 +710,7 @@ template<typename T>
 		return " " + vParamName + "=\"" + ct::toStr(vValue) + "\"";
 	return "";
 }
-/// Mix : get value based on ratio and inf and sup limit // https://www.opengl.org/sdk/docs/man/html/mix.xhtml
+/// Mix : Get value based on ratio and inf and sup limit // https://www.opengl.org/sdk/docs/man/html/mix.xhtml
 // ex : ct::mix(2.0f, 6.0f, 0.5f) => 4.0f
 
 template<typename T>
@@ -731,7 +731,7 @@ ct::vec4<T> ct::mix(const ct::vec4<T>& vInf, const ct::vec4<T>& vSup, const ct::
 	return vInf * (1.0f - vRatio) + vSup * vRatio;
 }
 
-/// get ratio based on value and inf and sup limit
+/// Get ratio based on value and inf and sup limit
 // ex : cRatio(2.0f, 6.0f, 4.0f) => 0.5f
 template<typename T>
 ct::vec2<T> ct::invMix(const ct::vec2<T>& vInf, const ct::vec2<T>& vSup, const ct::vec2<T>& vValue)
