@@ -28,7 +28,7 @@ SOFTWARE.
 #include "cocos2d.h"
 #endif
 
-#include <cTools.h>
+#include "cTools.h"
 
 #include <stdarg.h>     /* va_list, va_start, va_arg, va_end */
 
