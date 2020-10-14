@@ -860,8 +860,8 @@ namespace ct // cTools
 	typedef vec3<float> fvec3;
 	typedef vec3<bool> bvec3;
 	typedef vec3<int> ivec3;
-	typedef vec3<uin32t_t> uvec3;
-	typedef vec3<uin64t_t> u64vec3;
+	typedef vec3<uint32_t> uvec3;
+	typedef vec3<uint64_t> u64vec3;
 	// specialization for float32 test to fvec3
 	inline bool valid(const fvec3& a) { return floatIsValid(a.x) && floatIsValid(a.y) && floatIsValid(a.z); }
 	// specialization for fvec2
