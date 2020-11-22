@@ -273,9 +273,9 @@ namespace ct // cTools
 		return (v.i & 0x7f800000) != 0x7f800000;
 	}
 
-	template <typename T> inline T round(const T& v) { return ::std::round(v); }
-	template <typename T> inline T floor(const T& v) { return ::std::floor(v); }
-	template <typename T> inline T ceil(const T& v) { return ::std::ceil(v); }
+	template <typename T> inline T round(const T& v) { return (T)(::std::round((double)v)); }
+	template <typename T> inline T floor(const T& v) { return (T)(::std::floor((double)v)); }
+	template <typename T> inline T ceil(const T& v) { return (T)(::std::ceil((double)v)); }
 	template <typename T> inline T fract(const T& v) { return v - floor<T>(v); }
 	template <typename T> inline T cos(const T& v) { return ::std::cos(v); }
 	template <typename T> inline T sin(const T& v) { return ::std::sin(v); }
@@ -633,12 +633,12 @@ namespace ct // cTools
 		void operator /= (vec2<T> v) { x /= v.x; y /= v.y; }
 		T length() const { return sqrt(lengthSquared()); }
 		T lengthSquared() const { return x * x + y * y; }
-		T normalize() { T _length = length(); if (_length < (T)1e-5) return (T)0.0; T _invLength = (T)1.0 / _length; x *= _invLength; y *= _invLength; return _length; }
+		T normalize() { T _length = length(); if (_length < (T)1e-5) return (T)0.0; T _invLength = (T)1.0 / _length; x *= _invLength; y *= _invLength; return _length; } // return length
 		vec2<T> GetNormalized() { vec2<T> n = vec2<T>(x, y); n.normalize(); return n; }
 		T sum() { return x + y; }
 		T sumAbs() { return abs<T>(x) + abs<T>(y); }
-		bool empty() { if (x == (T)0 && y == (T)0) return true; else return false; }
-		bool emptyOR() { if (x == (T)0 || y == (T)0) return true; else return false; }
+		bool emptyAND() { return x == (T)0 && y == (T)0; }
+		bool emptyOR() { return x == (T)0 || y == (T)0; }
 		std::string string(char c = ';') { return toStr(x) + c + toStr(y); }
 		T ratioXY() { if (y > (T)0) return x / y; return (T)0; }
 		T ratioYX() { if (x > (T)0) return y / x; return (T)0; }
@@ -822,7 +822,8 @@ namespace ct // cTools
 		vec3<T> GetNormalized() { vec3<T> n = vec3<T>(x, y, z); n.normalize(); return n; }
 		T sum() { return x + y + z; }
 		T sumAbs() { return abs<T>(x) + abs<T>(y) + abs<T>(z); }
-		bool empty() { return x == (T) 0 && y == (T) 0 && z == (T) 0; }
+		bool emptyAND() { return x == (T)0 && y == (T)0 && z == (T)0; }
+		bool emptyOR() { return x == (T)0 || y == (T)0 || z == (T)0; }
 		std::string string(char c = ';') { return toStr(x) + c + toStr(y) + c + toStr(z); }
 	};
 	template <typename T> inline vec3<T> operator + (vec3<T> v, T f) { return vec3<T>(v.x + f, v.y + f, v.z + f); }
@@ -981,7 +982,8 @@ namespace ct // cTools
 		T lengthSquared() const { return x * x + y * y + z * z + w * w; }
 		T normalize() { T _length = length(); if (_length < (T)1e-5)return (T)0; T _invLength = (T)1 / _length; x *= _invLength; y *= _invLength; z *= _invLength; w *= _invLength; return _length; }
 		vec4<T> GetNormalized() { vec4<T> n = vec4<T>(x, y, z, w); n.normalize(); return n; }
-		bool empty() { if (x == (T)0 && y == (T)0 && z == (T)0 && w == (T)0) return true; else return false; }
+		bool emptyAND() { return x == (T)0 && y == (T)0 && z == (T)0 && w == (T)0; }
+		bool emptyOR() { return x == (T)0 || y == (T)0 || z == (T)0 || w == (T)0; }
 		T sum() { return x + y + z + w; }
 		T sumAbs() { return abs<T>(x) + abs<T>(y) + abs<T>(z) + abs<T>(w); }
 		std::string string(char c = ';') { return toStr(x) + c + toStr(y) + c + toStr(z) + c + toStr(w); }

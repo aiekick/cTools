@@ -174,7 +174,7 @@ std::string FileHelper::LoadFileToString(const std::string& vFilePathName)
 	}
 	else
 	{
-		printf("File %s Not Found !\n", vFilePathName.c_str());
+		printf("FileHelper::LoadFileToString : File \"%s\" Not Found !\n", vFilePathName.c_str());
 	}
 
 	return fileCode;
@@ -286,7 +286,7 @@ std::string FileHelper::GetExistingFilePathForFile(const std::string& vFileName)
 	}
 
 		if (res.empty())
-			printf("Cant found file %s\n", vFileName.c_str());
+			printf("FileHelper::GetExistingFilePathForFile : Cant found file \"%s\"\n", vFileName.c_str());
 	
 	return res;
 }
@@ -401,7 +401,7 @@ std::string FileHelper::GetRelativePathToPath(const std::string& vFilePathName, 
 #ifdef _DEBUG
 		else
 		{
-			printf("Path %s is relative !?\n", res.c_str());
+			printf("FileHelper::GetRelativePathToPath : Path %s is relative !?\n", res.c_str());
 		}
 #endif
 	}
@@ -531,7 +531,7 @@ bool FileHelper::IsFileExist(const std::string& name)
 	}
 	else
     {
-	    printf("fail to found file %s\n", name.c_str());
+	    printf("FileHelper::IsFileExist : fail to found file \"%s\"\n", name.c_str());
     }
 
 	return false;
@@ -561,7 +561,7 @@ void FileHelper::DestroyFile(const std::string& vFilePathName)
 		{
 			if (remove(filePathName.c_str()))
 			{
-				printf("%s Cant be deleted !\n", vFilePathName.c_str());
+				printf("FileHelper::DestroyFile : %s Cant be deleted !\n", vFilePathName.c_str());
 			}
 		}
 	}
@@ -586,7 +586,7 @@ bool FileHelper::CreateDirectoryIfNotExist(const std::string& name)
             const int dir_err = std::system(buffer);
             if (dir_err == -1)
             {
-                LogStr("Error creating directory " + filePathName);
+				printf("FileHelper::CreateDirectoryIfNotExist : Error creating directory %s", filePathName.c_str());
                 res = false;
             }
 #endif
