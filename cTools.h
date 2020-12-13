@@ -1737,6 +1737,17 @@ namespace ct // cTools
 				return (bool_value ? "true" : "false");
 			if (inputtype == "float")
 				return toStr(float_value);
+			if (inputtype == "vectorFloat")
+			{
+				std::string str;
+				for (auto f : vector_float_value)
+				{
+					if (!str.empty())
+						str += c;
+					str += toStr(f);
+				}
+				return str;
+			}
 			if (inputtype == "double")
 				return toStr(double_value);
 			if (inputtype == "int")
@@ -1781,6 +1792,11 @@ namespace ct // cTools
 		std::vector<float> GetVectorFloat(char c = ';')
 		{
 			if (inputtype == "string") return StringToNumberVector<float>(string_value, c);
+			return vector_float_value;
+		}
+		std::vector<T> GetVectorType(char c = ';')
+		{
+			if (inputtype == "string") return StringToNumberVector<T>(string_value, c);
 			return vector_float_value;
 		}
 		::std::vector<::std::string> GetVectorString(char c = ';')

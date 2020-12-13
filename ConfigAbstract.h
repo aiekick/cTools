@@ -67,6 +67,16 @@ namespace conf
 			ct::replaceString(vDatas, "&gt;", ">");
 			return vDatas;
 		}
+		
+		bool LoadConfigString(const std::string& vConfigString)
+		{
+			return parseConfigDatas(vConfigString);
+		}
+
+		std::string SaveConfigString()
+		{
+			return "<config>\n" + getXml("\t") + "</config>\n";
+		}
 
 		bool LoadConfigFile(const std::string& vFilePathName)
 		{
@@ -79,7 +89,7 @@ namespace conf
 
 				strStream << docFile.rdbuf();//read the file
 
-				res = parseConfigDatas(strStream.str());
+				res = LoadConfigString(strStream.str());
 
 				docFile.close();
 			}
@@ -91,7 +101,7 @@ namespace conf
 		{
 			bool res = false;
 
-			std::string data = "<config>\n" + getXml("\t") + "</config>\n";
+			std::string data = SaveConfigString();
 			std::ofstream configFileWriter(vFilePathName, std::ios::out);
 			if (!configFileWriter.bad())
 			{
