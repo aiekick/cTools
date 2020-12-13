@@ -861,8 +861,17 @@ namespace ct // cTools
 	typedef vec3<float> fvec3;
 	typedef vec3<bool> bvec3;
 	typedef vec3<int> ivec3;
+	typedef vec3<int8_t> i8vec3;
+	typedef vec3<int16_t> i16vec3;
+	typedef vec3<int32_t> ivec3;
+	typedef vec3<int32_t> i32vec3;
+	typedef vec3<int64_t> i64vec3;
+	typedef vec3<uint8_t> u8vec3;
+	typedef vec3<uint16_t> u16vec3;
 	typedef vec3<uint32_t> uvec3;
+	typedef vec3<uint32_t> u32vec3;
 	typedef vec3<uint64_t> u64vec3;
+
 	// specialization for float32 test to fvec3
 	inline bool valid(const fvec3& a) { return floatIsValid(a.x) && floatIsValid(a.y) && floatIsValid(a.z); }
 	// specialization for fvec2
@@ -1020,7 +1029,16 @@ namespace ct // cTools
 	typedef vec4<float> fvec4;
 	typedef vec4<bool> bvec4;
 	typedef vec4<int> ivec4;
-	typedef vec4<size_t> uvec4;
+	typedef vec4<int8_t> i8vec4;
+	typedef vec4<int16_t> i16vec4;
+	typedef vec4<int32_t> ivec4;
+	typedef vec4<int32_t> i32vec4;
+	typedef vec4<int64_t> i64vec4;
+	typedef vec4<uint8_t> u8vec4;
+	typedef vec4<uint16_t> u16vec4;
+	typedef vec4<uint32_t> uvec4;
+	typedef vec4<uint32_t> u32vec4;
+	typedef vec4<uint64_t> u64vec4;
 
 	// specialization for float32 test to fvec4
 	inline bool valid(const fvec4& a) { return floatIsValid(a.x) && floatIsValid(a.y) && floatIsValid(a.z) && floatIsValid(a.w); }
@@ -1567,7 +1585,7 @@ namespace ct // cTools
 		float float_value = 0.0f;
 		double double_value = 0.0;
 		long long_value = 0;
-		size_t size_t_value = 0;
+		uint32_t uint32_t_value = 0;
 		//uint64_t uint64_t_value = 0;
 		Color<T> color_value;
 #ifdef USE_OPENGL
@@ -1595,7 +1613,7 @@ namespace ct // cTools
 		variant(const int& v) { int_value = v; inputtype = "int"; datatype = inputtype; }
 		variant(const long& v) { long_value = v; inputtype = "long"; datatype = inputtype; }
 		//variant(const uint64_t& v) { uint64_t_value = v; inputtype = "uint64_t"; datatype = inputtype; }
-		variant(const size_t& v) { size_t_value = v; inputtype = "size_t"; datatype = inputtype; }
+		variant(const uint32_t& v) { uint32_t_value = v; inputtype = "uint32_t"; datatype = inputtype; }
 		variant(const float& v) { float_value = v; inputtype = "float"; datatype = inputtype; }
 		variant(const double& v) { double_value = v; inputtype = "double"; datatype = inputtype; }
 		variant(const ::std::string& v, const ::std::string& dt) { string_value = v; inputtype = "string"; datatype = dt; }
@@ -1640,8 +1658,8 @@ namespace ct // cTools
 					return int_value == v.int_value;
 				if (inputtype == "long")
 					return long_value == v.long_value;
-				if (inputtype == "size_t")
-					return size_t_value == v.size_t_value;
+				if (inputtype == "uint32_t")
+					return uint32_t_value == v.uint32_t_value;
 				return string_value == v.string_value;
 			}
 			return false;
@@ -1670,16 +1688,16 @@ namespace ct // cTools
 			return uint64_t_value;
 		}*/
 
-		size_t GetU(bool *success = 0)
+		uint32_t GetU(bool *success = 0)
 		{
 			if (inputtype == "string")
 			{
-				size_t tmp = 0;
+				uint32_t tmp = 0;
 
 #ifdef MSVC
-				int res = sscanf_s(string_value.c_str(), "%zu", &tmp);
+				int res = sscanf_s(string_value.c_str(), "%u", &tmp);
 #else
-				int res = sscanf(string_value.c_str(), "%zu", &tmp);
+				int res = sscanf(string_value.c_str(), "%u", &tmp);
 #endif
 				if (success)
 				{
@@ -1689,7 +1707,7 @@ namespace ct // cTools
 				//tmp = StringToNumber<size_t>(string_value);
 				return tmp;
 			}
-			return size_t_value;
+			return uint32_t_value;
 		}
 
 		::std::string GetS(char c = ';')
@@ -1725,8 +1743,8 @@ namespace ct // cTools
 				return toStr(int_value);
 			if (inputtype == "long")
 				return toStr(long_value);
-			if (inputtype == "size_t")
-				return toStr(size_t_value);
+			if (inputtype == "uint32_t")
+				return toStr(uint32_t_value);
 			return string_value;
 		}
 		Color<T> GetColor(char c = ';')
