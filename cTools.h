@@ -391,14 +391,14 @@ namespace ct // cTools
 	///////// ActionTime ///////////////////////////////////////
 	/////////////////////////////////////////////////////////////
 
-	int64 GetTicks();
+	uint64_t GetTicks();
 	float GetTimeInterval();
 	class ActionTime
 	{
 	public:
-		int64 lastTick = 0;
-		int64 pauseTick = 0;
-		int64 resumeTick = 0;
+		uint64_t lastTick = 0;
+		uint64_t pauseTick = 0;
+		uint64_t resumeTick = 0;
 		bool play = true;
 
 	public:
@@ -406,9 +406,9 @@ namespace ct // cTools
 		void Fix(); // fixe the time marking
 		void Pause();
 		void Resume();
-		int64 Get();
-		float GetFloatTime();
-		void setFloatTime(float vValue);
+		uint64_t Get();
+		double GetTime();
+		void setTime(double vValue);
 
 		// verifie si vMs millisecond depuis le dernier fix et donc si on peut agir
 		// vFix permet de fixer le temps pour la prochaine action 
@@ -1921,7 +1921,7 @@ namespace ct // cTools
 		T vNewRangeInf, T vNewRangeSup,
 		T vValue);
 
-	size_t ratioOfSizeT(size_t t, float r);
+	size_t ratioOfSizeT(size_t t, double r);
 
 	// format 2500000 to 2.5M by ex
 	std::string FormatNum(size_t vNum, int vDecimalCount);

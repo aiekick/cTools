@@ -351,17 +351,17 @@ std::wstring ct::string_to_wstring(const std::string mbstr)
 ///////// ct::ActionTime ////////////////////////////////////
 /////////////////////////////////////////////////////////////
 
-ct::int64 ct::GetTicks()
+uint64_t ct::GetTicks()
 {
 	return std::chrono::duration_cast<std::chrono::milliseconds>
 		(std::chrono::system_clock::now().time_since_epoch()).count();
 }
 
-static ct::int64 lastTick = ct::GetTicks();
+static uint64_t lastTick = ct::GetTicks();
 
 float ct::GetTimeInterval()
 {
-	ct::int64 ticks = GetTicks();
+	uint64_t ticks = GetTicks();
 	static float secMult = 1.0f / 1000.0f;
 	float interval = (ticks - lastTick) * secMult;
 	lastTick = ticks;
@@ -391,20 +391,20 @@ void ct::ActionTime::Resume()
 	play = true;
 }
 
-ct::int64 ct::ActionTime::Get() 
+uint64_t ct::ActionTime::Get()
 { 
-	return (ct::int64)(ct::GetTicks() - lastTick);
+	return ct::GetTicks() - lastTick;
 }
 
-float ct::ActionTime::GetFloatTime()
+double ct::ActionTime::GetTime()
 {
-	static float secMult = 1.0f / 1000.0f;
+	static double secMult = 1.0 / 1000.0;
 	return (ct::GetTicks() - lastTick) * secMult;
 }
 
-void ct::ActionTime::setFloatTime(float vValue)
+void ct::ActionTime::setTime(double vValue)
 {
-	ct::int64 v = (ct::int64)(vValue * 1000.0f);
+	uint64_t v = (uint64_t)(((double)vValue) * 1000.0);
 	lastTick = ct::GetTicks() - v;
 }
 
@@ -916,7 +916,7 @@ T ct::cReRange(T vMaxRange,
 }
 
 /// Returns 1 for non-negative values and -1 for negative values.
-size_t ct::ratioOfSizeT(size_t t, float r)
+size_t ct::ratioOfSizeT(size_t t, double r)
 {
 	return (size_t)(t * r);
 }
