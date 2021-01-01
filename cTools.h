@@ -93,12 +93,6 @@ using namespace cocos2d;
 #endif
 #endif
 
-#ifdef GLM
-#include <glm/mat4x4.hpp> // glm::mat4
-#include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
-#include <glm/vec3.hpp> // glm::vec3
-#endif
-
 #ifdef BOX2D
 #include <Box2D\Box2D.h>
 #endif
@@ -108,8 +102,8 @@ using namespace cocos2d;
 #include "Logger.h"
 #endif
 
-#ifdef IMGUI
-#include <imgui/imgui.h>
+#ifdef USE_IMGUI
+#include USE_IMGUI
 #endif
 
 #ifdef WIN32
@@ -181,8 +175,6 @@ namespace ct // cTools
 /////////////////////////////////////////////////////////////
 
 #define IFEXIST(ptr) if (ptr) ptr
-
-#define cAssert(a,b) if (!(a)) { LogStr(b); assert(a); }
 
 #ifdef BOX2D
 #define SAFE_BOX2D_DESTROY_BODY(world, body) if(world!=0 && body!=0) world->DestroyBody(body); body=0
@@ -1049,7 +1041,7 @@ namespace ct // cTools
 	
 	/////////////////////////////////////////////////////////////////////////
 
-#ifdef IMGUI
+#ifdef USE_IMGUI
 	inline ImVec2 toImVec2(const fvec2& v) { return ImVec2(v.x, v.y); }
 	inline ImVec2 toImVec2(const ivec2& v) { return ImVec2((float)v.x, (float)v.y); }
 	inline ImVec2 toImVec2(const dvec2& v) { return ImVec2((float)v.x, (float)v.y); }
