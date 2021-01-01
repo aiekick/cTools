@@ -530,9 +530,9 @@ namespace ct // cTools
 			int a = 255;
 			return Color(r, g, b, a);
 		}
-		void setColor(T _r, T _g, T _b, T _a, T Div)
+		void setColor(T _r, T _g, T _b, T _a, T Div = (T)1)
 		{
-			assert(Div != (T)0);
+			assert((int)Div != (T)0);
 
 			if ((int)Div == 1)
 			{
@@ -578,7 +578,7 @@ namespace ct // cTools
 #endif
 		std::string GetColor3String(){return toStr(r) + ";" + toStr(g) + ";" + toStr(b);}
 		std::string GetColor4String(){return toStr(r) + ";" + toStr(g) + ";" + toStr(b) + ";" + toStr(a);}
-#ifdef IMGUI
+#ifdef USE_IMGUI
 		ImVec4 ToImVec4(){return ImVec4(r, g, b, a);}
 #endif
 	};
@@ -607,7 +607,7 @@ namespace ct // cTools
 			if (s > 0) x = result[0];
 			if (s > 1) y = result[1];
 		}
-#ifdef IMGUI
+#ifdef USE_IMGUI
 		vec2<T>(const ImVec2& vec) { x = (T)vec.x; y = (T)vec.y; }
 #endif
 		T operator () (size_t i) const { return (&x)[i]; }
@@ -881,7 +881,7 @@ namespace ct // cTools
 		vec4(vec3<T> xyz, float w) : x(xyz.x), y(xyz.y), z(xyz.z), w(w) {}
 		vec4(T xyzw) : x(xyzw), y(xyzw), z(xyzw), w(xyzw) {}
 		vec4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
-#ifdef IMGUI
+#ifdef USE_IMGUI
 		vec4<T>(const ImVec4& vec) { x = (T)vec.x; y = (T)vec.y; z = (T)vec.z; w = (T)vec.w; }
 #endif
 		vec4(::std::string vec, char c = ';', vec4<T> *def = 0)//may be in format "0.2f,0.3f,0.4f,0.8f"
@@ -1287,7 +1287,7 @@ namespace ct // cTools
 			return vec2<T>(upperBound - lowerBound);
 		}
 
-#ifdef IMGUI
+#ifdef USE_IMGUI
 		const ImVec4 ToImVec4()
 		{
 			ImVec4 v = ImVec4(lowerBound.x, lowerBound.y, upperBound.x, upperBound.y);
