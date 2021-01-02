@@ -41,7 +41,9 @@ struct PathStruct
 
 typedef int FileLocation;
 
+#ifdef USE_GLFW3
 struct GLFWwindow;
+#endif
 class FileHelper
 {
 public: // static
@@ -108,9 +110,11 @@ public: // funcs
 	// specific function
 	std::string GetRelativePathToParent(const std::string& vFilePath, const std::string& vParentPath);
 
+#ifdef USE_GLFW3
 public: /* clipboard */
 	void SaveInClipBoard(GLFWwindow *vWin, const std::string& vString);
 	std::string GetFromClipBoard(GLFWwindow *vWin);
+#endif
 
 public: // singleton
 	static FileHelper *Instance()

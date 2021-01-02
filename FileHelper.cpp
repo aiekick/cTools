@@ -33,8 +33,10 @@ SOFTWARE.
 #include "cTools.h"
 #include "Logger.h"
 
+#ifdef USE_GLFW3
 // for clipboard
 #include <GLFW/glfw3.h>
+#endif
 
 // general
 #include <fstream>
@@ -825,8 +827,8 @@ size_t FileHelper::GetTimeStampToNumber()
 	return timeStamp;
 }
 
+#ifdef USE_GLFW3
 // Need GLFW
-
 void FileHelper::SaveInClipBoard(GLFWwindow *vWin, const std::string& vString)
 {
 	if (vString.size() > 0)
@@ -840,6 +842,7 @@ std::string FileHelper::GetFromClipBoard(GLFWwindow *vWin)
 	std::string res = glfwGetClipboardString(vWin);
 	return res;
 }
+#endif
 
 std::vector<std::string> FileHelper::GetAbsolutePathForFileLocation(const std::vector<std::string>& vRelativeFilePathNames, FileLocation vFileType)
 {
