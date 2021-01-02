@@ -26,7 +26,9 @@ SOFTWARE.
 */
 
 #include "Logger.h"
+#ifdef USE_GLFW3
 #include <GLFW/glfw3.h>
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -53,8 +55,10 @@ void Logger::LogString(std::string str)
 	{
 		m_ConsoleMap["App"][""][""].push_back(str);
 		
+#ifdef USE_GLFW3
 		GLFWwindow* currentWindow = glfwGetCurrentContext();
 		str = "thread(" + ct::toStr(currentWindow) + ") " + str;
+#endif
 		int64 ticks = ct::GetTicks(); 
 		float time = (ticks - lastTick) / 1000.0f;
 		std::cout << "t:" << time << "s " << str << std::endl;
@@ -68,9 +72,11 @@ void Logger::LogString(std::string vFile, std::string vFunction, std::string vLi
 	if (vMsg.size() > 0/* && Logger::Instance()->ConsoleVerbose*/)
 	{
 		m_ConsoleMap[vFile][vFunction][vLine].push_back(vMsg);
-
+		std::string str = vFile + " " + vFunction + " " + vLine + " " + vMsg;
+#ifdef USE_GLFW3
 		GLFWwindow* currentWindow = glfwGetCurrentContext();
-		std::string str = "thread(" + ct::toStr(currentWindow) + ") " + vFile + " " + vFunction + " " + vLine + " " + vMsg;
+		str = "thread(" + ct::toStr(currentWindow) + ") " + str;
+#endif 
 		int64 ticks = ct::GetTicks();
 		float time = (ticks - lastTick) / 1000.0f;
 		std::cout << "t:" << time << "s " << str << std::endl;
@@ -103,8 +109,11 @@ void Logger::LogGLError(std::string vFile, std::string vFunc, int vLine, std::st
 
 		if (error.size() > 0)
 		{
+#ifdef USE_GLFW3
 			GLFWwindow* currentWindow = glfwGetCurrentContext();
-			error = "thread(" + ct::toStr(currentWindow) + ") OpenGL error : " + error + " in " + vFile + " " + vFunc + " " + ct::toStr(vLine) + " " + vGLFunc;
+			error = "thread(" + ct::toStr(currentWindow) + ") ";
+#endif 
+			error += "OpenGL error : " + error + " in " + vFile + " " + vFunc + " " + ct::toStr(vLine) + " " + vGLFunc;
 			int64 ticks = ct::GetTicks();
 			float time = (ticks - lastTick) / 1000.0f;
 			std::cout << "t:" << time << "s : " << error << std::endl;
@@ -137,9 +146,11 @@ void Logger::LogString(const char* fmt, ...)
 	{
 		std::string msg = std::string(TempBuffer, w);
 		m_ConsoleMap["App"][""][""].push_back(msg);
-
+		std::string str = msg;
+#ifdef USE_GLFW3
 		GLFWwindow* currentWindow = glfwGetCurrentContext();
-		std::string str = "thread(" + ct::toStr(currentWindow) + ") " + " " + msg;
+		str = "thread(" + ct::toStr(currentWindow) + ") " + msg;
+#endif 
 		int64 ticks = ct::GetTicks();
 		float time = (ticks - lastTick) / 1000.0f;
 		std::cout << "t:" << time << "s " << str << std::endl;
@@ -160,9 +171,11 @@ void Logger::LogString(std::string vPrettyFunction, std::string vLine, const cha
 	{
 		std::string msg = vPrettyFunction + ":line(" + vLine + ") => " + std::string(TempBuffer, w);
 		m_ConsoleMap["App"][""][""].push_back(msg);
-
+		std::string str = msg;
+#ifdef USE_GLFW3
 		GLFWwindow* currentWindow = glfwGetCurrentContext();
-		std::string str = "thread(" + ct::toStr(currentWindow) + ") " + " " + msg;
+		str = "thread(" + ct::toStr(currentWindow) + ") " + msg;
+#endif 
 		int64 ticks = ct::GetTicks();
 		float time = (ticks - lastTick) / 1000.0f;
 		std::cout << "t:" << time << "s " << str << std::endl;
