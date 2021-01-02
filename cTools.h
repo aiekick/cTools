@@ -1600,7 +1600,7 @@ namespace ct // cTools
 			float_value = 0.0f;
 			double_value = 0.0;
 			long_value = 0;
-			size_t_value = 0;
+			uint32_t_value = 0;
 		}
 		variant(const int& v) { int_value = v; inputtype = "int"; datatype = inputtype; }
 		variant(const long& v) { long_value = v; inputtype = "long"; datatype = inputtype; }
@@ -1622,7 +1622,6 @@ namespace ct // cTools
 		variant(const ::std::vector<float>& c) { vector_float_value = c; inputtype = "vectorFloat"; datatype = inputtype; }
 		variant(const ::std::vector<::std::string>& c) { vector_string_value = c; inputtype = "vectorString"; datatype = inputtype; }
 		variant(const ::std::set<::std::string>& c) { set_string_value = c; inputtype = "setString"; datatype = inputtype; }
-
 
 		::std::string GetInputType() { return inputtype; }
 		::std::string GetDataType() { return datatype; }
