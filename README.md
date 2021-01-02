@@ -1,3 +1,7 @@
+[<img src="https://github.com/aiekick/cTools/workflows/Win/badge.svg" width="150"/>](https://github.com/aiekick/cTools/actions?query=workflow%3AWin) 
+[<img src="https://github.com/aiekick/cTools/workflows/Linux/badge.svg" width="165"/>](https://github.com/aiekick/cTools/actions?query=workflow%3ALinux) 
+[<img src="https://github.com/aiekick/cTools/workflows/Osx/badge.svg" width="150"/>](https://github.com/aiekick/cTools/actions?query=workflow%3AOsx)
+
 ## cTools :
 
 a two files helper im using from more than 10 years, in all my project.
@@ -86,7 +90,7 @@ std::string toto::getXml(const std::string& vOffset)
 	return str;
 }
 
-void toto::setFromXml(tinyxml2::XMLElement* vElem, tinyxml2::XMLElement* vParent)
+bool toto::setFromXml(tinyxml2::XMLElement* vElem, tinyxml2::XMLElement* vParent)
 {
 	// The value of this child identifies the name of this element
 	std::string strName = "";
@@ -106,5 +110,7 @@ void toto::setFromXml(tinyxml2::XMLElement* vElem, tinyxml2::XMLElement* vParent
 		if (strName == "tata")
 			youvar = strValue;
 	}
+	
+	return true; // parsing continue if childs or stop
 }
 ```
