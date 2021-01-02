@@ -756,12 +756,7 @@ void FileHelper::SelectFile(const std::string& vFileToSelect)
 	}*/
 
 #elif defined(LINUX)
-	// is there a similar command on linux ?
-	if (fileToSelect.size() > 0)
-	{
-		std::string sCmdOpenWith = "open -R " + fileToSelect;
-		std::system(sCmdOpenWith.c_str());
-	}
+	// todo : is there a similar command on linux ?
 #elif defined(APPLE)
     if (fileToSelect.size() > 0)
     {
@@ -800,21 +795,20 @@ std::string FileHelper::GetTimeStampToString(const std::string& vSeparator)
 	std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch());
 	std::time_t now_c = std::chrono::system_clock::to_time_t(now);
 #ifdef MSVC
-	struct tm parts;
-	errno_t err = localtime_s(&parts, &now_c);
+	struct tm partsStruct;
+	errno_t err = localtime_s(&partsStruct, &now_c);
 	if (!err)
+	{
+		struct tm* parts = &partsStruct;
 #else
 	struct tm *parts = std::localtime(&now_c);
 	if (parts)
-#endif
 	{
-		float time_seconds = (float)(parts.tm_hour * 3600 + parts.tm_min * 60 + parts.tm_sec + (float)(ms.count() % 1000) / 1000.0f);
-
-		float year = ct::fract((float)(1900 + parts.tm_year) / 100.0f) * 100.0f;
-		float month = (float)(1 + parts.tm_mon);
-		float day = (float)(parts.tm_mday);
-		float seconds = time_seconds;
-
+#endif
+		float year = ct::fract((float)(1900 + parts->tm_year) / 100.0f) * 100.0f;
+		float month = (float)(1 + parts->tm_mon);
+		float day = (float)(parts->tm_mday);
+		float seconds = (float)(parts->tm_hour * 3600 + parts->tm_min * 60 + parts->tm_sec + (float)(ms.count() % 1000) / 1000.0f);
 		res = ct::toStr(year) + vSeparator + ct::toStr(month) + vSeparator + ct::toStr(day) + vSeparator + ct::toStr(seconds);
 	}
 	return res;
@@ -823,26 +817,9 @@ std::string FileHelper::GetTimeStampToString(const std::string& vSeparator)
 size_t FileHelper::GetTimeStampToNumber()
 {
 	size_t timeStamp = 0;
-
-	auto now = std::chrono::system_clock::now();
-	std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch());
-	std::time_t now_c = std::chrono::system_clock::to_time_t(now);
-#ifdef MSVC
-	struct tm parts;
-	errno_t err = localtime_s(&parts, &now_c);
-	if (!err)
-#else
-	struct tm *parts = std::localtime(&now_c);
-	if (parts)
-#endif
+	std::string res = GetTimeStampToString("");
+	if (!res.empty())
 	{
-		int year = 1900 + parts.tm_year - 2000;
-		int month = 1 + parts.tm_mon;
-		int day = parts.tm_mday;
-		int seconds = parts.tm_hour * 3600 + parts.tm_min * 60 + parts.tm_sec;
-
-		std::string res = ct::toStr(year) + ct::toStr(month) + ct::toStr(day) + ct::toStr(seconds);
-
 		timeStamp = ct::uvariant(res).GetU();
 	}
 	return timeStamp;
