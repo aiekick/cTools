@@ -93,12 +93,6 @@ using namespace cocos2d;
 #endif
 #endif
 
-#ifdef GLM
-#include <glm/mat4x4.hpp> // glm::mat4
-#include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
-#include <glm/vec3.hpp> // glm::vec3
-#endif
-
 #ifdef BOX2D
 #include <Box2D\Box2D.h>
 #endif
@@ -108,8 +102,8 @@ using namespace cocos2d;
 #include "Logger.h"
 #endif
 
-#ifdef IMGUI
-#include <imgui/imgui.h>
+#ifdef USE_IMGUI
+#include USE_IMGUI
 #endif
 
 #ifdef WIN32
@@ -181,8 +175,6 @@ namespace ct // cTools
 /////////////////////////////////////////////////////////////
 
 #define IFEXIST(ptr) if (ptr) ptr
-
-#define cAssert(a,b) if (!(a)) { LogStr(b); assert(a); }
 
 #ifdef BOX2D
 #define SAFE_BOX2D_DESTROY_BODY(world, body) if(world!=0 && body!=0) world->DestroyBody(body); body=0
@@ -391,14 +383,14 @@ namespace ct // cTools
 	///////// ActionTime ///////////////////////////////////////
 	/////////////////////////////////////////////////////////////
 
-	int64 GetTicks();
+	uint64_t GetTicks();
 	float GetTimeInterval();
 	class ActionTime
 	{
 	public:
-		int64 lastTick = 0;
-		int64 pauseTick = 0;
-		int64 resumeTick = 0;
+		uint64_t lastTick = 0;
+		uint64_t pauseTick = 0;
+		uint64_t resumeTick = 0;
 		bool play = true;
 
 	public:
@@ -406,9 +398,9 @@ namespace ct // cTools
 		void Fix(); // fixe the time marking
 		void Pause();
 		void Resume();
-		int64 Get();
-		float GetFloatTime();
-		void setFloatTime(float vValue);
+		uint64_t Get();
+		double GetTime();
+		void setTime(double vValue);
 
 		// verifie si vMs millisecond depuis le dernier fix et donc si on peut agir
 		// vFix permet de fixer le temps pour la prochaine action 
@@ -538,9 +530,9 @@ namespace ct // cTools
 			int a = 255;
 			return Color(r, g, b, a);
 		}
-		void setColor(T _r, T _g, T _b, T _a, T Div)
+		void setColor(T _r, T _g, T _b, T _a, T Div = (T)1)
 		{
-			assert(Div != (T)0);
+			assert((int)Div != (T)0);
 
 			if ((int)Div == 1)
 			{
@@ -586,7 +578,7 @@ namespace ct // cTools
 #endif
 		std::string GetColor3String(){return toStr(r) + ";" + toStr(g) + ";" + toStr(b);}
 		std::string GetColor4String(){return toStr(r) + ";" + toStr(g) + ";" + toStr(b) + ";" + toStr(a);}
-#ifdef IMGUI
+#ifdef USE_IMGUI
 		ImVec4 ToImVec4(){return ImVec4(r, g, b, a);}
 #endif
 	};
@@ -615,7 +607,7 @@ namespace ct // cTools
 			if (s > 0) x = result[0];
 			if (s > 1) y = result[1];
 		}
-#ifdef IMGUI
+#ifdef USE_IMGUI
 		vec2<T>(const ImVec2& vec) { x = (T)vec.x; y = (T)vec.y; }
 #endif
 		T operator () (size_t i) const { return (&x)[i]; }
@@ -889,7 +881,7 @@ namespace ct // cTools
 		vec4(vec3<T> xyz, float w) : x(xyz.x), y(xyz.y), z(xyz.z), w(w) {}
 		vec4(T xyzw) : x(xyzw), y(xyzw), z(xyzw), w(xyzw) {}
 		vec4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
-#ifdef IMGUI
+#ifdef USE_IMGUI
 		vec4<T>(const ImVec4& vec) { x = (T)vec.x; y = (T)vec.y; z = (T)vec.z; w = (T)vec.w; }
 #endif
 		vec4(::std::string vec, char c = ';', vec4<T> *def = 0)//may be in format "0.2f,0.3f,0.4f,0.8f"
@@ -1049,7 +1041,7 @@ namespace ct // cTools
 	
 	/////////////////////////////////////////////////////////////////////////
 
-#ifdef IMGUI
+#ifdef USE_IMGUI
 	inline ImVec2 toImVec2(const fvec2& v) { return ImVec2(v.x, v.y); }
 	inline ImVec2 toImVec2(const ivec2& v) { return ImVec2((float)v.x, (float)v.y); }
 	inline ImVec2 toImVec2(const dvec2& v) { return ImVec2((float)v.x, (float)v.y); }
@@ -1295,7 +1287,7 @@ namespace ct // cTools
 			return vec2<T>(upperBound - lowerBound);
 		}
 
-#ifdef IMGUI
+#ifdef USE_IMGUI
 		const ImVec4 ToImVec4()
 		{
 			ImVec4 v = ImVec4(lowerBound.x, lowerBound.y, upperBound.x, upperBound.y);
@@ -1920,7 +1912,7 @@ namespace ct // cTools
 		T vNewRangeInf, T vNewRangeSup,
 		T vValue);
 
-	size_t ratioOfSizeT(size_t t, float r);
+	size_t ratioOfSizeT(size_t t, double r);
 
 	// format 2500000 to 2.5M by ex
 	std::string FormatNum(size_t vNum, int vDecimalCount);
