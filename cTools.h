@@ -39,7 +39,7 @@ SOFTWARE.
 #include <vector>
 #include <set>
 #include <cmath>
-#include <stdarg.h>  // For va_start, etc.
+#include <stdarg.h>  /* va_list, va_start, va_arg, va_end */
 #include <sstream>
 #include <iostream>
 #include <float.h>
@@ -122,6 +122,8 @@ typedef uint8 byte;
 
 namespace ct // cTools
 {
+	::std::string toStr(const char* fmt, ...);
+
 	template <typename T> ::std::string toStr(T t)
 	{
 		::std::ostringstream os;
