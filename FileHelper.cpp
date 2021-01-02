@@ -79,9 +79,6 @@ SOFTWARE.
 		#include <dlfcn.h>
 		#include <sys/syslimits.h> // PATH_MAX
 	#endif
-	#ifdef LINUX
-		#include <unistd.h>
-	#endif
 	#ifdef STDC_HEADERS
 		#include <stdlib.h>
 		#include <stddef.h>
@@ -93,9 +90,6 @@ SOFTWARE.
 	#ifdef HAVE_STRING_H
 		#include <string.h>
 	#endif /* HAVE_STRING_H */
-	#ifdef HAVE_UNISTD_H
-		#include <unistd.h>
-	#endif
 	// defines
 	#define GetCurrentDir getcwd
 	#define SetCurrentDir chdir
@@ -475,7 +469,7 @@ std::string FileHelper::GetAppPath()
         GetModuleFileName(NULL, buffer, MAX_PATH);
 #elif defined(LINUX)
         char szTmp[32];
-        sprintf(szTmp, "/proc/%d/exe", Getpid());
+        sprintf(szTmp, "/proc/%d/exe", getpid());
         int bytes = ct::mini<int>(readlink(szTmp, buffer, MAX_PATH), MAX_PATH - 1);
         if(bytes >= 0)
             buffer[bytes] = '\0';
