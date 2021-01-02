@@ -77,6 +77,9 @@ SOFTWARE.
 		#include <dlfcn.h>
 		#include <sys/syslimits.h> // PATH_MAX
 	#endif
+	#ifdef LINUX
+		#include <unistd.h>
+	#endif
 	#ifdef STDC_HEADERS
 		#include <stdlib.h>
 		#include <stddef.h>
@@ -754,6 +757,11 @@ void FileHelper::SelectFile(const std::string& vFileToSelect)
 
 #elif defined(LINUX)
 	// is there a similar command on linux ?
+	if (fileToSelect.size() > 0)
+	{
+		std::string sCmdOpenWith = "open -R " + fileToSelect;
+		std::system(sCmdOpenWith.c_str());
+	}
 #elif defined(APPLE)
     if (fileToSelect.size() > 0)
     {
