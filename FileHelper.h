@@ -36,8 +36,10 @@ struct PathStruct
 	bool isOk = false;
 
 	PathStruct();
+	PathStruct(const std::string& vPath, const std::string& vName, const std::string& vExt);
 
 	// FPNE mean FilePathNameExt
+	std::string GetFPNE();
 	std::string GetFPNE_WithPathNameExt(std::string vPath, const std::string& vName, const std::string& vExt);
 	std::string GetFPNE_WithPath(const std::string& vPath);
 	std::string GetFPNE_WithPathName(const std::string& vPath, const std::string& vName);

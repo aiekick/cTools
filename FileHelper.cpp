@@ -109,6 +109,19 @@ PathStruct::PathStruct()
 	isOk = false;
 }
 
+PathStruct::PathStruct(const std::string& vPath, const std::string& vName, const std::string& vExt)
+{
+	isOk = true;
+	path = vPath;
+	name = vName;
+	ext = vExt;
+}
+
+std::string PathStruct::GetFPNE()
+{
+	return GetFPNE_WithPathNameExt(path, name, ext);
+}
+
 std::string PathStruct::GetFPNE_WithPathNameExt(std::string vPath, const std::string& vName, const std::string& vExt)
 {
 	if (vPath[0] == FileHelper::Instance()->m_SlashType[0])
