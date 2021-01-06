@@ -109,24 +109,54 @@ PathStruct::PathStruct()
 	isOk = false;
 }
 
-std::string PathStruct::GetFilePathWithNameExt(const std::string& vName, const std::string& vExt) // need a refactoring
+std::string PathStruct::GetFilePathNameExt(std::string vPath, const std::string& vName, const std::string& vExt)
 {
-	if (path[0] == FileHelper::Instance()->m_SlashType[0])
+	if (vPath[0] == FileHelper::Instance()->m_SlashType[0])
 	{
 #ifdef WIN32
 		// if it happening on window this seem that this path msut be a relative path but with an error
 
-		path = path.substr(1); // bad formated path go relative
+		vPath = vPath.substr(1); // bad formated path go relative
 #endif
 	}
 	else
 	{
 #ifdef UNIX
-		path = "/" + path; // make it absolute
+		vPath = "/" + vPath; // make it absolute
 #endif
 	}
 
-	return path + FileHelper::Instance()->m_SlashType + vName + vExt;
+	return vPath + FileHelper::Instance()->m_SlashType + vName + vExt;
+}
+
+std::string PathStruct::GetFilePathNameExt(const std::string& vPath)
+{
+	return GetFilePathNameExt(vPath, name, ext);
+}
+
+std::string PathStruct::GetFilePathNameExt(const std::string& vPath, const std::string& vName)
+{
+	return GetFilePathNameExt(vPath, vName, ext);
+}
+
+std::string PathStruct::GetFilePathNameExt(const std::string& vPath, const std::string& vExt)
+{
+	return GetFilePathNameExt(vPath, name, vExt);
+}
+
+std::string PathStruct::GetFilePathNameExt(const std::string& vName)
+{
+	return GetFilePathNameExt(path, vName, ext);
+}
+
+std::string PathStruct::GetFilePathNameExt(const std::string& vName, const std::string& vExt)
+{
+	return GetFilePathNameExt(path, vName, vExt);
+}
+
+std::string PathStruct::GetFilePathNameExt(const std::string& vExt)
+{
+	return GetFilePathNameExt(path, name, vExt);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

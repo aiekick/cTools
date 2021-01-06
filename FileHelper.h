@@ -36,7 +36,13 @@ struct PathStruct
 	bool isOk = false;
 
 	PathStruct();
-	std::string GetFilePathWithNameExt(const std::string& vName, const std::string& vExt);
+	std::string GetFilePathNameExt(std::string vPath, const std::string& vName, const std::string& vExt);
+	std::string GetFilePathNameExt(const std::string& vPath);
+	std::string GetFilePathNameExt(const std::string& vPath, const std::string& vName);
+	std::string GetFilePathNameExt(const std::string& vPath, const std::string& vExt);
+	std::string GetFilePathNameExt(const std::string& vName);
+	std::string GetFilePathNameExt(const std::string& vName, const std::string& vExt);
+	std::string GetFilePathNameExt(const std::string& vExt);
 };
 
 typedef int FileLocation;
