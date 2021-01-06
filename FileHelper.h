@@ -59,7 +59,7 @@ public: // funcs
 	void RegisterPath(FileLocation vLoc, const std::string& vPath);
 
 	std::string GetExistingFilePathForFile(const std::string& vFileName);
-	std::string CorrectFilePathName(const std::string &vFilePathName);
+	std::string CorrectSlashTypeForFilePathName(const std::string &vFilePathName);
 #ifdef _DEBUG
 	void Test_GetRelativePathToPath();
 #endif

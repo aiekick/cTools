@@ -235,7 +235,7 @@ PathStruct FileHelper::ParsePathFileName(const std::string& vPathFileName)
 
 	if (vPathFileName.size() > 0)
 	{
-		std::string pfn = CorrectFilePathName(vPathFileName);
+		std::string pfn = CorrectSlashTypeForFilePathName(vPathFileName);
 		size_t lastSlash = pfn.find_last_of(m_SlashType);
 		if (lastSlash != std::string::npos)
 		{
@@ -290,8 +290,8 @@ std::string FileHelper::GetExistingFilePathForFile(const std::string& vFileName)
 	return res;
 }
 
-/* correct file path between os and different slash tyupe between window and unix */
-std::string FileHelper::CorrectFilePathName(const std::string &vFilePathName)
+/* correct file path between os and different slash type between window and unix */
+std::string FileHelper::CorrectSlashTypeForFilePathName(const std::string &vFilePathName)
 {
 	std::string res = vFilePathName;
 	ct::replaceString(res, "\\", m_SlashType);
@@ -354,8 +354,8 @@ std::string FileHelper::GetRelativePathToPath(const std::string& vFilePathName, 
 		{
 			//vRootPath = "C:\\gamedev\\github\\ImGuiFontStudio_avp\\build\\Debug\\..\\..\\projects"
 			//vFilePathName = "C:\\gamedev\\github\\ImGuiFontStudio_avp\\samples_Fonts\\fontawesome-webfont.ttf"
-			auto rootArr = ct::splitStringToVector(CorrectFilePathName(vRootPath), m_SlashType);
-			auto inArr = ct::splitStringToVector(CorrectFilePathName(vFilePathName), m_SlashType);
+			auto rootArr = ct::splitStringToVector(CorrectSlashTypeForFilePathName(vRootPath), m_SlashType);
+			auto inArr = ct::splitStringToVector(CorrectSlashTypeForFilePathName(vFilePathName), m_SlashType);
 			if (!inArr.empty() && !rootArr.empty())
 			{
 				std::vector<std::string> outArr;
@@ -410,14 +410,15 @@ std::string FileHelper::GetRelativePathToPath(const std::string& vFilePathName, 
 
 bool FileHelper::IsAbsolutePath(const std::string& vFilePathName)
 {
+	auto file = CorrectSlashTypeForFilePathName(vFilePathName);
 #ifdef WIN32
 	// on window an absolute path can be like "C:\\" (disk) or "\\" (network)
-	if ((vFilePathName.size() > 3 &&
-		vFilePathName[1] == ':' &&
-		vFilePathName[2] == m_SlashType[0]) ||
-		vFilePathName[0] == m_SlashType[0])
+	if ((file.size() > 3 &&
+		file[1] == ':' &&
+		file[2] == m_SlashType[0]) ||
+		file[0] == m_SlashType[0])
 #elif defined(UNIX)
-	if (vFilePathName[0] == m_SlashType[0]) // absolute path for linux / apple
+	if (file[0] == m_SlashType[0]) // absolute path for linux / apple
 #endif
 
 	{
@@ -447,7 +448,7 @@ void FileHelper::SetAppPath(const std::string& vPath)
 {
     if (vPath.size() > 0)
     {
-        std::string::size_type pos = vPath.find_last_of("\\/");
+		std::string::size_type pos = vPath.find_last_of("\\/");
         if (pos != std::string::npos)
         {
             FileHelper::AppPath = vPath.substr(0, pos);
@@ -499,15 +500,18 @@ std::string FileHelper::GetCurDirectory()
 
 bool FileHelper::SetCurDirectory(const std::string& vPath)
 {
-    return SetCurrentDir(vPath.c_str()) == 0;
+	auto path = CorrectSlashTypeForFilePathName(vPath);
+
+    return SetCurrentDir(path.c_str()) == 0;
 }
 
 std::string FileHelper::ComposePath(const std::string& vPath, const std::string& vFileName, const std::string& vExt)
 {
-	std::string res = vPath;
+	auto path = CorrectSlashTypeForFilePathName(vPath);
+	std::string res = path;
 	if (!vFileName.empty())
 	{
-		if (!vPath.empty()) res += m_SlashType;
+		if (!path.empty()) res += m_SlashType;
 		res += vFileName;
 		if (!vExt.empty()) res += "." + vExt;
 	}
@@ -517,7 +521,7 @@ std::string FileHelper::ComposePath(const std::string& vPath, const std::string&
 bool FileHelper::IsFileExist(const std::string& name)
 {
     std::string fileToOpen = name;
-	fileToOpen = CorrectFilePathName(fileToOpen);
+	fileToOpen = CorrectSlashTypeForFilePathName(fileToOpen);
     ct::replaceString(fileToOpen, "\"", "");
     ct::replaceString(fileToOpen, "\n", "");
     ct::replaceString(fileToOpen, "\r", "");
@@ -542,7 +546,7 @@ bool FileHelper::IsDirectoryExist(const std::string& name)
 
     if (name.size() > 0)
     {
-		std::string dir = CorrectFilePathName(name);
+		std::string dir = CorrectSlashTypeForFilePathName(name);
 		struct stat sb;
 		if (stat(dir.c_str(), &sb))
 			bExists = (sb.st_mode & S_IFDIR);
@@ -555,7 +559,7 @@ void FileHelper::DestroyFile(const std::string& vFilePathName)
 {
 	if (vFilePathName.size() > 0)
 	{
-		auto filePathName = CorrectFilePathName(vFilePathName);
+		auto filePathName = CorrectSlashTypeForFilePathName(vFilePathName);
 		if (IsFileExist(filePathName))
 		{
 			if (remove(filePathName.c_str()))
@@ -572,7 +576,7 @@ bool FileHelper::CreateDirectoryIfNotExist(const std::string& name)
 
     if (name.size() > 0)
     {
-		auto filePathName = CorrectFilePathName(name);
+		auto filePathName = CorrectSlashTypeForFilePathName(name);
 		if (!IsDirectoryExist(filePathName))
         {
             res = true;
@@ -601,7 +605,7 @@ bool FileHelper::CreatePathIfNotExist(const std::string& vPath)
 
     if (vPath.size() > 0)
 	{
-		auto path = CorrectFilePathName(vPath);
+		auto path = CorrectSlashTypeForFilePathName(vPath);
 		if (!IsDirectoryExist(path))
 		{
 		    res = true;
@@ -627,7 +631,7 @@ bool FileHelper::CreatePathIfNotExist(const std::string& vPath)
 
 std::string FileHelper::SimplifyFilePath(const std::string& vFilePath)
 {
-	std::string newPath = CorrectFilePathName(vFilePath);
+	std::string newPath = CorrectSlashTypeForFilePathName(vFilePath);
 
 	// the idea is to simplify a path where there is some ..
 	// by ex : script\\kifs\\../space3d.glsl => can be simplified in /script/space3d.glsl
@@ -662,7 +666,7 @@ std::string FileHelper::SimplifyFilePath(const std::string& vFilePath)
 
 std::string FileHelper::GetID(const std::string& vPathFileName)
 {
-	auto pathFileName = CorrectFilePathName(vPathFileName);
+	auto pathFileName = CorrectSlashTypeForFilePathName(vPathFileName);
 	return "";
 }
 
@@ -672,7 +676,7 @@ std::string FileHelper::GetID(const std::string& vPathFileName)
 
 void FileHelper::OpenFile(const std::string&vShaderToOpen)
 {
-	auto shaderToOpen = CorrectFilePathName(vShaderToOpen);
+	auto shaderToOpen = CorrectSlashTypeForFilePathName(vShaderToOpen);
 
 #if defined(WIN32)
 	auto result = ShellExecute(0, "", shaderToOpen.c_str(), 0, 0, SW_SHOW);
@@ -707,7 +711,7 @@ void FileHelper::OpenFile(const std::string&vShaderToOpen)
 
 void FileHelper::OpenUrl(const std::string& vUrl)
 {
-	auto url = CorrectFilePathName(vUrl);
+	auto url = CorrectSlashTypeForFilePathName(vUrl);
 
 #ifdef WIN32
 	ShellExecute(0, 0, url.c_str(), 0, 0, SW_SHOW);
@@ -724,7 +728,7 @@ void FileHelper::OpenUrl(const std::string& vUrl)
 
 void FileHelper::SelectFile(const std::string& vFileToSelect)
 {
-	auto fileToSelect = CorrectFilePathName(vFileToSelect);
+	auto fileToSelect = CorrectSlashTypeForFilePathName(vFileToSelect);
 
 #ifdef WIN32
 	if (fileToSelect.size() > 0)
