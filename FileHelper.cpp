@@ -109,7 +109,7 @@ PathStruct::PathStruct()
 	isOk = false;
 }
 
-std::string PathStruct::GetFilePathNameExt(std::string vPath, const std::string& vName, const std::string& vExt)
+std::string PathStruct::GetFPNE_WithPathNameExt(std::string vPath, const std::string& vName, const std::string& vExt)
 {
 	if (vPath[0] == FileHelper::Instance()->m_SlashType[0])
 	{
@@ -129,34 +129,34 @@ std::string PathStruct::GetFilePathNameExt(std::string vPath, const std::string&
 	return vPath + FileHelper::Instance()->m_SlashType + vName + vExt;
 }
 
-std::string PathStruct::GetFilePathNameExt(const std::string& vPath)
+std::string PathStruct::GetFPNE_WithPath(const std::string& vPath)
 {
-	return GetFilePathNameExt(vPath, name, ext);
+	return GetFPNE_WithPathNameExt(vPath, name, ext);
 }
 
-std::string PathStruct::GetFilePathNameExt(const std::string& vPath, const std::string& vName)
+std::string PathStruct::GetFPNE_WithPathName(const std::string& vPath, const std::string& vName)
 {
-	return GetFilePathNameExt(vPath, vName, ext);
+	return GetFPNE_WithPathNameExt(vPath, vName, ext);
 }
 
-std::string PathStruct::GetFilePathNameExt(const std::string& vPath, const std::string& vExt)
+std::string PathStruct::GetFPNE_WithPathExt(const std::string& vPath, const std::string& vExt)
 {
-	return GetFilePathNameExt(vPath, name, vExt);
+	return GetFPNE_WithPathNameExt(vPath, name, vExt);
 }
 
-std::string PathStruct::GetFilePathNameExt(const std::string& vName)
+std::string PathStruct::GetFPNE_WithName(const std::string& vName)
 {
-	return GetFilePathNameExt(path, vName, ext);
+	return GetFPNE_WithPathNameExt(path, vName, ext);
 }
 
-std::string PathStruct::GetFilePathNameExt(const std::string& vName, const std::string& vExt)
+std::string PathStruct::GetFPNE_WithNameExt(const std::string& vName, const std::string& vExt)
 {
-	return GetFilePathNameExt(path, vName, vExt);
+	return GetFPNE_WithPathNameExt(path, vName, vExt);
 }
 
-std::string PathStruct::GetFilePathNameExt(const std::string& vExt)
+std::string PathStruct::GetFPNE_WithExt(const std::string& vExt)
 {
-	return GetFilePathNameExt(path, name, vExt);
+	return GetFPNE_WithPathNameExt(path, name, vExt);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
