@@ -37,9 +37,9 @@ namespace conf
 	class ConfigAbstract
 	{
 	public:
-		virtual std::string getXml(const std::string& vOffset) = 0;
+		virtual std::string getXml(const std::string& vOffset, const std::string& vUserDatas = "") = 0;
 		// return true for continue xml parsing of childs in this node or false for interupt the child exploration
-		virtual bool setFromXml(tinyxml2::XMLElement* vElem, tinyxml2::XMLElement* vParent) = 0;
+		virtual bool setFromXml(tinyxml2::XMLElement* vElem, tinyxml2::XMLElement* vParent, const std::string& vUserDatas = "") = 0;
 
 	public:
 		// replace patterns (who can break a xml code) by corresponding escaped pattern
@@ -68,17 +68,17 @@ namespace conf
 			return vDatas;
 		}
 		
-		bool LoadConfigString(const std::string& vConfigString)
+		bool LoadConfigString(const std::string& vConfigString, const std::string& vUserDatas = "")
 		{
-			return parseConfigDatas(vConfigString);
+			return parseConfigDatas(vConfigString, vUserDatas);
 		}
 
-		std::string SaveConfigString()
+		std::string SaveConfigString(const std::string& vUserDatas = "")
 		{
-			return "<config>\n" + getXml("\t") + "</config>\n";
+			return "<config>\n" + getXml("\t", vUserDatas) + "</config>\n";
 		}
 
-		bool LoadConfigFile(const std::string& vFilePathName)
+		bool LoadConfigFile(const std::string& vFilePathName, const std::string& vUserDatas = "")
 		{
 			bool res = false;
 
@@ -89,7 +89,7 @@ namespace conf
 
 				strStream << docFile.rdbuf();//read the file
 
-				res = LoadConfigString(strStream.str());
+				res = LoadConfigString(strStream.str(), vUserDatas);
 
 				docFile.close();
 			}
@@ -97,11 +97,11 @@ namespace conf
 			return res;
 		}
 
-		bool SaveConfigFile(const std::string& vFilePathName)
+		bool SaveConfigFile(const std::string& vFilePathName, const std::string& vUserDatas = "")
 		{
 			bool res = false;
 
-			std::string data = SaveConfigString();
+			std::string data = SaveConfigString(vUserDatas);
 			std::ofstream configFileWriter(vFilePathName, std::ios::out);
 			if (!configFileWriter.bad())
 			{
@@ -113,7 +113,7 @@ namespace conf
 			return res;
 		}
 
-		bool parseConfigDatas(std::string vDatas)
+		bool parseConfigDatas(std::string vDatas, const std::string& vUserDatas = "")
 		{
 			bool res = false;
 
@@ -126,7 +126,7 @@ namespace conf
 
 				if (err == tinyxml2::XMLError::XML_SUCCESS)
 				{
-					res = RecursParsingConfig(doc.FirstChildElement("config"), 0);
+					res = RecursParsingConfig(doc.FirstChildElement("config"), 0, vUserDatas);
 				}
 			}
 			catch (std::exception& ex)
@@ -137,17 +137,17 @@ namespace conf
 			return res;
 		}
 
-		bool RecursParsingConfig(tinyxml2::XMLElement* vElem, tinyxml2::XMLElement* vParent)
+		bool RecursParsingConfig(tinyxml2::XMLElement* vElem, tinyxml2::XMLElement* vParent, const std::string& vUserDatas = "")
 		{
 			bool res = true;
 
-			if (setFromXml(vElem, vParent))
+			if (setFromXml(vElem, vParent, vUserDatas))
 			{
 				// CHILDS 
 				// parse through all childs elements
 				for (tinyxml2::XMLElement* child = vElem->FirstChildElement(); child != 0; child = child->NextSiblingElement())
 				{
-					res &= RecursParsingConfig(child->ToElement(), vElem);
+					res &= RecursParsingConfig(child->ToElement(), vElem, vUserDatas);
 				}
 			}
 
