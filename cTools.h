@@ -595,6 +595,7 @@ namespace ct // cTools
 	{
 		T x, y;
 		vec2<T>() { x = (T)0; y = (T)0; }
+		template <typename U> vec2<T>(vec2<U> a) { x = (T)a.x; y = (T)a.y; }
 		vec2<T>(T a) { x = a; y = a; }
 		vec2<T>(T a, T b) { x = a; y = b; }
 		vec2<T>(::std::string vec, char c = ';', vec2<T> *def = 0)//may be in format "0.2f,0.3f,0.4f"
@@ -780,6 +781,7 @@ namespace ct // cTools
 	{
 		T x, y, z;
 		vec3() : x((T)0), y((T)0), z((T)0) {}
+		template <typename U> vec3<T>(vec3<U> a) { x = (T)a.x; y = (T)a.y; z = (T)a.z; }
 		vec3(T xyz) : x(xyz), y(xyz), z(xyz) {}
 		vec3(T x, T y, T z) : x(x), y(y), z(z) {}
 		vec3(vec2<T> xy, T z) : x(xy.x), y(xy.y), z(z) {}
@@ -879,6 +881,7 @@ namespace ct // cTools
 	{
 		T x, y, z, w;
 		vec4() : x((T)0), y((T)0), z((T)0), w((T)0) {}
+		template <typename U> vec4<T>(vec4<U> a) { x = (T)a.x; y = (T)a.y; z = (T)a.z; w = (T)a.w; }
 		vec4(vec2<T> xy, vec2<T> zw) : x(xy.x), y(xy.y), z(zw.x), w(zw.y) {}
 		vec4(vec3<T> xyz, float w) : x(xyz.x), y(xyz.y), z(xyz.z), w(w) {}
 		vec4(T xyzw) : x(xyzw), y(xyzw), z(xyzw), w(xyzw) {}
