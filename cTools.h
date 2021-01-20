@@ -626,8 +626,8 @@ namespace ct // cTools
 		void operator *= (vec2<T> v) { x *= v.x; y *= v.y; }
 		void operator /= (T a) { x /= a; y /= a; }
 		void operator /= (vec2<T> v) { x /= v.x; y /= v.y; }
-		T length() const { return sqrt(lengthSquared()); }
-		T lengthSquared() const { return x * x + y * y; }
+		T length() { return sqrt(lengthSquared()); }
+		T lengthSquared() { return x * x + y * y; }
 		T normalize() { T _length = length(); if (_length < (T)1e-5) return (T)0.0; T _invLength = (T)1.0 / _length; x *= _invLength; y *= _invLength; return _length; } // return length
 		vec2<T> GetNormalized() { vec2<T> n = vec2<T>(x, y); n.normalize(); return n; }
 		T sum() { return x + y; }
@@ -812,8 +812,8 @@ namespace ct // cTools
 		void operator -= (const vec3& v) { x -= v.x; y -= v.y; z -= v.z; }
 		void operator *= (T a) { x *= a; y *= a; z *= a; }
 		void operator /= (T a) { x /= a; y /= a; z /= a; }
-		T length() const { return (T)sqrtf((float)lengthSquared()); }
-		T lengthSquared() const { return x * x + y * y + z * z; }
+		T length() { return (T)sqrtf((float)lengthSquared()); }
+		T lengthSquared() { return x * x + y * y + z * z; }
 		T normalize() { T _length = length(); if (_length < (T)1e-5) return (T)0; T _invLength = (T)1 / _length; x *= _invLength; y *= _invLength; z *= _invLength; return _length; }
 		vec3<T> GetNormalized() { vec3<T> n = vec3<T>(x, y, z); n.normalize(); return n; }
 		T sum() { return x + y + z; }
@@ -984,8 +984,8 @@ namespace ct // cTools
 		void operator -= (const vec4& v) { x -= v.x; y -= v.y; z -= v.z; w -= v.w; }
 		void operator *= (T a) { x *= a; y *= a; z *= a; w *= a; }
 		void operator /= (T a) { x /= a; y /= a; z /= a; w /= a; }
-		T length() const { return sqrtf(lengthSquared()); }
-		T lengthSquared() const { return x * x + y * y + z * z + w * w; }
+		T length() { return sqrtf(lengthSquared()); }
+		T lengthSquared() { return x * x + y * y + z * z + w * w; }
 		T normalize() { T _length = length(); if (_length < (T)1e-5)return (T)0; T _invLength = (T)1 / _length; x *= _invLength; y *= _invLength; z *= _invLength; w *= _invLength; return _length; }
 		vec4<T> GetNormalized() { vec4<T> n = vec4<T>(x, y, z, w); n.normalize(); return n; }
 		bool emptyAND() { return x == (T)0 && y == (T)0 && z == (T)0 && w == (T)0; }
@@ -1279,7 +1279,7 @@ namespace ct // cTools
 			return result;
 		}
 #ifdef BOX2D
-		const b2AABB Tob2AABB()
+		b2AABB Tob2AABB()
 		{
 			b2AABB v;
 			v.lowerBound = lowerBound.Tob2Vec2();
@@ -1287,26 +1287,18 @@ namespace ct // cTools
 			return v;
 		}
 #endif
-		const vec2<T> Size()
+		vec2<T> Size()
 		{
 			return vec2<T>(upperBound - lowerBound);
 		}
 
 #ifdef USE_IMGUI
-		const ImVec4 ToImVec4()
+		ImVec4 ToImVec4()
 		{
 			ImVec4 v = ImVec4(lowerBound.x, lowerBound.y, upperBound.x, upperBound.y);
 			return v;
 		}
 #endif
-
-		/*const vec4<T> ToVec4()
-		{
-			vec4<T> v = vec4<T>(lowerBound.x, lowerBound.y, upperBound.x, upperBound.y);
-			return v;
-		}*/
-
-
 	};
 	typedef AABB<int> iAABB;
 	typedef AABB<double> dAABB;
