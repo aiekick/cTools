@@ -104,6 +104,46 @@ SOFTWARE.
 	#endif
 #endif
 
+PathStruct FileHelper::ParsePathFileName(const std::string& vPathFileName)
+{
+	PathStruct res;
+
+	if (!vPathFileName.empty())
+	{
+		std::string pfn = CorrectSlashTypeForFilePathName(vPathFileName);
+		if (!pfn.empty())
+		{
+			size_t lastSlash = pfn.find_last_of(m_SlashType);
+			if (lastSlash != std::string::npos)
+			{
+				res.name = pfn.substr(lastSlash + 1);
+				res.path = pfn.substr(0, lastSlash);
+				res.isOk = true;
+			}
+
+			size_t lastPoint = pfn.find_last_of('.');
+			if (lastPoint != std::string::npos)
+			{
+				if (!res.isOk)
+				{
+					res.name = pfn;
+					res.isOk = true;
+				}
+				res.ext = pfn.substr(lastPoint + 1);
+				ct::replaceString(res.name, "." + res.ext, "");
+			}
+
+			if (!res.isOk)
+			{
+				res.name = pfn;
+				res.isOk = true;
+			}
+		}
+	}
+
+	return res;
+}
+
 PathStruct::PathStruct()
 {
 	isOk = false;
@@ -115,6 +155,15 @@ PathStruct::PathStruct(const std::string& vPath, const std::string& vName, const
 	path = vPath;
 	name = vName;
 	ext = vExt;
+	if (ext.empty())
+	{
+		size_t lastPoint = name.find_last_of('.');
+		if (lastPoint != std::string::npos)
+		{
+			ext = name.substr(lastPoint + 1);
+			name = name.substr(0, lastPoint);
+		}
+	}
 }
 
 std::string PathStruct::GetFPNE()
@@ -128,7 +177,6 @@ std::string PathStruct::GetFPNE_WithPathNameExt(std::string vPath, const std::st
 	{
 #ifdef WIN32
 		// if it happening on window this seem that this path msut be a relative path but with an error
-
 		vPath = vPath.substr(1); // bad formated path go relative
 #endif
 	}
@@ -139,7 +187,10 @@ std::string PathStruct::GetFPNE_WithPathNameExt(std::string vPath, const std::st
 #endif
 	}
 
-	return vPath + FileHelper::Instance()->m_SlashType + vName + vExt;
+	if (vPath.empty())
+		return vName + "." + vExt;
+
+	return vPath + FileHelper::Instance()->m_SlashType + vName + "." + vExt;
 }
 
 std::string PathStruct::GetFPNE_WithPath(const std::string& vPath)
@@ -267,40 +318,6 @@ std::vector<uint8_t> FileHelper::LoadFileToBytes(const std::string& vFilePathNam
 	}
 
 	return bytes;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-PathStruct FileHelper::ParsePathFileName(const std::string& vPathFileName)
-{
-	PathStruct res;
-
-	if (vPathFileName.size() > 0)
-	{
-		std::string pfn = CorrectSlashTypeForFilePathName(vPathFileName);
-		size_t lastSlash = pfn.find_last_of(m_SlashType);
-		if (lastSlash != std::string::npos)
-		{
-			res.name = pfn.substr(lastSlash + 1);
-			res.path = pfn.substr(0, lastSlash);
-			res.isOk = true;
-		}
-
-		size_t lastPoint = pfn.find_last_of('.');
-		if (lastPoint != std::string::npos)
-		{
-			if (!res.isOk)
-			{
-				res.name = pfn;
-				res.isOk = true;
-			}
-			res.ext = pfn.substr(lastPoint + 1);
-			ct::replaceString(res.name, "." + res.ext, "");
-		}
-	}
-
-	return res;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

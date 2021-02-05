@@ -66,6 +66,8 @@ public: // var
 	std::vector<std::string> m_SearchPaths;
 
 public: // funcs
+	PathStruct ParsePathFileName(const std::string& vPathFileName);
+
 	void RegisterPath(FileLocation vLoc, const std::string& vPath);
 
 	std::string GetExistingFilePathForFile(const std::string& vFileName);
@@ -94,7 +96,7 @@ public: // funcs
 	void SaveStringToFile(const std::string& vString, const std::string& vFilePathName);
 
 	std::vector<uint8_t> LoadFileToBytes(const std::string& vFilePathName, int *vError = 0);
-	PathStruct ParsePathFileName(const std::string& vPathFileName);
+	
 
 	void DestroyFile(const std::string& filePathName);
 
