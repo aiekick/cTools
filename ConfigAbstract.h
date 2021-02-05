@@ -68,7 +68,7 @@ namespace conf
 			return vDatas;
 		}
 		
-		bool LoadConfigString(const std::string& vConfigString, const std::string& vUserDatas = "")
+		tinyxml2::XMLError LoadConfigString(const std::string& vConfigString, const std::string& vUserDatas = "")
 		{
 			return parseConfigDatas(vConfigString, vUserDatas);
 		}
@@ -78,9 +78,9 @@ namespace conf
 			return "<config>\n" + getXml("\t", vUserDatas) + "</config>\n";
 		}
 
-		bool LoadConfigFile(const std::string& vFilePathName, const std::string& vUserDatas = "")
+		tinyxml2::XMLError LoadConfigFile(const std::string& vFilePathName, const std::string& vUserDatas = "")
 		{
-			bool res = false;
+			tinyxml2::XMLError res = tinyxml2::XMLError::XML_CAN_NOT_CONVERT_TEXT;
 
 			std::ifstream docFile(vFilePathName, std::ios::in);
 			if (docFile.is_open())
@@ -92,6 +92,10 @@ namespace conf
 				res = LoadConfigString(strStream.str(), vUserDatas);
 
 				docFile.close();
+			}
+			else
+			{
+				res = tinyxml2::XMLError::XML_ERROR_FILE_COULD_NOT_BE_OPENED;
 			}
 
 			return res;
@@ -113,20 +117,24 @@ namespace conf
 			return res;
 		}
 
-		bool parseConfigDatas(std::string vDatas, const std::string& vUserDatas = "")
+		tinyxml2::XMLError parseConfigDatas(std::string vDatas, const std::string& vUserDatas = "")
 		{
-			bool res = false;
+			tinyxml2::XMLError res = tinyxml2::XMLError::XML_CAN_NOT_CONVERT_TEXT;
 
 			try
 			{
 				ct::replaceString(vDatas, "\r\n", "\n");
 
 				tinyxml2::XMLDocument doc;
-				tinyxml2::XMLError err = doc.Parse(vDatas.c_str(), vDatas.size());
+				res = doc.Parse(vDatas.c_str(), vDatas.size());
 
-				if (err == tinyxml2::XMLError::XML_SUCCESS)
+				if (res == tinyxml2::XMLError::XML_SUCCESS)
 				{
-					res = RecursParsingConfig(doc.FirstChildElement("config"), 0, vUserDatas);
+					RecursParsingConfig(doc.FirstChildElement("config"), 0, vUserDatas);
+				}
+				else
+				{
+					doc.PrintError();
 				}
 			}
 			catch (std::exception& ex)
@@ -137,21 +145,23 @@ namespace conf
 			return res;
 		}
 
-		bool RecursParsingConfig(tinyxml2::XMLElement* vElem, tinyxml2::XMLElement* vParent, const std::string& vUserDatas = "")
+		void RecursParsingConfig(tinyxml2::XMLElement* vElem, tinyxml2::XMLElement* vParent, const std::string& vUserDatas = "")
 		{
-			bool res = true;
-
 			if (setFromXml(vElem, vParent, vUserDatas))
 			{
 				// CHILDS 
 				// parse through all childs elements
 				for (tinyxml2::XMLElement* child = vElem->FirstChildElement(); child != 0; child = child->NextSiblingElement())
 				{
-					res &= RecursParsingConfig(child->ToElement(), vElem, vUserDatas);
+					RecursParsingConfig(child->ToElement(), vElem, vUserDatas);
 				}
 			}
-
-			return res;
+		}
+		
+		std::string getTinyXml2ErrorMessage(tinyxml2::XMLError vErrorCode)
+		{
+			tinyxml2::XMLDocument doc;
+			return std::string(doc.ErrorIDToName(vErrorCode));
 		}
 	};
 }
