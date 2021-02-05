@@ -696,11 +696,11 @@ std::string FileHelper::SimplifyFilePath(const std::string& vFilePath)
 					std::string str = newPath.substr(sl, dpt + 2 - sl);
 					ct::replaceString(newPath, str, "");
 				}
-				else
-				{
-
-				}
 			}
+		}
+		else
+		{
+			break;
 		}
 	}
 
