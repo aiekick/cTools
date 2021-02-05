@@ -123,6 +123,7 @@ typedef uint8 byte;
 namespace ct // cTools
 {
 	::std::string toStr(const char* fmt, ...);
+	const char* toCStr(const char* fmt, ...);
 
 	template <typename T> ::std::string toStr(T t)
 	{
@@ -272,7 +273,9 @@ namespace ct // cTools
 	template <typename T> inline T ceil(const T& v) { return (T)(::std::ceil((double)v)); }
 	template <typename T> inline T fract(const T& v) { return v - floor<T>(v); }
 	template <typename T> inline T cos(const T& v) { return ::std::cos(v); }
+	template <typename T> inline T acos(const T& v) { return ::std::acos(v); }
 	template <typename T> inline T sin(const T& v) { return ::std::sin(v); }
+	template <typename T> inline T asin(const T& v) { return ::std::asin(v); }
 	template <typename T> inline T tan(const T& v) { return ::std::tan(v); }
 	template <typename T> inline T atan(const T& v) { return ::std::atan(v); }
 	template <typename T> inline T mini(const T& a, const T& b) { return a < b ? a : b; }
