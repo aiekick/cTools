@@ -26,8 +26,12 @@ SOFTWARE.
 */
 
 #include "Logger.h"
+
 #ifdef USE_GLFW3
 #include <GLFW/glfw3.h>
+#endif
+#if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
+#include <tracy/Tracy.hpp>
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -37,57 +41,142 @@ SOFTWARE.
 // singleton
 ofstream *Logger::debugLogFile = new ofstream("debug.log", ios::out);
 //wofstream *Logger::wdebugLogFile = new wofstream("wdebug.log", ios::out);
+std::mutex Logger::Logger_Mutex;
 
 Logger::Logger(void) 
 {
+#if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
+	ZoneScoped;
+#endif
+	std::unique_lock<std::mutex> lck(Logger::Logger_Mutex, std::defer_lock);
+	lck.lock();
 	lastTick = ct::GetTicks();
 	ConsoleVerbose = false;
+	lck.unlock();
 }
 
 Logger::~Logger(void) 
 {
-
-}
-
-void Logger::LogString(std::string str)
-{
-	if (str.size() > 0/* && Logger::Instance()->ConsoleVerbose*/)
-	{
-		m_ConsoleMap["App"][""][""].push_back(str);
-		
-#ifdef USE_GLFW3
-		GLFWwindow* currentWindow = glfwGetCurrentContext();
-		str = "thread(" + ct::toStr(currentWindow) + ") " + str;
+#if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
+	ZoneScoped;
 #endif
-		int64 ticks = ct::GetTicks(); 
-		float time = (ticks - lastTick) / 1000.0f;
-		std::cout << "t:" << time << "s " << str << std::endl;
-		if (!debugLogFile->bad())
-			*debugLogFile << "t:" << time << "s " << str << std::endl;
-	}
+	Close();
 }
 
-void Logger::LogString(std::string vFile, std::string vFunction, std::string vLine, std::string vMsg)
+void Logger::LogString(const char* fmt, ...)
 {
-	if (vMsg.size() > 0/* && Logger::Instance()->ConsoleVerbose*/)
+#if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
+	ZoneScoped;
+#endif
+	std::unique_lock<std::mutex> lck(Logger::Logger_Mutex, std::defer_lock);
+	lck.lock();
+	va_list args;
+	va_start(args, fmt);
+	char TempBuffer[3072 + 1];//3072 = 1024 * 3
+	int w = vsnprintf(TempBuffer, 3072, fmt, args);
+	if (w)
 	{
-		m_ConsoleMap[vFile][vFunction][vLine].push_back(vMsg);
-		std::string str = vFile + " " + vFunction + " " + vLine + " " + vMsg;
-#ifdef USE_GLFW3
-		GLFWwindow* currentWindow = glfwGetCurrentContext();
-		str = "thread(" + ct::toStr(currentWindow) + ") " + str;
-#endif 
 		int64 ticks = ct::GetTicks();
-		float time = (ticks - lastTick) / 1000.0f;
-		std::cout << "t:" << time << "s " << str << std::endl;
-		if (!debugLogFile->bad())
-			*debugLogFile << "t:" << time << "s " << str << std::endl;
+		float time = (ticks - lastTick) / 100.0f;
+
+		char TempBufferBis[3072 + 1];
+		w = snprintf(TempBufferBis, 3072, "[%.3fs]%s", time, TempBuffer);
+		if (w)
+		{
+			std::string msg = std::string(TempBufferBis, w);
+			m_Messages.push_back(msg);
+#if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
+			TracyMessageL(m_Messages[m_Messages.size() - 1U].c_str());
+#endif
+			printf("%s\n", msg.c_str());
+			if (!debugLogFile->bad())
+				*debugLogFile << msg << std::endl;
+		}
 	}
+	va_end(args);
+	lck.unlock();
+}
+
+void Logger::LogStringWithFunction_Debug(std::string vFunction, int vLine, const char* fmt, ...)
+{
+#ifdef _DEBUG
+#if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
+	ZoneScoped;
+#endif
+	std::unique_lock<std::mutex> lck(Logger::Logger_Mutex, std::defer_lock);
+	lck.lock();
+	va_list args;
+	va_start(args, fmt);
+	char TempBuffer[1024 * 3 + 1];
+	int w = vsnprintf(TempBuffer, 1024 * 3, fmt, args);
+	if (w)
+	{
+		int64 ticks = ct::GetTicks();
+		float time = (ticks - lastTick) / 100.0f;
+
+		char TempBufferBis[1024 * 3 + 1];
+		w = snprintf(TempBufferBis, 1024 * 3, "[%.3fs][%s:%i] => %s", time, vFunction.c_str(), vLine, TempBuffer);
+		if (w)
+		{
+			std::string msg = std::string(TempBufferBis, w);
+			m_Messages.push_back(msg);
+#if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
+			TracyMessageL(m_Messages[m_Messages.size() - 1U].c_str());
+#endif
+			printf("%s\n", msg.c_str());
+			if (!debugLogFile->bad())
+				*debugLogFile << msg << std::endl;
+		}
+	}
+	va_end(args);
+	lck.unlock();
+#else
+	UNUSED(vFunction);
+	UNUSED(vLine);
+	UNUSED(fmt);
+#endif
+}
+
+void Logger::LogStringWithFunction(std::string vFunction, int vLine, const char* fmt, ...)
+{
+#if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
+	ZoneScoped;
+#endif
+	std::unique_lock<std::mutex> lck(Logger::Logger_Mutex, std::defer_lock);
+	lck.lock();
+	va_list args;
+	va_start(args, fmt);
+	char TempBuffer[1024 * 3 + 1];
+	int w = vsnprintf(TempBuffer, 1024 * 3, fmt, args);
+	if (w)
+	{
+		int64 ticks = ct::GetTicks();
+		float time = (ticks - lastTick) / 100.0f;
+		
+		char TempBufferBis[1024 * 3 + 1];
+		w = snprintf(TempBufferBis, 1024 * 3, "[%.3fs][%s:%i] => %s", time, vFunction.c_str(), vLine, TempBuffer);
+		if (w)
+		{
+			std::string msg = std::string(TempBufferBis, w);
+			m_Messages.push_back(msg);
+#if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
+			TracyMessageL(m_Messages[m_Messages.size() - 1U].c_str());
+#endif
+			printf("%s\n", msg.c_str());
+			if (!debugLogFile->bad())
+				*debugLogFile << msg << std::endl;
+		}
+	}
+	va_end(args);
+	lck.unlock();
 }
 
 #ifdef USE_OPENGL
 void Logger::LogGLError(std::string vFile, std::string vFunc, int vLine, std::string vGLFunc)
 {
+#if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
+	ZoneScoped;
+#endif
 	if (!Logger::Instance()->ConsoleVerbose)
 		return;
 
@@ -124,68 +213,13 @@ void Logger::LogGLError(std::string vFile, std::string vFunc, int vLine, std::st
 }
 #endif
 
-void Logger::LogString(wstring str)
-{
-	if (str.size() > 0)
-	{
-		//int ticks = 0;// SDL_GetTicks();
-		//float time = ticks / 1000.0f;
-		//std::cout << "t:" << time << "s " << str << std::endl;
-		//if (wdebugLogFile->bad() == false)
-		//	*wdebugLogFile << "t:" << time << "s " << str << std::endl;
-	}
-}
-
-void Logger::LogString(const char* fmt, ...)
-{
-	va_list args;
-	va_start(args, fmt);
-	char TempBuffer[1024 * 3 + 1];
-	int w = vsnprintf(TempBuffer, 1024 * 3 + 1, fmt, args);
-	if (w)
-	{
-		std::string msg = std::string(TempBuffer, w);
-		m_ConsoleMap["App"][""][""].push_back(msg);
-		std::string str = msg;
-#ifdef USE_GLFW3
-		GLFWwindow* currentWindow = glfwGetCurrentContext();
-		str = "thread(" + ct::toStr(currentWindow) + ") " + msg;
-#endif 
-		int64 ticks = ct::GetTicks();
-		float time = (ticks - lastTick) / 1000.0f;
-		std::cout << "t:" << time << "s " << str << std::endl;
-		if (!debugLogFile->bad())
-			*debugLogFile << "t:" << time << "s " << str << std::endl;
-	}
-	va_end(args);
-}
-
-
-void Logger::LogString(std::string vPrettyFunction, std::string vLine, const char* fmt, ...)
-{
-	va_list args;
-	va_start(args, fmt);
-	char TempBuffer[1024 * 3 + 1];
-	int w = vsnprintf(TempBuffer, 1024 * 3 + 1, fmt, args);
-	if (w)
-	{
-		std::string msg = vPrettyFunction + ":line(" + vLine + ") => " + std::string(TempBuffer, w);
-		m_ConsoleMap["App"][""][""].push_back(msg);
-		std::string str = msg;
-#ifdef USE_GLFW3
-		GLFWwindow* currentWindow = glfwGetCurrentContext();
-		str = "thread(" + ct::toStr(currentWindow) + ") " + msg;
-#endif 
-		int64 ticks = ct::GetTicks();
-		float time = (ticks - lastTick) / 1000.0f;
-		std::cout << "t:" << time << "s " << str << std::endl;
-		if (!debugLogFile->bad())
-			*debugLogFile << "t:" << time << "s " << str << std::endl;
-	}
-	va_end(args);
-}
-
 void Logger::Close()
 {
+#if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
+	ZoneScoped;
+#endif
+	std::unique_lock<std::mutex> lck(Logger::Logger_Mutex, std::defer_lock);
+	lck.lock();
 	debugLogFile->close();
+	lck.unlock();
 }

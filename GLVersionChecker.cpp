@@ -483,29 +483,29 @@ void GLVersionChecker::DisplaySupport()
 	auto glStruct = GetOpenglVersionStruct(m_OpenglVersion);
 	if (glStruct)
 	{
-		Logger::Instance()->LogString("OpenGl version : " + ct::toStr(glStruct->major) + "." + ct::toStr(glStruct->minor));
+		LogVar("OpenGl version : %i.%i", glStruct->major, glStruct->minor);
 		if (m_AttribLayoutSupportedCore)
-			Logger::Instance()->LogString("- Attrib Location Available in Core");
+			LogVar("- Attrib Location Available in Core");
 		else if (m_AttribLayoutSupportedExtention)
-			Logger::Instance()->LogString("- Attrib Location Available in Extension");
+			LogVar("- Attrib Location Available in Extension");
 		else
-			Logger::Instance()->LogString("- Attrib Location Not Available");
+			LogVar("- Attrib Location Not Available");
 		if (m_GeometryShaderSupported)
-			Logger::Instance()->LogString("- Geometry Stage Available");
+			LogVar("- Geometry Stage Available");
 		else
-			Logger::Instance()->LogString("- Geometry Stage Not Available");
+			LogVar("- Geometry Stage Not Available");
 		if (m_TesselationShaderSupported)
-			Logger::Instance()->LogString("- Tesselation Stage Available");
+			LogVar("- Tesselation Stage Available");
 		else
-			Logger::Instance()->LogString("- Tesselation Stage Not Available");
+			LogVar("- Tesselation Stage Not Available");
 		if (m_ComputeShaderSupported)
-			Logger::Instance()->LogString("- Compute Stage Available");
+			LogVar("- Compute Stage Available");
 		else
-			Logger::Instance()->LogString("- Compute Stage Not Available");
+			LogVar("- Compute Stage Not Available");
 	}
 	else
 	{
-		Logger::Instance()->LogString("OpenGl version : Not Found !");
+		LogVar("OpenGl version : Not Found !");
 	}
 }
 

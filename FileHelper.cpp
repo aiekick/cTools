@@ -249,7 +249,7 @@ FileHelper::~FileHelper() = default;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-std::string FileHelper::LoadFileToString(const std::string& vFilePathName)
+std::string FileHelper::LoadFileToString(const std::string& vFilePathName, bool vSilentMode)
 {
 	std::string fileCode;
 
@@ -265,7 +265,7 @@ std::string FileHelper::LoadFileToString(const std::string& vFilePathName)
 
 		docFile.close();
 	}
-	else
+	else if (!vSilentMode)
 	{
 		printf("FileHelper::LoadFileToString : File \"%s\" Not Found !\n", vFilePathName.c_str());
 	}
@@ -329,7 +329,7 @@ void FileHelper::RegisterPath(FileLocation vLoc, const std::string& vPath)
 	m_RegisteredPaths[vLoc] = vPath;
 }
 
-std::string FileHelper::GetExistingFilePathForFile(const std::string& vFileName)
+std::string FileHelper::GetExistingFilePathForFile(const std::string& vFileName, bool vSilentMode)
 {
 	std::string res;
 
@@ -337,16 +337,16 @@ std::string FileHelper::GetExistingFilePathForFile(const std::string& vFileName)
 	for (auto it = m_SearchPaths.begin(); it != m_SearchPaths.end(); ++it)
 	{
 		path = *it + m_SlashType + vFileName;
-		if (IsFileExist(path))
+		if (IsFileExist(path, vSilentMode))
 		{
 			res = path;
 			break;
 		}
 	}
 
-		if (res.empty())
-			printf("FileHelper::GetExistingFilePathForFile : Cant found file \"%s\"\n", vFileName.c_str());
-	
+	if (res.empty() && !vSilentMode)
+		printf("FileHelper::GetExistingFilePathForFile : Cant found file \"%s\"\n", vFileName.c_str());
+
 	return res;
 }
 
@@ -460,7 +460,7 @@ std::string FileHelper::GetRelativePathToPath(const std::string& vFilePathName, 
 #ifdef _DEBUG
 		else
 		{
-			printf("FileHelper::GetRelativePathToPath : Path %s is relative !?\n", res.c_str());
+			printf("DEBUG : FileHelper::GetRelativePathToPath : Path %s is relative !?\n", res.c_str());
 		}
 #endif
 	}
@@ -578,7 +578,7 @@ std::string FileHelper::ComposePath(const std::string& vPath, const std::string&
 	return res;
 }
 
-bool FileHelper::IsFileExist(const std::string& name)
+bool FileHelper::IsFileExist(const std::string& name, bool vSilentMode)
 {
     std::string fileToOpen = name;
 	fileToOpen = CorrectSlashTypeForFilePathName(fileToOpen);
@@ -592,7 +592,7 @@ bool FileHelper::IsFileExist(const std::string& name)
 		docFile.close();
 		return true;
 	}
-	else
+	else if (!vSilentMode)
     {
 	    printf("FileHelper::IsFileExist : fail to found file \"%s\"\n", name.c_str());
     }
@@ -620,7 +620,7 @@ void FileHelper::DestroyFile(const std::string& vFilePathName)
 	if (vFilePathName.size() > 0)
 	{
 		auto filePathName = CorrectSlashTypeForFilePathName(vFilePathName);
-		if (IsFileExist(filePathName))
+		if (IsFileExist(filePathName, true))
 		{
 			if (remove(filePathName.c_str()))
 			{
@@ -966,11 +966,11 @@ void FileHelper::SaveToFile(const std::string& vCode, const std::string& vFilePa
 /////////////// SPECIFIC FUNCTION ////////////////////////////
 //////////////////////////////////////////////////////////////
 
-std::string FileHelper::GetRelativePathToParent(const std::string& vFilePath, const std::string& vParentPath)
+std::string FileHelper::GetRelativePathToParent(const std::string& vFilePath, const std::string& vParentPath, bool vSilentMode)
 {
 	std::string newPath = vFilePath;
 
-	if (IsFileExist(newPath))
+	if (IsFileExist(newPath, vSilentMode))
 	{
 
 	}
@@ -978,7 +978,7 @@ std::string FileHelper::GetRelativePathToParent(const std::string& vFilePath, co
 	{
 		newPath = vParentPath + FileHelper::Instance()->m_SlashType + vFilePath;
 
-		if (IsFileExist(newPath))
+		if (IsFileExist(newPath, vSilentMode))
 		{
 
 		}
@@ -987,11 +987,11 @@ std::string FileHelper::GetRelativePathToParent(const std::string& vFilePath, co
 			std::string incPath = "";
 			newPath = incPath + FileHelper::Instance()->m_SlashType + vFilePath;
 
-			if (IsFileExist(newPath))
+			if (IsFileExist(newPath, vSilentMode))
 			{
 
 			}
-			else
+			else if (!vSilentMode)
 			{
 				// error
 				printf("File %s Not Found !\n", newPath.c_str());

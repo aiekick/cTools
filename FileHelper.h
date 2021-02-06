@@ -70,7 +70,7 @@ public: // funcs
 
 	void RegisterPath(FileLocation vLoc, const std::string& vPath);
 
-	std::string GetExistingFilePathForFile(const std::string& vFileName);
+	std::string GetExistingFilePathForFile(const std::string& vFileName, bool vSilentMode = false);
 	std::string CorrectSlashTypeForFilePathName(const std::string &vFilePathName);
 #ifdef _DEBUG
 	void Test_GetRelativePathToPath();
@@ -87,12 +87,12 @@ public: // funcs
 
 	std::string ComposePath(const std::string& vPath, const std::string& vFileName, const std::string& vExt);
 
-	bool IsFileExist(const std::string& name);
+	bool IsFileExist(const std::string& name, bool vSilentMode = false);
 	std::string GetID(const std::string& vPathFileName);
 
 	std::string SimplifyFilePath(const std::string& vFilePath);
 
-	std::string LoadFileToString(const std::string& vFilePathName);
+	std::string LoadFileToString(const std::string& vFilePathName, bool vSilentMode = false);
 	void SaveStringToFile(const std::string& vString, const std::string& vFilePathName);
 
 	std::vector<uint8_t> LoadFileToBytes(const std::string& vFilePathName, int *vError = 0);
@@ -120,7 +120,7 @@ public: // funcs
 	void SaveToFile(const std::string& vCode, const std::string& vFilePathName, FileLocation vFileType);
 
 	// specific function
-	std::string GetRelativePathToParent(const std::string& vFilePath, const std::string& vParentPath);
+	std::string GetRelativePathToParent(const std::string& vFilePath, const std::string& vParentPath, bool vSilentMode = false);
 
 #ifdef USE_GLFW3
 public: /* clipboard */

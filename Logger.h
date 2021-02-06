@@ -24,14 +24,11 @@ SOFTWARE.
 
 #pragma once
 
-#ifdef COCOS2D
-#include "cocos2d.h"
-#endif
-
 #include "cTools.h"
 
 #include <stdarg.h>     /* va_list, va_start, va_arg, va_end */
 
+#include <mutex>
 #include <cassert>
 #include <string>
 #include <stdlib.h>
@@ -50,18 +47,24 @@ typedef long long int64;
 #ifdef MSVC
 #define __PRETTY_FUNCTION__ __FUNCSIG__
 #endif
-#define LogStr(n) Logger::Instance()->LogString(std::string(__FILE__), std::string(__FUNCTION__), ct::toStr(__LINE__), (n))
-#define LogVarDebug(s, ...) Logger::Instance()->LogString(std::string(__FUNCTION__), ct::toStr(__LINE__), s, __VA_ARGS__);
-#define LogValue(s, n) Logger::Instance()->LogString(/*std::string(__FILE__) + " " + */std::string(__FUNCTION__) + " " + ct::toStr(__LINE__) + " : " + (s) + " = " + ct::toStr(n))
+
+#define IsVerboseMode Logger::Instance()->ConsoleVerbose == true
+#define LogVar(s, ...) Logger::Instance()->LogStringWithFunction(std::string(__FUNCTION__), (int)(__LINE__), s, __VA_ARGS__)
+#define LogVarDebug(s, ...) Logger::Instance()->LogStringWithFunction_Debug(std::string(__FUNCTION__), (int)(__LINE__), s, __VA_ARGS__)
+#define LogVarLight(s, ...) Logger::Instance()->LogString(s, __VA_ARGS__)
+#define LogAssert(a,b,...) if (!(a)) { LogVarDebug(b,__VA_ARGS__); assert(a); }
+
 #ifdef USE_OPENGL
 #define LogGlError() Logger::Instance()->LogGLError(""/*__FILE__*/,__FUNCTION__,__LINE__, "")
 #define LogGlErrorVar(var) Logger::Instance()->LogGLError(""/*__FILE__*/,__FUNCTION__,__LINE__,var)
 #endif
-#define LogAssert(a,b) if (!(a)) { LogStr(b); assert(a); }
 
 struct ImGuiContext;
 class Logger
 {
+protected:
+	static std::mutex Logger_Mutex;
+
 private:
 	static ofstream *debugLogFile;
 	static wofstream *wdebugLogFile;
@@ -77,16 +80,14 @@ public:
 public:
 	bool ConsoleVerbose = false;
 	// file, function, line, msg
-	std::map<std::string, std::map<std::string, std::map<std::string, std::list<std::string>>>> m_ConsoleMap;
+	std::vector<std::string> m_Messages;
 
 public:
 	Logger(void);
 	~Logger(void);
-	void LogString(std::string vFile, std::string vFunction, std::string vLine, std::string vMsg);
-	void LogString(std::string str);
-	void LogString(wstring str);
 	void LogString(const char* fmt, ...);
-	void LogString(std::string vPrettyFunction, std::string vLine, const char* fmt, ...);
+	void LogStringWithFunction(std::string vFunction, int vLine, const char* fmt, ...);
+	void LogStringWithFunction_Debug(std::string vFunction, int vLine, const char* fmt, ...);
 #ifdef USE_OPENGL
 	void LogGLError(std::string vFile, std::string vFunc, int vLine, std::string vGLFunc = "");
 #endif
