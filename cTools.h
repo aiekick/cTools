@@ -86,6 +86,12 @@ using namespace cocos2d;
 #define SAFE_SET_POINTERS_ARRAY(buf, size, value) for (int i=0;i<size;i++) buf[i] = value
 #define SAFE_RESET_CHAR_ARRAY(buf) buf[0] = 0
 
+#ifdef _MSC_VER
+#define CTOOL_DEBUG_BREAK if(IsDebuggerPresent()) __debugbreak()
+#else
+#define CTOOL_DEBUG_BREAK (void)
+#endif
+
 #ifdef WXWIDGETS
 #include <wx/wxprec.h>
 #ifndef WX_PRECOMP
