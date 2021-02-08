@@ -208,6 +208,8 @@ void Logger::LogGLError(std::string vFile, std::string vFunc, int vLine, std::st
 			std::cout << "t:" << time << "s : " << error << std::endl;
 			if (!debugLogFile->bad())
 				*debugLogFile << "t:" << time << "s : " << error << std::endl;
+
+			CTOOL_DEBUG_BREAK;
 		}
 	}
 }
