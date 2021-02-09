@@ -958,7 +958,7 @@ namespace ct // cTools
 			}
 		}
 		void Set(T vX, T vY, T vZ, T vW) { x = vX; y = vY; z = vZ; w = vW; }
-		vec4 operator -() const { return vec4(-x, -y, -z, -w); }
+		vec4 operator -() { return vec4(-x, -y, -z, -w); }
 		vec2<T> SizeLBRT() { return vec2<T>(z - x, w - y); }// Considere vec4 as a rect with LBRT for have size LBRT Mean => x = Left, y = Bottom, z = Right, w = Top
 		vec3<T> xyz() { return vec3<T>(x, y, z); }
 		vec2<T> xy() { return vec2<T>(x, y); }
