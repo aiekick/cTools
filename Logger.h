@@ -73,14 +73,14 @@ private:
 public:
 	static Logger* Instance()
 	{
-		static Logger *m_instance = new Logger();
-		return m_instance;
+		static Logger *puinstance = new Logger();
+		return puinstance;
 	}
 
 public:
 	bool ConsoleVerbose = false;
 	// file, function, line, msg
-	std::vector<std::string> m_Messages;
+	std::vector<std::string> puMessages;
 
 public:
 	Logger(void);

@@ -84,9 +84,9 @@ void Logger::LogString(const char* fmt, ...)
 		if (w)
 		{
 			std::string msg = std::string(TempBufferBis, w);
-			m_Messages.push_back(msg);
+			puMessages.push_back(msg);
 #if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
-			TracyMessageL(m_Messages[m_Messages.size() - 1U].c_str());
+			TracyMessageL(puMessages[puMessages.size() - 1U].c_str());
 #endif
 			printf("%s\n", msg.c_str());
 			if (!debugLogFile->bad())
@@ -119,9 +119,9 @@ void Logger::LogStringWithFunction_Debug(std::string vFunction, int vLine, const
 		if (w)
 		{
 			std::string msg = std::string(TempBufferBis, w);
-			m_Messages.push_back(msg);
+			puMessages.push_back(msg);
 #if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
-			TracyMessageL(m_Messages[m_Messages.size() - 1U].c_str());
+			TracyMessageL(puMessages[puMessages.size() - 1U].c_str());
 #endif
 			printf("%s\n", msg.c_str());
 			if (!debugLogFile->bad())
@@ -158,9 +158,9 @@ void Logger::LogStringWithFunction(std::string vFunction, int vLine, const char*
 		if (w)
 		{
 			std::string msg = std::string(TempBufferBis, w);
-			m_Messages.push_back(msg);
+			puMessages.push_back(msg);
 #if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
-			TracyMessageL(m_Messages[m_Messages.size() - 1U].c_str());
+			TracyMessageL(puMessages[puMessages.size() - 1U].c_str());
 #endif
 			printf("%s\n", msg.c_str());
 			if (!debugLogFile->bad())

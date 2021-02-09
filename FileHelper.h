@@ -60,10 +60,10 @@ public: // static
 	static std::string AppPath;
 
 public: // var
-	std::map<FileLocation, std::string> m_RegisteredPaths;
-	std::string m_SlashType;
-	std::string m_AppFileName;
-	std::vector<std::string> m_SearchPaths;
+	std::map<FileLocation, std::string> puRegisteredPaths;
+	std::string puSlashType;
+	std::string puAppFileName;
+	std::vector<std::string> puSearchPaths;
 
 public: // funcs
 	PathStruct ParsePathFileName(const std::string& vPathFileName);

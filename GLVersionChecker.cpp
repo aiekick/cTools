@@ -471,34 +471,34 @@ OpenGlVersionStruct* GLVersionChecker::GetOpenglVersionStruct(std::string vVersi
 
 void GLVersionChecker::InitSupportedVars()
 {
-	m_GeometryShaderSupported = false;
-	m_TesselationShaderSupported = false;
-	m_ComputeShaderSupported = false;
-	m_AttribLayoutSupportedCore = false;
-	m_AttribLayoutSupportedExtention = false;
+	puGeometryShaderSupported = false;
+	puTesselationShaderSupported = false;
+	puComputeShaderSupported = false;
+	puAttribLayoutSupportedCore = false;
+	puAttribLayoutSupportedExtention = false;
 }
 
 void GLVersionChecker::DisplaySupport()
 {
-	auto glStruct = GetOpenglVersionStruct(m_OpenglVersion);
+	auto glStruct = GetOpenglVersionStruct(puOpenglVersion);
 	if (glStruct)
 	{
 		LogVar("OpenGl version : %i.%i", glStruct->major, glStruct->minor);
-		if (m_AttribLayoutSupportedCore)
+		if (puAttribLayoutSupportedCore)
 			LogVar("- Attrib Location Available in Core");
-		else if (m_AttribLayoutSupportedExtention)
+		else if (puAttribLayoutSupportedExtention)
 			LogVar("- Attrib Location Available in Extension");
 		else
 			LogVar("- Attrib Location Not Available");
-		if (m_GeometryShaderSupported)
+		if (puGeometryShaderSupported)
 			LogVar("- Geometry Stage Available");
 		else
 			LogVar("- Geometry Stage Not Available");
-		if (m_TesselationShaderSupported)
+		if (puTesselationShaderSupported)
 			LogVar("- Tesselation Stage Available");
 		else
 			LogVar("- Tesselation Stage Not Available");
-		if (m_ComputeShaderSupported)
+		if (puComputeShaderSupported)
 			LogVar("- Compute Stage Available");
 		else
 			LogVar("- Compute Stage Not Available");
@@ -563,19 +563,19 @@ bool GLVersionChecker::CheckVersion(int vMajorGLVersion, int MinorGLVersion)
 	bool res = IsGlSupported(vMajorGLVersion, MinorGLVersion);
 	if (res)
 	{
-		m_OpenglVersion = ct::toStr(vMajorGLVersion) + "." + ct::toStr(MinorGLVersion);
-		auto version = GetOpenglVersionStruct(m_OpenglVersion);
+		puOpenglVersion = ct::toStr(vMajorGLVersion) + "." + ct::toStr(MinorGLVersion);
+		auto version = GetOpenglVersionStruct(puOpenglVersion);
 		if (version)
 		{
 			version->supported = true;
-			m_DefaultGlslVersionInt = version->DefaultGlslVersionInt;
-			m_DefaultGlslVersionHeader = version->DefineCode;
+			puDefaultGlslVersionInt = version->DefaultGlslVersionInt;
+			puDefaultGlslVersionHeader = version->DefineCode;
 
-			m_AttribLayoutSupportedExtention = version->attribLayoutSupportedExtention;
-			m_AttribLayoutSupportedCore = version->attribLayoutSupportedCore;
-			m_GeometryShaderSupported = version->geometryShaderSupported;
-			m_TesselationShaderSupported = version->tesselationShaderSupported;
-			m_ComputeShaderSupported = version->computeShaderSupported;
+			puAttribLayoutSupportedExtention = version->attribLayoutSupportedExtention;
+			puAttribLayoutSupportedCore = version->attribLayoutSupportedCore;
+			puGeometryShaderSupported = version->geometryShaderSupported;
+			puTesselationShaderSupported = version->tesselationShaderSupported;
+			puComputeShaderSupported = version->computeShaderSupported;
 		}
 	}
 	else
@@ -605,7 +605,7 @@ bool GLVersionChecker::CheckVersions()
 											if (!CheckVersion(2, 1))
 												CheckVersion(2, 0);
 
-	m_OpenglInfosStruct.fill();
+	puOpenglInfosStruct.fill();
 
 	return true;
 }

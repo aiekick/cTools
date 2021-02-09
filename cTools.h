@@ -313,9 +313,9 @@ namespace ct // cTools
 	class cCyclicArray
 	{
 	private:
-		::std::vector<T> m_Array;
-		int m_Count = 0;
-		T m_DefaultValue = (T)0;
+		::std::vector<T> puArray;
+		int puCount = 0;
+		T puDefaultValue = (T)0;
 
 	public:
 		cCyclicArray()
@@ -325,36 +325,36 @@ namespace ct // cTools
 
 		void Init(T vDefaultValue, int vCount)
 		{
-			m_DefaultValue = vDefaultValue;
-			m_Count = vCount;
+			puDefaultValue = vDefaultValue;
+			puCount = vCount;
 
-			for (int i = 0; i < m_Count; i++)
+			for (int i = 0; i < puCount; i++)
 			{
-				m_Array.emplace_back(m_DefaultValue);
+				puArray.emplace_back(puDefaultValue);
 			}
 		}
 
 		void AddValue(T vValue)
 		{
-			m_Array.erase(m_Array.begin());
-			m_Array.emplace_back(vValue);
+			puArray.erase(puArray.begin());
+			puArray.emplace_back(vValue);
 		}
 
 		T GetMean()
 		{
-			T value = m_DefaultValue;
-			for (auto it = m_Array.begin(); it != m_Array.end(); ++it)
+			T value = puDefaultValue;
+			for (auto it = puArray.begin(); it != puArray.end(); ++it)
 			{
-				//if (*it != m_DefaultValue)
+				//if (*it != puDefaultValue)
 				value += *it;
 			}
-			return value / m_Array.size();
+			return value / puArray.size();
 		}
 
 		T GetMinValue(T vMaxValue)
 		{
 			T value = vMaxValue;
-			for (auto it = m_Array.begin(); it != m_Array.end(); ++it)
+			for (auto it = puArray.begin(); it != puArray.end(); ++it)
 			{
 				if (*it < value)
 					value = *it;
@@ -365,7 +365,7 @@ namespace ct // cTools
 		T GetMaxValue(T vMinValue)
 		{
 			T value = vMinValue;
-			for (auto it = m_Array.begin(); it != m_Array.end(); ++it)
+			for (auto it = puArray.begin(); it != puArray.end(); ++it)
 			{
 				if (*it > value)
 					value = *it;
@@ -376,9 +376,9 @@ namespace ct // cTools
 
 		T GetMeanExceptValue(T vExceptValue)
 		{
-			T value = m_DefaultValue;
+			T value = puDefaultValue;
 			int count = 0;
-			for (auto it = m_Array.begin(); it != m_Array.end(); ++it)
+			for (auto it = puArray.begin(); it != puArray.end(); ++it)
 			{
 				if (*it != vExceptValue)
 				{

@@ -113,7 +113,7 @@ PathStruct FileHelper::ParsePathFileName(const std::string& vPathFileName)
 		std::string pfn = CorrectSlashTypeForFilePathName(vPathFileName);
 		if (!pfn.empty())
 		{
-			size_t lastSlash = pfn.find_last_of(m_SlashType);
+			size_t lastSlash = pfn.find_last_of(puSlashType);
 			if (lastSlash != std::string::npos)
 			{
 				res.name = pfn.substr(lastSlash + 1);
@@ -173,7 +173,7 @@ std::string PathStruct::GetFPNE()
 
 std::string PathStruct::GetFPNE_WithPathNameExt(std::string vPath, const std::string& vName, const std::string& vExt)
 {
-	if (vPath[0] == FileHelper::Instance()->m_SlashType[0])
+	if (vPath[0] == FileHelper::Instance()->puSlashType[0])
 	{
 #ifdef WIN32
 		// if it happening on window this seem that this path msut be a relative path but with an error
@@ -190,7 +190,7 @@ std::string PathStruct::GetFPNE_WithPathNameExt(std::string vPath, const std::st
 	if (vPath.empty())
 		return vName + "." + vExt;
 
-	return vPath + FileHelper::Instance()->m_SlashType + vName + "." + vExt;
+	return vPath + FileHelper::Instance()->puSlashType + vName + "." + vExt;
 }
 
 std::string PathStruct::GetFPNE_WithPath(const std::string& vPath)
@@ -233,10 +233,10 @@ std::string FileHelper::AppPath = std::string();
 FileHelper::FileHelper()
 {
 #ifdef WIN32
-	m_SlashType = "\\";
+	puSlashType = "\\";
 #endif
 #ifdef UNIX
-	m_SlashType = "/";
+	puSlashType = "/";
 #endif
 #ifdef _DEBUG
 	//Test_GetRelativePathToPath();
@@ -326,7 +326,7 @@ std::vector<uint8_t> FileHelper::LoadFileToBytes(const std::string& vFilePathNam
 
 void FileHelper::RegisterPath(FileLocation vLoc, const std::string& vPath)
 {
-	m_RegisteredPaths[vLoc] = vPath;
+	puRegisteredPaths[vLoc] = vPath;
 }
 
 std::string FileHelper::GetExistingFilePathForFile(const std::string& vFileName, bool vSilentMode)
@@ -334,9 +334,9 @@ std::string FileHelper::GetExistingFilePathForFile(const std::string& vFileName,
 	std::string res;
 
 	std::string path;
-	for (auto it = m_SearchPaths.begin(); it != m_SearchPaths.end(); ++it)
+	for (auto it = puSearchPaths.begin(); it != puSearchPaths.end(); ++it)
 	{
-		path = *it + m_SlashType + vFileName;
+		path = *it + puSlashType + vFileName;
 		if (IsFileExist(path, vSilentMode))
 		{
 			res = path;
@@ -354,8 +354,8 @@ std::string FileHelper::GetExistingFilePathForFile(const std::string& vFileName,
 std::string FileHelper::CorrectSlashTypeForFilePathName(const std::string &vFilePathName)
 {
 	std::string res = vFilePathName;
-	ct::replaceString(res, "\\", m_SlashType);
-	ct::replaceString(res, "/", m_SlashType);
+	ct::replaceString(res, "\\", puSlashType);
+	ct::replaceString(res, "/", puSlashType);
 	return res;
 }
 
@@ -414,8 +414,8 @@ std::string FileHelper::GetRelativePathToPath(const std::string& vFilePathName, 
 		{
 			//vRootPath = "C:\\gamedev\\github\\ImGuiFontStudio_avp\\build\\Debug\\..\\..\\projects"
 			//vFilePathName = "C:\\gamedev\\github\\ImGuiFontStudio_avp\\samples_Fonts\\fontawesome-webfont.ttf"
-			auto rootArr = ct::splitStringToVector(CorrectSlashTypeForFilePathName(vRootPath), m_SlashType);
-			auto inArr = ct::splitStringToVector(CorrectSlashTypeForFilePathName(vFilePathName), m_SlashType);
+			auto rootArr = ct::splitStringToVector(CorrectSlashTypeForFilePathName(vRootPath), puSlashType);
+			auto inArr = ct::splitStringToVector(CorrectSlashTypeForFilePathName(vFilePathName), puSlashType);
 			if (!inArr.empty() && !rootArr.empty())
 			{
 				std::vector<std::string> outArr;
@@ -452,7 +452,7 @@ std::string FileHelper::GetRelativePathToPath(const std::string& vFilePathName, 
 				for (auto &it : outArr)
 				{
 					if (!res.empty())
-						res += m_SlashType;
+						res += puSlashType;
 					res += it;
 				}
 			}
@@ -475,10 +475,10 @@ bool FileHelper::IsAbsolutePath(const std::string& vFilePathName)
 	// on window an absolute path can be like "C:\\" (disk) or "\\" (network)
 	if ((file.size() > 3 &&
 		file[1] == ':' &&
-		file[2] == m_SlashType[0]) ||
-		file[0] == m_SlashType[0])
+		file[2] == puSlashType[0]) ||
+		file[0] == puSlashType[0])
 #elif defined(UNIX)
-	if (file[0] == m_SlashType[0]) // absolute path for linux / apple
+	if (file[0] == puSlashType[0]) // absolute path for linux / apple
 #endif
 
 	{
@@ -553,7 +553,7 @@ std::string FileHelper::GetCurDirectory()
 	char cCurrentPath[FILENAME_MAX];
 	if (GetCurrentDir(cCurrentPath, FILENAME_MAX))
 	{
-		return std::string(cCurrentPath) + m_SlashType;
+		return std::string(cCurrentPath) + puSlashType;
 	}
 	return "";
 }
@@ -571,7 +571,7 @@ std::string FileHelper::ComposePath(const std::string& vPath, const std::string&
 	std::string res = path;
 	if (!vFileName.empty())
 	{
-		if (!path.empty()) res += m_SlashType;
+		if (!path.empty()) res += puSlashType;
 		res += vFileName;
 		if (!vExt.empty()) res += "." + vExt;
 	}
@@ -681,7 +681,7 @@ bool FileHelper::CreatePathIfNotExist(const std::string& vPath)
 				res &= CreateDirectoryIfNotExist(fullPath);
 
 				// si sur windows
-				fullPath += m_SlashType;
+				fullPath += puSlashType;
 			}
 		}
 	}
@@ -699,15 +699,15 @@ std::string FileHelper::SimplifyFilePath(const std::string& vFilePath)
 	size_t dpt = 0;
 	while((dpt = newPath.find("..")) != std::string::npos)
 	{
-		ct::replaceString(newPath, "\\", m_SlashType);
-		ct::replaceString(newPath, "/", m_SlashType);
+		ct::replaceString(newPath, "\\", puSlashType);
+		ct::replaceString(newPath, "/", puSlashType);
 
-		size_t sl = newPath.rfind(m_SlashType, dpt);
+		size_t sl = newPath.rfind(puSlashType, dpt);
 		if (sl != std::string::npos)
 		{
 			if (sl > 0)
 			{
-				sl = newPath.rfind(m_SlashType, sl - 1);
+				sl = newPath.rfind(puSlashType, sl - 1);
 				if (sl != std::string::npos)
 				{
 					std::string str = newPath.substr(sl, dpt + 2 - sl);
@@ -917,13 +917,13 @@ std::vector<std::string> FileHelper::GetAbsolutePathForFileLocation(const std::v
 
 std::string FileHelper::GetAbsolutePathForFileLocation(const std::string& vRelativeFilePathName, FileLocation vFileType)
 {
-	std::string registeredPath = m_RegisteredPaths[vFileType];
+	std::string registeredPath = puRegisteredPaths[vFileType];
 	if (vRelativeFilePathName.find(registeredPath) != std::string::npos) // deja un chemin absolu
 	{
 		return vRelativeFilePathName;
 	}
 
-	return registeredPath + m_SlashType + vRelativeFilePathName;
+	return registeredPath + puSlashType + vRelativeFilePathName;
 }
 
 std::string FileHelper::LoadFile(const std::string& vFilePathName, FileLocation vFileType)
@@ -976,7 +976,7 @@ std::string FileHelper::GetRelativePathToParent(const std::string& vFilePath, co
 	}
 	else
 	{
-		newPath = vParentPath + FileHelper::Instance()->m_SlashType + vFilePath;
+		newPath = vParentPath + FileHelper::Instance()->puSlashType + vFilePath;
 
 		if (IsFileExist(newPath, vSilentMode))
 		{
@@ -985,7 +985,7 @@ std::string FileHelper::GetRelativePathToParent(const std::string& vFilePath, co
 		else
 		{
 			std::string incPath = "";
-			newPath = incPath + FileHelper::Instance()->m_SlashType + vFilePath;
+			newPath = incPath + FileHelper::Instance()->puSlashType + vFilePath;
 
 			if (IsFileExist(newPath, vSilentMode))
 			{
