@@ -129,8 +129,7 @@ typedef uint8 byte;
 namespace ct // cTools
 {
 	::std::string toStr(const char* fmt, ...);
-	const char* toCStr(const char* fmt, ...);
-
+	
 	template <typename T> ::std::string toStr(T t)
 	{
 		::std::ostringstream os;

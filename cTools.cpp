@@ -63,20 +63,6 @@ SOFTWARE.
 	return std::string();
 }
 
-const char* ct::toCStr(const char* fmt, ...)
-{
-	va_list args;
-	va_start(args, fmt);
-	char TempBuffer[3072 + 1];//3072 = 1024 * 3
-	int w = vsnprintf(TempBuffer, 3072, fmt, args);
-	va_end(args);
-	if (w)
-	{
-		return TempBuffer;
-	}
-	return "";
-}
-
 ::std::list<::std::string> ct::splitStringToList(const ::std::string& text, std::string delimiters, bool pushEmpty, bool vInversion)
 {
 	::std::list<::std::string> arr;
