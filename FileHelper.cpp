@@ -41,7 +41,6 @@ SOFTWARE.
 // general
 #include <fstream>
 #include <sstream>
-#include <sys/types.h>
 #include <sys/stat.h>
 #include <cerrno>
 #include <chrono>
@@ -104,16 +103,16 @@ SOFTWARE.
 	#endif
 #endif
 
-PathStruct FileHelper::ParsePathFileName(const std::string& vPathFileName)
+PathStruct FileHelper::ParsePathFileName(const std::string& vPathFileName) const
 {
 	PathStruct res;
 
 	if (!vPathFileName.empty())
 	{
-		std::string pfn = CorrectSlashTypeForFilePathName(vPathFileName);
+		const std::string pfn = CorrectSlashTypeForFilePathName(vPathFileName);
 		if (!pfn.empty())
 		{
-			size_t lastSlash = pfn.find_last_of(puSlashType);
+			const size_t lastSlash = pfn.find_last_of(puSlashType);
 			if (lastSlash != std::string::npos)
 			{
 				res.name = pfn.substr(lastSlash + 1);
@@ -121,7 +120,7 @@ PathStruct FileHelper::ParsePathFileName(const std::string& vPathFileName)
 				res.isOk = true;
 			}
 
-			size_t lastPoint = pfn.find_last_of('.');
+			const size_t lastPoint = pfn.find_last_of('.');
 			if (lastPoint != std::string::npos)
 			{
 				if (!res.isOk)
@@ -155,9 +154,10 @@ PathStruct::PathStruct(const std::string& vPath, const std::string& vName, const
 	path = vPath;
 	name = vName;
 	ext = vExt;
+	
 	if (ext.empty())
 	{
-		size_t lastPoint = name.find_last_of('.');
+		const size_t lastPoint = name.find_last_of('.');
 		if (lastPoint != std::string::npos)
 		{
 			ext = name.substr(lastPoint + 1);
@@ -287,7 +287,7 @@ std::vector<uint8_t> FileHelper::LoadFileToBytes(const std::string& vFilePathNam
 {
 	std::vector<uint8_t> bytes;
 
-	FILE* intput_file = NULL;
+	FILE* intput_file = nullptr;
 #if defined(MSVC)
 	fopen_s(&intput_file, vFilePathName.c_str(), "rb");
 #else
@@ -351,7 +351,7 @@ std::string FileHelper::GetExistingFilePathForFile(const std::string& vFileName,
 }
 
 /* correct file path between os and different slash type between window and unix */
-std::string FileHelper::CorrectSlashTypeForFilePathName(const std::string &vFilePathName)
+std::string FileHelper::CorrectSlashTypeForFilePathName(const std::string &vFilePathName) const
 {
 	std::string res = vFilePathName;
 	ct::replaceString(res, "\\", puSlashType);
@@ -506,9 +506,9 @@ static std::string GetMacOsAppPath()
 
 void FileHelper::SetAppPath(const std::string& vPath)
 {
-    if (vPath.size() > 0)
+    if (!vPath.empty())
     {
-		std::string::size_type pos = vPath.find_last_of("\\/");
+	    const std::string::size_type pos = vPath.find_last_of("\\/");
         if (pos != std::string::npos)
         {
             FileHelper::AppPath = vPath.substr(0, pos);
@@ -527,7 +527,7 @@ std::string FileHelper::GetAppPath()
 	{
         char buffer[MAX_PATH] = {};
 #ifdef WIN32
-        GetModuleFileName(NULL, buffer, MAX_PATH);
+        GetModuleFileName(nullptr, buffer, MAX_PATH);
 #elif defined(LINUX)
         char szTmp[32];
         sprintf(szTmp, "/proc/%d/exe", getpid());
@@ -540,7 +540,7 @@ std::string FileHelper::GetAppPath()
 		FileHelper::AppPath = path.substr(0, pos);
 #endif
 #if defined(WIN32) || defined(LINUX)
-		std::string::size_type pos = std::string(buffer).find_last_of("\\/");
+        const std::string::size_type pos = std::string(buffer).find_last_of("\\/");
 		FileHelper::AppPath = std::string(buffer).substr(0, pos);
 #endif
 	}
@@ -548,7 +548,7 @@ std::string FileHelper::GetAppPath()
 	return FileHelper::AppPath;
 }
 
-std::string FileHelper::GetCurDirectory()
+std::string FileHelper::GetCurDirectory() const
 {
 	char cCurrentPath[FILENAME_MAX];
 	if (GetCurrentDir(cCurrentPath, FILENAME_MAX))
@@ -558,16 +558,16 @@ std::string FileHelper::GetCurDirectory()
 	return "";
 }
 
-bool FileHelper::SetCurDirectory(const std::string& vPath)
+bool FileHelper::SetCurDirectory(const std::string& vPath) const
 {
-	auto path = CorrectSlashTypeForFilePathName(vPath);
+	const auto path = CorrectSlashTypeForFilePathName(vPath);
 
     return SetCurrentDir(path.c_str()) == 0;
 }
 
-std::string FileHelper::ComposePath(const std::string& vPath, const std::string& vFileName, const std::string& vExt)
+std::string FileHelper::ComposePath(const std::string& vPath, const std::string& vFileName, const std::string& vExt) const
 {
-	auto path = CorrectSlashTypeForFilePathName(vPath);
+	const auto path = CorrectSlashTypeForFilePathName(vPath);
 	std::string res = path;
 	if (!vFileName.empty())
 	{
@@ -578,7 +578,7 @@ std::string FileHelper::ComposePath(const std::string& vPath, const std::string&
 	return res;
 }
 
-bool FileHelper::IsFileExist(const std::string& name, bool vSilentMode)
+bool FileHelper::IsFileExist(const std::string& name, bool vSilentMode) const
 {
     std::string fileToOpen = name;
 	fileToOpen = CorrectSlashTypeForFilePathName(fileToOpen);
@@ -600,13 +600,13 @@ bool FileHelper::IsFileExist(const std::string& name, bool vSilentMode)
 	return false;
 }
 
-bool FileHelper::IsDirectoryExist(const std::string& name)
+bool FileHelper::IsDirectoryExist(const std::string& name) const
 {
     bool bExists = false;
 
-    if (name.size() > 0)
+    if (!name.empty())
     {
-		std::string dir = CorrectSlashTypeForFilePathName(name);
+	    const std::string dir = CorrectSlashTypeForFilePathName(name);
 		struct stat sb;
 		if (stat(dir.c_str(), &sb))
 			bExists = (sb.st_mode & S_IFDIR);
@@ -615,11 +615,11 @@ bool FileHelper::IsDirectoryExist(const std::string& name)
 	return bExists;    // this is not a directory!
 }
 
-void FileHelper::DestroyFile(const std::string& vFilePathName)
+void FileHelper::DestroyFile(const std::string& vFilePathName) const
 {
-	if (vFilePathName.size() > 0)
+	if (!vFilePathName.empty())
 	{
-		auto filePathName = CorrectSlashTypeForFilePathName(vFilePathName);
+		const auto filePathName = CorrectSlashTypeForFilePathName(vFilePathName);
 		if (IsFileExist(filePathName, true))
 		{
 			if (remove(filePathName.c_str()))
@@ -630,19 +630,19 @@ void FileHelper::DestroyFile(const std::string& vFilePathName)
 	}
 }
 
-bool FileHelper::CreateDirectoryIfNotExist(const std::string& name)
+bool FileHelper::CreateDirectoryIfNotExist(const std::string& name) const
 {
     bool res = false;
 
-    if (name.size() > 0)
+    if (!name.empty())
     {
-		auto filePathName = CorrectSlashTypeForFilePathName(name);
+	    const auto filePathName = CorrectSlashTypeForFilePathName(name);
 		if (!IsDirectoryExist(filePathName))
         {
             res = true;
 
 #ifdef WIN32
-            CreateDirectory(filePathName.c_str(), NULL);
+            CreateDirectory(filePathName.c_str(), nullptr);
 #elif defined(UNIX)
             char buffer[MAX_PATH] = {};
             snprintf(buffer, MAX_PATH, "mkdir -p %s", filePathName.c_str());
@@ -659,11 +659,11 @@ bool FileHelper::CreateDirectoryIfNotExist(const std::string& name)
     return res;
 }
 
-bool FileHelper::CreatePathIfNotExist(const std::string& vPath)
+bool FileHelper::CreatePathIfNotExist(const std::string& vPath) const
 {
     bool res = false;
 
-    if (vPath.size() > 0)
+    if (!vPath.empty())
 	{
 		auto path = CorrectSlashTypeForFilePathName(vPath);
 		if (!IsDirectoryExist(path))
@@ -689,7 +689,7 @@ bool FileHelper::CreatePathIfNotExist(const std::string& vPath)
     return res;
 }
 
-std::string FileHelper::SimplifyFilePath(const std::string& vFilePath)
+std::string FileHelper::SimplifyFilePath(const std::string& vFilePath) const
 {
 	std::string newPath = CorrectSlashTypeForFilePathName(vFilePath);
 
@@ -724,7 +724,7 @@ std::string FileHelper::SimplifyFilePath(const std::string& vFilePath)
 	return newPath;
 }
 
-std::string FileHelper::GetID(const std::string& vPathFileName)
+std::string FileHelper::GetID(const std::string& vPathFileName) const
 {
 	auto pathFileName = CorrectSlashTypeForFilePathName(vPathFileName);
 	return "";
@@ -734,26 +734,26 @@ std::string FileHelper::GetID(const std::string& vPathFileName)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void FileHelper::OpenFile(const std::string&vShaderToOpen)
+void FileHelper::OpenFile(const std::string&vShaderToOpen) const
 {
-	auto shaderToOpen = CorrectSlashTypeForFilePathName(vShaderToOpen);
+	const auto shaderToOpen = CorrectSlashTypeForFilePathName(vShaderToOpen);
 
 #if defined(WIN32)
-	auto result = ShellExecute(0, "", shaderToOpen.c_str(), 0, 0, SW_SHOW);
+	auto* result = ShellExecute(nullptr, "", shaderToOpen.c_str(), nullptr, nullptr, SW_SHOW);
 	if (result < (HINSTANCE)32)
 	{
 		// try to open an editor
-		result = ShellExecute(0, "edit", shaderToOpen.c_str(), 0, 0, SW_SHOW);
+		result = ShellExecute(nullptr, "edit", shaderToOpen.c_str(), nullptr, nullptr, SW_SHOW);
 		if (result == (HINSTANCE)SE_ERR_ASSOCINCOMPLETE || result == (HINSTANCE)SE_ERR_NOASSOC)
 		{
 			// open associating dialog
-			std::string sCmdOpenWith = "shell32.dll,OpenAs_RunDLL \"" + shaderToOpen + "\"";
-			result = ShellExecute(0, "", "rundll32.exe", sCmdOpenWith.c_str(), NULL, SW_NORMAL);
+			const std::string sCmdOpenWith = "shell32.dll,OpenAs_RunDLL \"" + shaderToOpen + "\"";
+			result = ShellExecute(nullptr, "", "rundll32.exe", sCmdOpenWith.c_str(), nullptr, SW_NORMAL);
 		}
 		if (result < (HINSTANCE)32) // open in explorer
 		{
-			std::string sCmdExplorer = "/select,\"" + shaderToOpen + "\"";
-			ShellExecute(0, "", "explorer.exe", sCmdExplorer.c_str(), NULL, SW_NORMAL); // ce serait peut etre mieu d'utilsier la commande system comme dans SelectFile
+			const std::string sCmdExplorer = "/select,\"" + shaderToOpen + "\"";
+			ShellExecute(nullptr, "", "explorer.exe", sCmdExplorer.c_str(), nullptr, SW_NORMAL); // ce serait peut etre mieu d'utilsier la commande system comme dans SelectFile
 		}
 	}
 #elif defined(LINUX)
@@ -769,12 +769,12 @@ void FileHelper::OpenFile(const std::string&vShaderToOpen)
 #endif
 }
 
-void FileHelper::OpenUrl(const std::string& vUrl)
+void FileHelper::OpenUrl(const std::string& vUrl) const
 {
-	auto url = CorrectSlashTypeForFilePathName(vUrl);
+	const auto url = CorrectSlashTypeForFilePathName(vUrl);
 
 #ifdef WIN32
-	ShellExecute(0, 0, url.c_str(), 0, 0, SW_SHOW);
+	ShellExecute(nullptr, nullptr, url.c_str(), nullptr, nullptr, SW_SHOW);
 #elif defined(LINUX)
 	char buffer[MAX_PATH] = {};
 	snprintf(buffer, MAX_PATH, "<mybrowser> %s", url.c_str());
@@ -786,14 +786,14 @@ void FileHelper::OpenUrl(const std::string& vUrl)
 #endif
 }
 
-void FileHelper::SelectFile(const std::string& vFileToSelect)
+void FileHelper::SelectFile(const std::string& vFileToSelect) const
 {
-	auto fileToSelect = CorrectSlashTypeForFilePathName(vFileToSelect);
+	const auto fileToSelect = CorrectSlashTypeForFilePathName(vFileToSelect);
 
 #ifdef WIN32
-	if (fileToSelect.size() > 0)
+	if (!fileToSelect.empty())
 	{
-		std::string sCmdOpenWith = "explorer /select," + fileToSelect;
+		const std::string sCmdOpenWith = "explorer /select," + fileToSelect;
 		std::system(sCmdOpenWith.c_str());
 	}
 
@@ -826,15 +826,15 @@ void FileHelper::SelectFile(const std::string& vFileToSelect)
 #endif
 }
 
-std::vector<std::string> FileHelper::GetDrives()
+std::vector<std::string> FileHelper::GetDrives() const
 {
 	std::vector<std::string> res;
 
 #ifdef WIN32
-	DWORD mydrives = 2048;
+	const DWORD mydrives = 2048;
 	char lpBuffer[2048];
 
-	DWORD countChars = GetLogicalDriveStrings(mydrives, lpBuffer);
+	const DWORD countChars = GetLogicalDriveStrings(mydrives, lpBuffer);
 
 	if (countChars > 0)
 	{
@@ -847,16 +847,16 @@ std::vector<std::string> FileHelper::GetDrives()
 	return res;
 }
 
-std::string FileHelper::GetTimeStampToString(const std::string& vSeparator)
+std::string FileHelper::GetTimeStampToString(const std::string& vSeparator) const
 {
 	std::string res;
 
-	auto now = std::chrono::system_clock::now();
-	std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch());
+	const auto now = std::chrono::system_clock::now();
+	const std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch());
 	std::time_t now_c = std::chrono::system_clock::to_time_t(now);
 #ifdef MSVC
 	struct tm partsStruct;
-	errno_t err = localtime_s(&partsStruct, &now_c);
+	const errno_t err = localtime_s(&partsStruct, &now_c);
 	if (!err)
 	{
 		struct tm* parts = &partsStruct;
@@ -865,19 +865,19 @@ std::string FileHelper::GetTimeStampToString(const std::string& vSeparator)
 	if (parts)
 	{
 #endif
-		float year = ct::fract((float)(1900 + parts->tm_year) / 100.0f) * 100.0f;
-		float month = (float)(1 + parts->tm_mon);
-		float day = (float)(parts->tm_mday);
-		float seconds = (float)(parts->tm_hour * 3600 + parts->tm_min * 60 + parts->tm_sec + (float)(ms.count() % 1000) / 1000.0f);
+		const float year = ct::fract((float)(1900 + parts->tm_year) / 100.0f) * 100.0f;
+		const auto month = (float)(1 + parts->tm_mon);
+		const auto day = (float)(parts->tm_mday);
+		const auto seconds = (float)(parts->tm_hour * 3600 + parts->tm_min * 60 + parts->tm_sec + (float)(ms.count() % 1000) / 1000.0f);
 		res = ct::toStr(year) + vSeparator + ct::toStr(month) + vSeparator + ct::toStr(day) + vSeparator + ct::toStr(seconds);
 	}
 	return res;
 }
 
-size_t FileHelper::GetTimeStampToNumber()
+size_t FileHelper::GetTimeStampToNumber() const
 {
 	size_t timeStamp = 0;
-	std::string res = GetTimeStampToString("");
+	const std::string res = GetTimeStampToString("");
 	if (!res.empty())
 	{
 		timeStamp = ct::uvariant(res).GetU();
@@ -889,7 +889,7 @@ size_t FileHelper::GetTimeStampToNumber()
 // Need GLFW
 void FileHelper::SaveInClipBoard(GLFWwindow *vWin, const std::string& vString)
 {
-	if (vString.size() > 0)
+	if (!vString.empty())
 	{
 		glfwSetClipboardString(vWin, vString.c_str());
 	}
@@ -906,7 +906,7 @@ std::vector<std::string> FileHelper::GetAbsolutePathForFileLocation(const std::v
 {
 	std::vector<std::string> res;
 
-	for (auto &it : vRelativeFilePathNames)
+	for (const auto &it : vRelativeFilePathNames)
 	{
 
 		res.emplace_back(GetAbsolutePathForFileLocation(it, vFileType));
@@ -917,7 +917,7 @@ std::vector<std::string> FileHelper::GetAbsolutePathForFileLocation(const std::v
 
 std::string FileHelper::GetAbsolutePathForFileLocation(const std::string& vRelativeFilePathName, FileLocation vFileType)
 {
-	std::string registeredPath = puRegisteredPaths[vFileType];
+	const std::string registeredPath = puRegisteredPaths[vFileType];
 	if (vRelativeFilePathName.find(registeredPath) != std::string::npos) // deja un chemin absolu
 	{
 		return vRelativeFilePathName;
@@ -966,7 +966,7 @@ void FileHelper::SaveToFile(const std::string& vCode, const std::string& vFilePa
 /////////////// SPECIFIC FUNCTION ////////////////////////////
 //////////////////////////////////////////////////////////////
 
-std::string FileHelper::GetRelativePathToParent(const std::string& vFilePath, const std::string& vParentPath, bool vSilentMode)
+std::string FileHelper::GetRelativePathToParent(const std::string& vFilePath, const std::string& vParentPath, bool vSilentMode) const
 {
 	std::string newPath = vFilePath;
 

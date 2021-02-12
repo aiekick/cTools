@@ -26,20 +26,14 @@ SOFTWARE.
 
 #include "cTools.h"
 
-#include <stdarg.h>     /* va_list, va_start, va_arg, va_end */
+#include <cstdarg>     /* va_list, va_start, va_arg, va_end */
 
 #include <mutex>
 #include <cassert>
 #include <string>
-#include <stdlib.h>
-#include <iostream>
 #include <fstream>
 #include <stdexcept>
-#include <chrono>
-#include <map>
 #include <vector>
-#include <sstream>
-#include <exception>
 using namespace std;
 
 typedef long long int64;
@@ -73,7 +67,7 @@ private:
 public:
 	static Logger* Instance()
 	{
-		static Logger *puinstance = new Logger();
+		static auto*puinstance = new Logger();
 		return puinstance;
 	}
 
@@ -86,10 +80,10 @@ public:
 	Logger(void);
 	~Logger(void);
 	void LogString(const char* fmt, ...);
-	void LogStringWithFunction(std::string vFunction, int vLine, const char* fmt, ...);
-	void LogStringWithFunction_Debug(std::string vFunction, int vLine, const char* fmt, ...);
+	void LogStringWithFunction(const std::string& vFunction, int vLine, const char* fmt, ...);
+	void LogStringWithFunction_Debug(const std::string& vFunction, int vLine, const char* fmt, ...);
 #ifdef USE_OPENGL
-	void LogGLError(std::string vFile, std::string vFunc, int vLine, std::string vGLFunc = "");
+	void LogGLError(const std::string& vFile, const std::string& vFunc, int vLine, const std::string& vGLFunc = "") const;
 #endif
 	void Close();
 
@@ -103,13 +97,13 @@ public:
 
 #ifdef WIN32
 		//Get the error message, if any.
-		DWORD errorMessageID = ::GetLastError();
+        const DWORD errorMessageID = ::GetLastError();
 		if (errorMessageID == 0 || errorMessageID == 6)
 			return std::string(); //No error message has been recorded
 
 		LPSTR messageBuffer = nullptr;
-		size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-			NULL, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
+        const size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+                                           nullptr, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, nullptr);
 
         msg = std::string(messageBuffer, size);
 

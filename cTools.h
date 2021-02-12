@@ -39,10 +39,9 @@ SOFTWARE.
 #include <vector>
 #include <set>
 #include <cmath>
-#include <stdarg.h>  /* va_list, va_start, va_arg, va_end */
+#include <cstdarg>  /* va_list, va_start, va_arg, va_end */
 #include <sstream>
 #include <iostream>
-#include <float.h>
 #include <chrono>
 #include <iomanip> // std::setprecision
 #include <type_traits> // std::is_same
@@ -192,9 +191,9 @@ namespace ct // cTools
 ///////// splitStringToVector ///////////////////////////////////////
 /////////////////////////////////////////////////////////////
 
-	::std::list<::std::string> splitStringToList(const ::std::string& text, std::string delimiters, bool pushEmpty = false, bool vInversion = false);
-	::std::vector<::std::string> splitStringToVector(const ::std::string& text, std::string delimiters, bool pushEmpty = false);
-	::std::set<::std::string> splitStringToSet(const ::std::string& text, std::string delimiters, bool pushEmpty = false);
+	::std::list<::std::string> splitStringToList(const ::std::string& text, const std::string& delimiters, bool pushEmpty = false, bool vInversion = false);
+	::std::vector<::std::string> splitStringToVector(const ::std::string& text, const std::string& delimiters, bool pushEmpty = false);
+	::std::set<::std::string> splitStringToSet(const ::std::string& text, const std::string& delimiters, bool pushEmpty = false);
 	::std::list<::std::string> splitStringToList(const ::std::string& text, char delimiter, bool pushEmpty = false, bool vInversion = false);
 	::std::vector<::std::string> splitStringToVector(const ::std::string& text, char delimiter, bool pushEmpty = false);
 	::std::set<::std::string> splitStringToSet(const ::std::string& text, char delimiter, bool pushEmpty = false);
@@ -242,15 +241,16 @@ namespace ct // cTools
 
 	bool replaceString(::std::string& str, const ::std::string& oldStr, const ::std::string& newStr);
 
-	size_t GetCountOccurence(::std::string vSrcString, ::std::string vStringToCount);
-	size_t GetCountOccurenceInSection(::std::string vSrcString, size_t vStartPos, size_t vEndpos, ::std::string vStringToCount);
+	size_t GetCountOccurence(const ::std::string& vSrcString, const ::std::string& vStringToCount);
+	size_t GetCountOccurenceInSection(const ::std::string& vSrcString, size_t vStartPos, size_t vEndpos, const ::std::string
+	                                  & vStringToCount);
 
 	// std::wstring to std::string
 	// std::wstring(unicode/multibytes/char16/wchar_t) to std::string(char)
-	std::string wstring_to_string(const std::wstring wstr);
+	std::string wstring_to_string(const std::wstring& wstr);
 	// std::string to std::wstring
 	// std::string(char) to std::wstring(unicode/multibytes/char16/wchar_t)
-	std::wstring string_to_wstring(const std::string mbstr);
+	std::wstring string_to_wstring(const std::string& mbstr);
 
 	/////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////
@@ -266,7 +266,7 @@ namespace ct // cTools
 	/// This function is used to ensure that a floating point number is not a NaN or infinity.
 	inline bool floatIsValid(float32 x)
 	{
-		union {
+		const union {
 			float32 f;
 			int32 i;
 		} v = { x };
@@ -408,8 +408,8 @@ namespace ct // cTools
 		void Fix(); // fixe the time marking
 		void Pause();
 		void Resume();
-		uint64_t Get();
-		double GetTime();
+		uint64_t Get() const;
+		double GetTime() const;
 		void setTime(double vValue);
 
 		// verifie si vMs millisecond depuis le dernier fix et donc si on peut agir
@@ -460,7 +460,7 @@ namespace ct // cTools
 		}
 
 	public:
-		::std::string GetString();
+		::std::string GetString() const;
 
 		::std::string format;
 		::std::string relativPath;
@@ -606,7 +606,7 @@ namespace ct // cTools
 		template <typename U> vec2<T>(vec2<U> a) { x = (T)a.x; y = (T)a.y; }
 		vec2<T>(T a) { x = a; y = a; }
 		vec2<T>(T a, T b) { x = a; y = b; }
-		vec2<T>(::std::string vec, char c = ';', vec2<T> *def = 0)//may be in format "0.2f,0.3f,0.4f"
+		vec2<T>(::std::string vec, char c = ';', vec2<T> *def = nullptr)//may be in format "0.2f,0.3f,0.4f"
 		{
 			if (def)
 			{
@@ -614,7 +614,7 @@ namespace ct // cTools
 				y = def->y;
 			}
 			::std::vector<T> result = StringToNumberVector<T>(vec, c);
-			size_t s = result.size();
+			const size_t s = result.size();
 			if (s > 0) x = result[0];
 			if (s > 1) y = result[1];
 		}
@@ -793,7 +793,7 @@ namespace ct // cTools
 		vec3(T xyz) : x(xyz), y(xyz), z(xyz) {}
 		vec3(T x, T y, T z) : x(x), y(y), z(z) {}
 		vec3(vec2<T> xy, T z) : x(xy.x), y(xy.y), z(z) {}
-		vec3(::std::string vec, char c = ';', vec3<T> *def = 0)//may be in format "0.2f,0.3f,0.4f"
+		vec3(::std::string vec, char c = ';', vec3<T> *def = nullptr)//may be in format "0.2f,0.3f,0.4f"
 		{
 			if (def)
 			{
@@ -802,7 +802,7 @@ namespace ct // cTools
 				z = def->z;
 			}
 			::std::vector<T> result = StringToNumberVector<T>(vec, c);
-			size_t s = result.size();
+			const size_t s = result.size();
 			if (s > 0) x = result[0];
 			if (s > 1) y = result[1];
 			if (s > 2) z = result[2];
@@ -897,7 +897,7 @@ namespace ct // cTools
 #ifdef USE_IMGUI
 		vec4<T>(const ImVec4& vec) { x = (T)vec.x; y = (T)vec.y; z = (T)vec.z; w = (T)vec.w; }
 #endif
-		vec4(::std::string vec, char c = ';', vec4<T> *def = 0)//may be in format "0.2f,0.3f,0.4f,0.8f"
+		vec4(::std::string vec, char c = ';', vec4<T> *def = nullptr)//may be in format "0.2f,0.3f,0.4f,0.8f"
 		{
 			if (def)
 			{
@@ -907,13 +907,13 @@ namespace ct // cTools
 				w = def->w;
 			}
 			::std::vector<T> result = StringToNumberVector<T>(vec, c);
-			size_t s = result.size();
+			const size_t s = result.size();
 			if (s > 0) x = result[0];
 			if (s > 1) y = result[1];
 			if (s > 2) z = result[2];
 			if (s > 3) w = result[3];
 		}
-		vec4(::std::string vec, char c = ';', int n = 4, vec4<T> *def = 0)//may be in format "0.2f,0.3f,0.4f,0.8f"
+		vec4(::std::string vec, char c = ';', int n = 4, vec4<T> *def = nullptr)//may be in format "0.2f,0.3f,0.4f,0.8f"
 		{
 			if (def)
 			{
@@ -930,7 +930,7 @@ namespace ct // cTools
 				w = (T)0;
 			}
 			::std::vector<T> result = StringToNumberVector<T>(vec, c);
-			size_t s = result.size();
+			const size_t s = result.size();
 			if ((int)s != n)
 			{
 				if (s == 1)
@@ -1133,7 +1133,7 @@ namespace ct // cTools
 	///////// BUFFERS ///////////////////////////////////////////
 	/////////////////////////////////////////////////////////////
 
-	void AppendToBuffer(char* vBuffer, size_t vBufferLen, ::std::string vStr);
+	void AppendToBuffer(char* vBuffer, size_t vBufferLen, const ::std::string& vStr);
 	void ResetBuffer(char* vBuffer);
 
 	/////////////////////////////////////////////////////////////
@@ -1161,7 +1161,7 @@ namespace ct // cTools
 		AABB(::std::string vec, char c)//may be in format "0.2f,0.3f,0.4f,0.8f" left, bottom, right, top
 		{
 			::std::vector<float> result = StringToNumberVector<float>(vec, c);
-			size_t s = result.size();
+			const size_t s = result.size();
 			if (s > 0) lowerBound.x = result[0];
 			if (s > 1) lowerBound.y = result[1];
 			if (s > 2) upperBound.x = result[2];
@@ -1218,8 +1218,8 @@ namespace ct // cTools
 		/// Get the perimeter length
 		T GetPerimeter() const
 		{
-			float wx = upperBound.x - lowerBound.x;
-			float wy = upperBound.y - lowerBound.y;
+			const float wx = upperBound.x - lowerBound.x;
+			const float wy = upperBound.y - lowerBound.y;
 			return (T)2 * (wx + wy);
 		}
 
@@ -1303,7 +1303,7 @@ namespace ct // cTools
 #ifdef USE_IMGUI
 		ImVec4 ToImVec4()
 		{
-			ImVec4 v = ImVec4(lowerBound.x, lowerBound.y, upperBound.x, upperBound.y);
+			const ImVec4 v = ImVec4(lowerBound.x, lowerBound.y, upperBound.x, upperBound.y);
 			return v;
 		}
 #endif
@@ -1435,9 +1435,9 @@ namespace ct // cTools
 		/// Get the perimeter length
 		T GetPerimeter() const
 		{
-			float wx = upperBound.x - lowerBound.x;
-			float wy = upperBound.y - lowerBound.y;
-			float wz = upperBound.z - lowerBound.z;
+			const float wx = upperBound.x - lowerBound.x;
+			const float wy = upperBound.y - lowerBound.y;
+			const float wz = upperBound.z - lowerBound.z;
 			return (T)2 * (wx + wy + wz);
 		}
 
@@ -1628,8 +1628,8 @@ namespace ct // cTools
 		variant(const ::std::vector<::std::string>& c) { vector_string_value = c; inputtype = "vectorString"; datatype = inputtype; }
 		variant(const ::std::set<::std::string>& c) { set_string_value = c; inputtype = "setString"; datatype = inputtype; }
 
-		::std::string GetInputType() { return inputtype; }
-		::std::string GetDataType() { return datatype; }
+		::std::string GetInputType() const { return inputtype; }
+		::std::string GetDataType() const { return datatype; }
 		void setCustomDataType(::std::string vDataType) { datatype = vDataType; }
 
 		bool operator == (variant<T> v)
@@ -1684,14 +1684,14 @@ namespace ct // cTools
 			return uint64_t_value;
 		}*/
 
-		uint32_t GetU(bool *success = 0)
+		uint32_t GetU(bool *success = nullptr) const
 		{
 			if (inputtype == "string")
 			{
 				uint32_t tmp = 0;
 
 #ifdef MSVC
-				int res = sscanf_s(string_value.c_str(), "%u", &tmp);
+				const int res = sscanf_s(string_value.c_str(), "%u", &tmp);
 #else
 				int res = sscanf(string_value.c_str(), "%u", &tmp);
 #endif
@@ -1760,7 +1760,7 @@ namespace ct // cTools
 			return color_value;
 		}
 #ifdef USE_OPENGL
-		texture GetTexture()
+		texture GetTexture() const
 		{
 			return texture_value;
 		}
@@ -1785,7 +1785,7 @@ namespace ct // cTools
 			if (inputtype == "string") return AABB<T>(string_value, c);
 			return aabb_value;
 		}
-		std::vector<float> GetVectorFloat(char c = ';')
+		std::vector<float> GetVectorFloat(char c = ';') const
 		{
 			if (inputtype == "string") return StringToNumberVector<float>(string_value, c);
 			return vector_float_value;
@@ -1795,36 +1795,36 @@ namespace ct // cTools
 			if (inputtype == "string") return StringToNumberVector<T>(string_value, c);
 			return vector_float_value;
 		}
-		::std::vector<::std::string> GetVectorString(char c = ';')
+		::std::vector<::std::string> GetVectorString(char c = ';') const
 		{
 			if (inputtype == "string") return splitStringToVector(string_value, c);
 			return vector_string_value;
 		}
-		::std::set<::std::string> GetSetString(char c = ';')
+		::std::set<::std::string> GetSetString(char c = ';') const
 		{
 			if (inputtype == "string") return splitStringToSet(string_value, c);
 			return set_string_value;
-		}		float GetF()
+		}		float GetF() const
 		{
 			if (inputtype == "string") return (float)atof(string_value.c_str());
 			return float_value;
 		}
-		double GetD()
+		double GetD() const
 		{
 			if (inputtype == "string") return (double)atof(string_value.c_str());
 			return double_value;
 		}
-		int GetI()
+		int GetI() const
 		{
 			if (inputtype == "string") return atoi(string_value.c_str());
 			return int_value;
 		}
-		long GetL()
+		long GetL() const
 		{
 			if (inputtype == "string") return atol(string_value.c_str());
 			return long_value;
 		}
-		bool GetB()
+		bool GetB() const
 		{
 			if (inputtype == "string")
 			{
@@ -1935,10 +1935,10 @@ namespace ct // cTools
 		if (visibleSize.x > 0.0f && visibleSize.y > 0.0f)
 		{
 			ct::fvec2 visibleOrigin;
-			ct::fvec2 texSize = ct::fvec2((float)vItemSize.x, (float)vItemSize.y);
+			const ct::fvec2 texSize = ct::fvec2((float)vItemSize.x, (float)vItemSize.y);
 
 			// float visibleRatio = visibleSize.x / visibleSize.y;
-			float refRatio = texSize.x / texSize.y;
+			const float refRatio = texSize.x / texSize.y;
 
 			float newX = visibleSize.y * refRatio;
 			float newY = visibleSize.x / refRatio;
@@ -1967,7 +1967,7 @@ namespace ct // cTools
 			if (std::is_same<T, float>::value || std::is_same<T, double>::value)
 				rc = ct::floor<T>(rc);
 
-			float newRatio = (float)rc.w / (float)rc.h;
+			const float newRatio = (float)rc.w / (float)rc.h;
 			if (vLogError)
 				if (IS_FLOAT_DIFFERENT(newRatio, refRatio))
 					printf("GetScreenRectWithRatio : the new ratio is not the same as the ref ratio\n");
@@ -1986,7 +1986,7 @@ namespace ct // cTools
 		{
 			ct::fvec2 visibleOrigin;
 
-			float refRatio = vRatio;
+			const float refRatio = vRatio;
 
 			float newX = visibleSize.y * refRatio;
 			float newY = visibleSize.x / refRatio;
@@ -2015,7 +2015,7 @@ namespace ct // cTools
 			if (std::is_same<T, float>::value || std::is_same<T, double>::value)
 				rc = ct::floor<T>(rc);
 
-			float newRatio = (float)rc.w / (float)rc.h;
+			const float newRatio = (float)rc.w / (float)rc.h;
 			if (vLogError)
 				if (IS_FLOAT_DIFFERENT(newRatio, refRatio))
 					printf("GetScreenRectWithRatio : the new ratio is not the same as the ref ratio\n");

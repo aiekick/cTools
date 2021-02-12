@@ -76,14 +76,14 @@ void Logger::LogString(const char* fmt, ...)
 	int w = vsnprintf(TempBuffer, 3072, fmt, args);
 	if (w)
 	{
-		int64 ticks = ct::GetTicks();
-		float time = (ticks - lastTick) / 100.0f;
+		const int64 ticks = ct::GetTicks();
+		const float time = (ticks - lastTick) / 100.0f;
 
 		char TempBufferBis[3072 + 1];
 		w = snprintf(TempBufferBis, 3072, "[%.3fs]%s", time, TempBuffer);
 		if (w)
 		{
-			std::string msg = std::string(TempBufferBis, w);
+			const std::string msg = std::string(TempBufferBis, w);
 			puMessages.push_back(msg);
 #if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
 			TracyMessageL(puMessages[puMessages.size() - 1U].c_str());
@@ -97,7 +97,7 @@ void Logger::LogString(const char* fmt, ...)
 	lck.unlock();
 }
 
-void Logger::LogStringWithFunction_Debug(std::string vFunction, int vLine, const char* fmt, ...)
+void Logger::LogStringWithFunction_Debug(const std::string& vFunction, int vLine, const char* fmt, ...)
 {
 #ifdef _DEBUG
 #if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
@@ -111,14 +111,14 @@ void Logger::LogStringWithFunction_Debug(std::string vFunction, int vLine, const
 	int w = vsnprintf(TempBuffer, 1024 * 3, fmt, args);
 	if (w)
 	{
-		int64 ticks = ct::GetTicks();
-		float time = (ticks - lastTick) / 100.0f;
+		const int64 ticks = ct::GetTicks();
+		const float time = (ticks - lastTick) / 100.0f;
 
 		char TempBufferBis[1024 * 3 + 1];
 		w = snprintf(TempBufferBis, 1024 * 3, "[%.3fs][%s:%i] => %s", time, vFunction.c_str(), vLine, TempBuffer);
 		if (w)
 		{
-			std::string msg = std::string(TempBufferBis, w);
+			const std::string msg = std::string(TempBufferBis, w);
 			puMessages.push_back(msg);
 #if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
 			TracyMessageL(puMessages[puMessages.size() - 1U].c_str());
@@ -137,7 +137,7 @@ void Logger::LogStringWithFunction_Debug(std::string vFunction, int vLine, const
 #endif
 }
 
-void Logger::LogStringWithFunction(std::string vFunction, int vLine, const char* fmt, ...)
+void Logger::LogStringWithFunction(const std::string& vFunction, int vLine, const char* fmt, ...)
 {
 #if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
 	ZoneScoped;
@@ -150,14 +150,14 @@ void Logger::LogStringWithFunction(std::string vFunction, int vLine, const char*
 	int w = vsnprintf(TempBuffer, 1024 * 3, fmt, args);
 	if (w)
 	{
-		int64 ticks = ct::GetTicks();
-		float time = (ticks - lastTick) / 100.0f;
+		const int64 ticks = ct::GetTicks();
+		const float time = (ticks - lastTick) / 100.0f;
 		
 		char TempBufferBis[1024 * 3 + 1];
 		w = snprintf(TempBufferBis, 1024 * 3, "[%.3fs][%s:%i] => %s", time, vFunction.c_str(), vLine, TempBuffer);
 		if (w)
 		{
-			std::string msg = std::string(TempBufferBis, w);
+			const std::string msg = std::string(TempBufferBis, w);
 			puMessages.push_back(msg);
 #if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
 			TracyMessageL(puMessages[puMessages.size() - 1U].c_str());
@@ -172,7 +172,7 @@ void Logger::LogStringWithFunction(std::string vFunction, int vLine, const char*
 }
 
 #ifdef USE_OPENGL
-void Logger::LogGLError(std::string vFile, std::string vFunc, int vLine, std::string vGLFunc)
+void Logger::LogGLError(const std::string& vFile, const std::string& vFunc, int vLine, const std::string& vGLFunc) const
 {
 #if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
 	ZoneScoped;
@@ -180,7 +180,7 @@ void Logger::LogGLError(std::string vFile, std::string vFunc, int vLine, std::st
 	if (!Logger::Instance()->ConsoleVerbose)
 		return;
 
-	GLenum err(glGetError());
+	const GLenum err(glGetError());
 	if (err != GL_NO_ERROR)
 	{
 		std::string error;
@@ -196,15 +196,15 @@ void Logger::LogGLError(std::string vFile, std::string vFunc, int vLine, std::st
 			case GL_STACK_OVERFLOW:					error = "GL_STACK_OVERFLOW";				break;
 		}
 
-		if (error.size() > 0)
+		if (!error.empty())
 		{
 #ifdef USE_GLFW3
 			GLFWwindow* currentWindow = glfwGetCurrentContext();
 			error = "thread(" + ct::toStr(currentWindow) + ") ";
 #endif 
 			error += "OpenGL error : " + error + " in " + vFile + " " + vFunc + " " + ct::toStr(vLine) + " " + vGLFunc;
-			int64 ticks = ct::GetTicks();
-			float time = (ticks - lastTick) / 1000.0f;
+			const int64 ticks = ct::GetTicks();
+			const float time = (ticks - lastTick) / 1000.0f;
 			std::cout << "t:" << time << "s : " << error << std::endl;
 			if (!debugLogFile->bad())
 				*debugLogFile << "t:" << time << "s : " << error << std::endl;
