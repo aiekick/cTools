@@ -207,11 +207,11 @@ public:
 public:
 	static GLVersionChecker* Instance()
 	{
-		static GLVersionChecker *puInstance = new GLVersionChecker();
-		return puInstance;
+		static std::unique_ptr<GLVersionChecker> puInstance = std::make_unique<GLVersionChecker>();
+		return puInstance.get();
 	}
 
-protected:
+public:
 	GLVersionChecker(); // Prevent construction
 	GLVersionChecker(const GLVersionChecker&) {}; // Prevent construction by copying
 	GLVersionChecker& operator =(const GLVersionChecker&) { return *this; }; // Prevent assignment

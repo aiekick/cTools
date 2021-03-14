@@ -26,6 +26,7 @@ SOFTWARE.
 #include <string>
 #include <vector>
 #include <map>
+#include <memory>
 
 struct PathStruct
 {
@@ -131,11 +132,11 @@ public: /* clipboard */
 public: // singleton
 	static FileHelper *Instance()
 	{
-		static auto*_instance = new FileHelper();
-		return _instance;
+		static std::unique_ptr<FileHelper> puInstance = std::make_unique<FileHelper>();
+		return puInstance.get();
 	}
 
-protected:
+public:
 	FileHelper(); // Prevent construction
 	FileHelper(const FileHelper&) {}; // Prevent construction by copying
 	FileHelper& operator =(const FileHelper&) { return *this; }; // Prevent assignment
