@@ -67,8 +67,8 @@ private:
 public:
 	static Logger* Instance()
 	{
-		static auto*puinstance = new Logger();
-		return puinstance;
+		static auto instance = std::make_unique<Logger>();
+		return instance.get();
 	}
 
 public:
