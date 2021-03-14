@@ -88,7 +88,7 @@ using namespace cocos2d;
 #ifdef _MSC_VER
 #define CTOOL_DEBUG_BREAK if(IsDebuggerPresent()) __debugbreak()
 #else
-#define CTOOL_DEBUG_BREAK (void)
+#define CTOOL_DEBUG_BREAK 
 #endif
 
 #ifdef WXWIDGETS

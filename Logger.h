@@ -43,10 +43,10 @@ typedef long long int64;
 #endif
 
 #define IsVerboseMode Logger::Instance()->ConsoleVerbose == true
-#define LogVar(s, ...) Logger::Instance()->LogStringWithFunction(std::string(__FUNCTION__), (int)(__LINE__), s, __VA_ARGS__)
-#define LogVarDebug(s, ...) Logger::Instance()->LogStringWithFunction_Debug(std::string(__FUNCTION__), (int)(__LINE__), s, __VA_ARGS__)
-#define LogVarLight(s, ...) Logger::Instance()->LogString(s, __VA_ARGS__)
-#define LogAssert(a,b,...) if (!(a)) { LogVarDebug(b,__VA_ARGS__); assert(a); }
+#define LogVar(s, ...) Logger::Instance()->LogStringWithFunction(std::string(__FUNCTION__), (int)(__LINE__), s, ## __VA_ARGS__)
+#define LogVarDebug(s, ...) Logger::Instance()->LogStringWithFunction_Debug(std::string(__FUNCTION__), (int)(__LINE__), s, ## __VA_ARGS__)
+#define LogVarLight(s, ...) Logger::Instance()->LogString(s, ## __VA_ARGS__)
+#define LogAssert(a,b,...) if (!(a)) { LogVarDebug(b,## __VA_ARGS__); assert(a); }
 
 #ifdef USE_OPENGL
 #define LogGlError() Logger::Instance()->LogGLError(""/*__FILE__*/,__FUNCTION__,__LINE__, "")

@@ -424,7 +424,7 @@ void ct::ActionTime::setTime(double vValue)
 
 bool ct::ActionTime::IsTimeToAct(long vMs, bool vFix)
 {
-	if (Get() > vMs)
+	if (Get() > (uint64_t)vMs)
 	{
 		if (vFix)
 			Fix();
