@@ -39,6 +39,7 @@ SOFTWARE.
 #include <vector>
 #include <set>
 #include <cmath>
+#include <float.h>
 #include <cstdarg>  /* va_list, va_start, va_arg, va_end */
 #include <sstream>
 #include <iostream>
@@ -88,7 +89,7 @@ using namespace cocos2d;
 #ifdef _MSC_VER
 #define CTOOL_DEBUG_BREAK if(IsDebuggerPresent()) __debugbreak()
 #else
-#define CTOOL_DEBUG_BREAK (void)
+#define CTOOL_DEBUG_BREAK 
 #endif
 
 #ifdef WXWIDGETS
