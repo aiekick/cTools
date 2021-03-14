@@ -39,6 +39,7 @@ SOFTWARE.
 #include <vector>
 #include <set>
 #include <cmath>
+#include <float.h>
 #include <cstdarg>  /* va_list, va_start, va_arg, va_end */
 #include <sstream>
 #include <iostream>
