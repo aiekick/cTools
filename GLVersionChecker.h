@@ -34,6 +34,7 @@ SOFTWARE.
 
 #include <string>
 #include <map>
+#include <memory>
 
 struct OpenglInfosStruct
 {

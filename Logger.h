@@ -34,6 +34,7 @@ SOFTWARE.
 #include <fstream>
 #include <stdexcept>
 #include <vector>
+#include <memory>
 using namespace std;
 
 typedef long long int64;
