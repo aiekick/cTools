@@ -62,6 +62,17 @@ SOFTWARE.
 	return std::string();
 }
 
+#ifdef USE_IMGUI
+::std::string ct::toStrFromImVec2(ImVec2 v, char delimiter)
+{
+	return toStrFromArray(&v.x, 2, delimiter);
+}
+::std::string ct::toStrFromImVec4(ImVec4 v, char delimiter)
+{
+	return toStrFromArray(&v.x, 4, delimiter);
+}
+#endif
+
 ::std::list<::std::string> ct::splitStringToList(const ::std::string& text, const std::string& delimiters, bool pushEmpty, bool vInversion)
 {
 	::std::list<::std::string> arr;

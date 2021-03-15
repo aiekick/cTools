@@ -129,13 +129,30 @@ typedef uint8 byte;
 namespace ct // cTools
 {
 	::std::string toStr(const char* fmt, ...);
-	
+
+	template <typename T> ::std::string toStrFromArray(T *arr, int n, char delimiter = ';')
+	{
+		::std::ostringstream os;
+		for (int i = 0; i < n; i++)
+		{
+			os << arr[i];
+			if (i < n - 1)
+				os << delimiter;
+		}
+		return os.str();
+	}
+
 	template <typename T> ::std::string toStr(T t)
 	{
 		::std::ostringstream os;
 		os << t;
 		return os.str();
 	}
+
+#ifdef USE_IMGUI
+	::std::string toStrFromImVec2(ImVec2 v, char delimiter = ';');
+	::std::string toStrFromImVec4(ImVec4 v, char delimiter = ';');
+#endif
 
 #include <ios>
 	template <typename T> ::std::string toHexStr(T t)
@@ -641,8 +658,8 @@ namespace ct // cTools
 		vec2<T> GetNormalized() { vec2<T> n = vec2<T>(x, y); n.normalize(); return n; }
 		T sum() { return x + y; }
 		T sumAbs() { return abs<T>(x) + abs<T>(y); }
-		bool emptyAND() { return x == (T)0 && y == (T)0; }
-		bool emptyOR() { return x == (T)0 || y == (T)0; }
+		bool emptyAND() const { return x == (T)0 && y == (T)0; }
+		bool emptyOR() const { return x == (T)0 || y == (T)0; }
 		std::string string(char c = ';') { return toStr(x) + c + toStr(y); }
 		T ratioXY() { if (y > (T)0) return x / y; return (T)0; }
 		T ratioYX() { if (x > (T)0) return y / x; return (T)0; }
@@ -1493,7 +1510,7 @@ namespace ct // cTools
 			return result;
 		}
 
-		bool Intersects(const AABBCC<T>& other)
+		bool Intersects(const AABBCC<T>& other) const
 		{
 			bool result = true;
 			result = result || lowerBound.x <= other.lowerBound.x;
@@ -1505,7 +1522,7 @@ namespace ct // cTools
 			return result;
 		}
 
-		const vec3<T> Size()
+		const vec3<T> Size() const
 		{
 			return vec3<T>(upperBound - lowerBound);
 		}
@@ -1922,6 +1939,23 @@ namespace ct // cTools
 
 	// format 2500000 to 2.5M by ex
 	std::string FormatNum(size_t vNum, int vDecimalCount);
+
+	/////////////////////////////////////////////////////////////
+	/// Specialisation et gestion des type complex de toStr /////
+	/////////////////////////////////////////////////////////////
+
+	template <typename T> ::std::string toStr(vec2<T> v, char delimiter = ',')
+	{
+		return ::toStr(&v.x, 2, delimiter);
+	}
+	template <typename T> ::std::string toStr(vec3<T> v, char delimiter = ',')
+	{
+		return ::toStr(&v.x, 3, delimiter);
+	}
+	template <typename T> ::std::string toStr(vec4<T> v, char delimiter = ',')
+	{
+		return ::toStr(&v.x, 4, delimiter);
+	}
 
 	/////////////////////////////////////////////////////////////
 	///////// DeleteObjectsAndClearPointerList //////////////////
