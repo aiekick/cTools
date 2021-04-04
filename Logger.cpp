@@ -72,14 +72,14 @@ void Logger::LogString(const char* fmt, ...)
 	lck.lock();
 	va_list args;
 	va_start(args, fmt);
-	char TempBuffer[3072 + 1];//3072 = 1024 * 3
+	static char TempBuffer[3072 + 1];//3072 = 1024 * 3
 	int w = vsnprintf(TempBuffer, 3072, fmt, args);
 	if (w)
 	{
 		const int64 ticks = ct::GetTicks();
 		const float time = (ticks - lastTick) / 100.0f;
 
-		char TempBufferBis[3072 + 1];
+		static char TempBufferBis[3072 + 1];
 		w = snprintf(TempBufferBis, 3072, "[%.3fs]%s", time, TempBuffer);
 		if (w)
 		{
@@ -107,14 +107,14 @@ void Logger::LogStringWithFunction_Debug(const std::string& vFunction, int vLine
 	lck.lock();
 	va_list args;
 	va_start(args, fmt);
-	char TempBuffer[1024 * 3 + 1];
+	static char TempBuffer[1024 * 3 + 1];
 	int w = vsnprintf(TempBuffer, 1024 * 3, fmt, args);
 	if (w)
 	{
 		const int64 ticks = ct::GetTicks();
 		const float time = (ticks - lastTick) / 100.0f;
 
-		char TempBufferBis[1024 * 3 + 1];
+		static char TempBufferBis[1024 * 3 + 1];
 		w = snprintf(TempBufferBis, 1024 * 3, "[%.3fs][%s:%i] => %s", time, vFunction.c_str(), vLine, TempBuffer);
 		if (w)
 		{
@@ -146,14 +146,14 @@ void Logger::LogStringWithFunction(const std::string& vFunction, int vLine, cons
 	lck.lock();
 	va_list args;
 	va_start(args, fmt);
-	char TempBuffer[1024 * 3 + 1];
+	static char TempBuffer[1024 * 3 + 1];
 	int w = vsnprintf(TempBuffer, 1024 * 3, fmt, args);
 	if (w)
 	{
 		const int64 ticks = ct::GetTicks();
 		const float time = (ticks - lastTick) / 100.0f;
 		
-		char TempBufferBis[1024 * 3 + 1];
+		static char TempBufferBis[1024 * 3 + 1];
 		w = snprintf(TempBufferBis, 1024 * 3, "[%.3fs][%s:%i] => %s", time, vFunction.c_str(), vLine, TempBuffer);
 		if (w)
 		{

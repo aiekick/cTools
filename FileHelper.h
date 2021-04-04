@@ -132,8 +132,8 @@ public: /* clipboard */
 public: // singleton
 	static FileHelper *Instance()
 	{
-		static std::unique_ptr<FileHelper> puInstance = std::make_unique<FileHelper>();
-		return puInstance.get();
+		static FileHelper puInstance;
+		return &puInstance;
 	}
 
 public:
