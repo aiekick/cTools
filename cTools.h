@@ -1946,15 +1946,15 @@ namespace ct // cTools
 
 	template <typename T> ::std::string toStr(vec2<T> v, char delimiter = ',')
 	{
-		return ::toStr(&v.x, 2, delimiter);
+		return ct::toStr(&v.x, 2, delimiter);
 	}
 	template <typename T> ::std::string toStr(vec3<T> v, char delimiter = ',')
 	{
-		return ::toStr(&v.x, 3, delimiter);
+		return ct::toStr(&v.x, 3, delimiter);
 	}
 	template <typename T> ::std::string toStr(vec4<T> v, char delimiter = ',')
 	{
-		return ::toStr(&v.x, 4, delimiter);
+		return ct::toStr(&v.x, 4, delimiter);
 	}
 
 	/////////////////////////////////////////////////////////////

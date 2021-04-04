@@ -132,8 +132,8 @@ public: /* clipboard */
 public: // singleton
 	static FileHelper *Instance()
 	{
-		static FileHelper puInstance;
-		return &puInstance;
+		static FileHelper _Instance;
+		return &_Instance;
 	}
 
 public:

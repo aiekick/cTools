@@ -68,8 +68,8 @@ private:
 public:
 	static Logger* Instance()
 	{
-		static std::unique_ptr<Logger> puInstance = std::make_unique<Logger>();
-		return puInstance.get();
+		static Logger _Instance;
+		return &_Instance;
 	}
 
 public:
