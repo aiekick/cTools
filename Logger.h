@@ -44,10 +44,10 @@ typedef long long int64;
 #endif
 
 #define IsVerboseMode Logger::Instance()->ConsoleVerbose == true
-#define LogVar(s, ...) Logger::Instance()->LogStringWithFunction(std::string(__FUNCTION__), (int)(__LINE__), s, __VA_ARGS__)
-#define LogVarDebug(s, ...) Logger::Instance()->LogStringWithFunction_Debug(std::string(__FUNCTION__), (int)(__LINE__), s, __VA_ARGS__)
-#define LogVarLight(s, ...) Logger::Instance()->LogString(s, __VA_ARGS__)
-#define LogAssert(a,b,...) if (!(a)) { LogVarDebug(b,__VA_ARGS__); assert(a); }
+#define LogVar(s, ...) Logger::Instance()->LogStringWithFunction(std::string(__FUNCTION__), (int)(__LINE__), s,  ##__VA_ARGS__)
+#define LogVarDebug(s, ...) Logger::Instance()->LogStringWithFunction_Debug(std::string(__FUNCTION__), (int)(__LINE__), s,  ##__VA_ARGS__)
+#define LogVarLight(s, ...) Logger::Instance()->LogString(s,  ##__VA_ARGS__)
+#define LogAssert(a,b,...) if (!(a)) { LogVarDebug(b, ##__VA_ARGS__); assert(a); }
 
 #ifdef USE_OPENGL
 #define LogGlError() Logger::Instance()->LogGLError(""/*__FILE__*/,__FUNCTION__,__LINE__, "")
@@ -65,6 +65,10 @@ private:
 	static wofstream *wdebugLogFile;
 	int64 lastTick = 0;
 
+private:
+	void LogString(const std::string *vFunction, const int *vLine, const char* vStr);
+	void LogString(const std::string *vFunction, const int *vLine, const char* fmt, const va_list& vArgs);
+
 public:
 	static Logger* Instance()
 	{
@@ -78,41 +82,18 @@ public:
 	std::vector<std::string> puMessages;
 
 public:
-	Logger(void);
-	~Logger(void);
+	Logger();
+	~Logger();
 	void LogString(const char* fmt, ...);
-	void LogStringWithFunction(const std::string& vFunction, int vLine, const char* fmt, ...);
-	void LogStringWithFunction_Debug(const std::string& vFunction, int vLine, const char* fmt, ...);
+	void LogStringWithFunction(const std::string& vFunction, const int& vLine, const char* fmt, ...);
+	void LogStringWithFunction_Debug(const std::string& vFunction, const int& vLine, const char* fmt, ...);
+	//void LogStringWithFunction(const std::string& vFunction, const int& vLine, const std::string& vStr);
+	//void LogStringWithFunction_Debug(const std::string& vFunction, const int& vLine, const std::string& vStr);
 #ifdef USE_OPENGL
 	void LogGLError(const std::string& vFile, const std::string& vFunc, int vLine, const std::string& vGLFunc = "") const;
 #endif
 	void Close();
 
 public:
-	/////////////////////////////////////////////////////////////
-	///////// Returns the last Win32 error //////////////////////
-	/////////////////////////////////////////////////////////////
-	std::string GetLastErrorAsString()
-	{
-        std::string msg;
-
-#ifdef WIN32
-		//Get the error message, if any.
-        const DWORD errorMessageID = ::GetLastError();
-		if (errorMessageID == 0 || errorMessageID == 6)
-			return std::string(); //No error message has been recorded
-
-		LPSTR messageBuffer = nullptr;
-        const size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-                                           nullptr, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, nullptr);
-
-        msg = std::string(messageBuffer, size);
-
-		//Free the buffer.
-		LocalFree(messageBuffer);
-#else
-		//cAssert(0, "to implement");
-#endif
-		return msg;
-	}
+	std::string GetLastErrorAsString();
 };

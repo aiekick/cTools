@@ -64,6 +64,41 @@ Logger::~Logger(void)
 	Close();
 }
 
+void Logger::LogString(const std::string *vFunction, const int *vLine, const char* vStr)
+{
+	const int64 ticks = ct::GetTicks();
+	const double time = (ticks - lastTick) / 100.0;
+
+	static char TempBufferBis[3072 + 1];
+	int w = 0;
+	if (vFunction && vLine)
+		w = snprintf(TempBufferBis, 1024 * 3, "[%.3fs][%s:%i] => %s", time, vFunction->c_str(), *vLine, vStr);
+	else
+		w = snprintf(TempBufferBis, 3072, "[%.3fs]%s", time,  vStr);
+	if (w)
+	{
+		const std::string msg = std::string(TempBufferBis, w);
+		puMessages.push_back(msg);
+#if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
+		TracyMessageL(puMessages[puMessages.size() - 1U].c_str());
+#endif
+		printf("%s\n", msg.c_str());
+		if (!debugLogFile->bad())
+			*debugLogFile << msg << std::endl;
+	}
+}
+
+
+void Logger::LogString(const std::string *vFunction, const int *vLine, const char* fmt, const va_list& vArgs)
+{
+	static char TempBuffer[3072 + 1];//3072 = 1024 * 3
+	int w = vsnprintf(TempBuffer, 3072, fmt, vArgs);
+	if (w)
+	{
+		LogString(vFunction, vLine, TempBuffer);
+	}
+}
+
 void Logger::LogString(const char* fmt, ...)
 {
 #if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
@@ -73,32 +108,26 @@ void Logger::LogString(const char* fmt, ...)
 	lck.lock();
 	va_list args;
 	va_start(args, fmt);
-	static char TempBuffer[3072 + 1];//3072 = 1024 * 3
-	int w = vsnprintf(TempBuffer, 3072, fmt, args);
-	if (w)
-	{
-		const int64 ticks = ct::GetTicks();
-		const float time = (ticks - lastTick) / 100.0f;
-
-		static char TempBufferBis[3072 + 1];
-		w = snprintf(TempBufferBis, 3072, "[%.3fs]%s", time, TempBuffer);
-		if (w)
-		{
-			const std::string msg = std::string(TempBufferBis, w);
-			puMessages.push_back(msg);
-#if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
-			TracyMessageL(puMessages[puMessages.size() - 1U].c_str());
-#endif
-			printf("%s\n", msg.c_str());
-			if (!debugLogFile->bad())
-				*debugLogFile << msg << std::endl;
-		}
-	}
+	LogString(nullptr, nullptr, fmt, args);
 	va_end(args);
 	lck.unlock();
 }
 
-void Logger::LogStringWithFunction_Debug(const std::string& vFunction, int vLine, const char* fmt, ...)
+void Logger::LogStringWithFunction(const std::string& vFunction, const int& vLine, const char* fmt, ...)
+{
+#if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
+	ZoneScoped;
+#endif
+	std::unique_lock<std::mutex> lck(Logger::Logger_Mutex, std::defer_lock);
+	lck.lock();
+	va_list args;
+	va_start(args, fmt);
+	LogString(&vFunction, &vLine, fmt, args);
+	va_end(args);
+	lck.unlock();
+}
+
+void Logger::LogStringWithFunction_Debug(const std::string& vFunction, const int& vLine, const char* fmt, ...)
 {
 #ifdef _DEBUG
 #if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
@@ -108,27 +137,7 @@ void Logger::LogStringWithFunction_Debug(const std::string& vFunction, int vLine
 	lck.lock();
 	va_list args;
 	va_start(args, fmt);
-	static char TempBuffer[1024 * 3 + 1];
-	int w = vsnprintf(TempBuffer, 1024 * 3, fmt, args);
-	if (w)
-	{
-		const int64 ticks = ct::GetTicks();
-		const float time = (ticks - lastTick) / 100.0f;
-
-		static char TempBufferBis[1024 * 3 + 1];
-		w = snprintf(TempBufferBis, 1024 * 3, "[%.3fs][%s:%i] => %s", time, vFunction.c_str(), vLine, TempBuffer);
-		if (w)
-		{
-			const std::string msg = std::string(TempBufferBis, w);
-			puMessages.push_back(msg);
-#if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
-			TracyMessageL(puMessages[puMessages.size() - 1U].c_str());
-#endif
-			printf("%s\n", msg.c_str());
-			if (!debugLogFile->bad())
-				*debugLogFile << msg << std::endl;
-		}
-	}
+	LogString(&vFunction, &vLine, fmt, args);
 	va_end(args);
 	lck.unlock();
 #else
@@ -138,39 +147,35 @@ void Logger::LogStringWithFunction_Debug(const std::string& vFunction, int vLine
 #endif
 }
 
-void Logger::LogStringWithFunction(const std::string& vFunction, int vLine, const char* fmt, ...)
+/*
+ * void Logger::LogStringWithFunction(const std::string& vFunction, const int& vLine, const std::string& vStr)
 {
 #if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
 	ZoneScoped;
 #endif
 	std::unique_lock<std::mutex> lck(Logger::Logger_Mutex, std::defer_lock);
 	lck.lock();
-	va_list args;
-	va_start(args, fmt);
-	static char TempBuffer[1024 * 3 + 1];
-	int w = vsnprintf(TempBuffer, 1024 * 3, fmt, args);
-	if (w)
-	{
-		const int64 ticks = ct::GetTicks();
-		const float time = (ticks - lastTick) / 100.0f;
-		
-		static char TempBufferBis[1024 * 3 + 1];
-		w = snprintf(TempBufferBis, 1024 * 3, "[%.3fs][%s:%i] => %s", time, vFunction.c_str(), vLine, TempBuffer);
-		if (w)
-		{
-			const std::string msg = std::string(TempBufferBis, w);
-			puMessages.push_back(msg);
-#if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
-			TracyMessageL(puMessages[puMessages.size() - 1U].c_str());
-#endif
-			printf("%s\n", msg.c_str());
-			if (!debugLogFile->bad())
-				*debugLogFile << msg << std::endl;
-		}
-	}
-	va_end(args);
+	LogString(&vFunction, &vLine, vStr.c_str());
 	lck.unlock();
 }
+
+void Logger::LogStringWithFunction_Debug(const std::string& vFunction, const int& vLine, const std::string& vStr)
+{
+#ifdef _DEBUG
+#if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
+	ZoneScoped;
+#endif
+	std::unique_lock<std::mutex> lck(Logger::Logger_Mutex, std::defer_lock);
+	lck.lock();
+	LogString(&vFunction, &vLine, vStr.c_str());
+	lck.unlock();
+#else
+	UNUSED(vFunction);
+	UNUSED(vLine);
+	UNUSED(fmt);
+#endif
+}
+*/
 
 #ifdef USE_OPENGL
 void Logger::LogGLError(const std::string& vFile, const std::string& vFunc, int vLine, const std::string& vGLFunc) const
@@ -226,4 +231,28 @@ void Logger::Close()
 	LogVar("Logger Closing");
 	debugLogFile->close();
 	lck.unlock();
+}
+
+std::string Logger::GetLastErrorAsString()
+{
+	std::string msg;
+
+#ifdef WIN32
+	//Get the error message, if any.
+	const DWORD errorMessageID = ::GetLastError();
+	if (errorMessageID == 0 || errorMessageID == 6)
+		return std::string(); //No error message has been recorded
+
+	LPSTR messageBuffer = nullptr;
+	const size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+		nullptr, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, nullptr);
+
+	msg = std::string(messageBuffer, size);
+
+	//Free the buffer.
+	LocalFree(messageBuffer);
+#else
+	//cAssert(0, "to implement");
+#endif
+	return msg;
 }
