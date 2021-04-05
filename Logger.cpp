@@ -53,7 +53,6 @@ Logger::Logger(void)
 	lastTick = ct::GetTicks();
 	ConsoleVerbose = false;
 	lck.unlock();
-	LogVar("Logger Opening");
 }
 
 Logger::~Logger(void) 
@@ -87,7 +86,6 @@ void Logger::LogString(const std::string *vFunction, const int *vLine, const cha
 			*debugLogFile << msg << std::endl;
 	}
 }
-
 
 void Logger::LogString(const std::string *vFunction, const int *vLine, const char* fmt, va_list vArgs)
 {
@@ -226,7 +224,6 @@ void Logger::Close()
 #if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
 	ZoneScoped;
 #endif
-	LogVar("Logger Closing");
 	std::unique_lock<std::mutex> lck(Logger::Logger_Mutex, std::defer_lock);
 	lck.lock();
 	debugLogFile->close();
