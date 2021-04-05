@@ -208,8 +208,8 @@ public:
 public:
 	static GLVersionChecker* Instance()
 	{
-		static std::unique_ptr<GLVersionChecker> puInstance = std::make_unique<GLVersionChecker>();
-		return puInstance.get();
+		static GLVersionChecker _Instance;
+		return &_Instance;
 	}
 
 public:

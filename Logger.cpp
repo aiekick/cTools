@@ -52,6 +52,7 @@ Logger::Logger(void)
 	lck.lock();
 	lastTick = ct::GetTicks();
 	ConsoleVerbose = false;
+	LogVar("Logger Opening");
 	lck.unlock();
 }
 
@@ -222,6 +223,7 @@ void Logger::Close()
 #endif
 	std::unique_lock<std::mutex> lck(Logger::Logger_Mutex, std::defer_lock);
 	lck.lock();
+	LogVar("Logger Closing");
 	debugLogFile->close();
 	lck.unlock();
 }
