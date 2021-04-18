@@ -46,6 +46,7 @@ SOFTWARE.
 #include <chrono>
 #include <iomanip> // std::setprecision
 #include <type_traits> // std::is_same
+#include <memory>
 
 #ifdef COCOS2D
 #ifndef USE_OPENGL
@@ -205,9 +206,9 @@ namespace ct // cTools
 #define SAFE_BOX2D_DESTROY_BODY(world, body) if(world!=0 && body!=0) world->DestroyBody(body); body=0
 #endif
 
-/////////////////////////////////////////////////////////////
-///////// splitStringToVector ///////////////////////////////////////
-/////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////
+	///////// splitStringToVector ///////////////////////////////
+	/////////////////////////////////////////////////////////////
 
 	::std::list<::std::string> splitStringToList(const ::std::string& text, const std::string& delimiters, bool pushEmpty = false, bool vInversion = false);
 	::std::vector<::std::string> splitStringToVector(const ::std::string& text, const std::string& delimiters, bool pushEmpty = false);
@@ -2058,5 +2059,29 @@ namespace ct // cTools
 
 		return rc;
 	}
+
+	/////////////////////////////////////////////////////////////
+	///////// EASY WEAK_PTR /////////////////////////////////////
+	/////////////////////////////////////////////////////////////
+
+	template<typename T>
+	class cWeak : public ::std::weak_ptr<T>
+	{
+	public:
+		::std::shared_ptr<T> getValidShared() const
+		{
+			if (!this->expired())
+			{
+				return this->lock();
+			}
+			return ::std::shared_ptr<T>();
+		}
+
+		weak_ptr& operator=(const weak_ptr<T>& vWeak) noexcept 
+		{
+			weak_ptr(vWeak).swap(*this);
+			return *this;
+		}
+	};
 
 } // namespace ct => cTools
