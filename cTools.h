@@ -2065,22 +2065,54 @@ namespace ct // cTools
 	/////////////////////////////////////////////////////////////
 
 	template<typename T>
-	class cWeak : public ::std::weak_ptr<T>
+	class cWeak
 	{
+	private:
+		::std::weak_ptr<T> m_WeakPtr;
+
 	public:
+		cWeak()
+		{
+
+		}
+
+		cWeak(const ::std::shared_ptr<T>& vOther) noexcept
+		{
+			m_WeakPtr = vOther;
+		}
+
+		cWeak(const ::std::weak_ptr<T>& vOther) noexcept
+		{
+			m_WeakPtr = vOther;
+		}
+
+		// check is not expired and direclty return a shared_ptr
 		::std::shared_ptr<T> getValidShared() const
 		{
-			if (!this->expired())
+			if (!m_WeakPtr.expired())
 			{
-				return this->lock();
+				return m_WeakPtr.lock();
 			}
 			return ::std::shared_ptr<T>();
 		}
 
-		weak_ptr& operator=(const weak_ptr<T>& vWeak) noexcept 
+		// weak = weak
+		cWeak& operator=(const ::std::weak_ptr<T>& vWeak) noexcept
 		{
-			weak_ptr(vWeak).swap(*this);
-			return *this;
+			m_WeakPtr = vWeak;
+			return m_WeakPtr;
+		}
+
+		// weak = shared
+		cWeak& operator=(const ::std::shared_ptr<T>& vShared) noexcept
+		{
+			m_WeakPtr = vShared;
+			return m_WeakPtr;
+		}
+
+		explicit operator bool() const noexcept 
+		{
+			return ((!m_WeakPtr.expired()) && (m_WeakPtr.lock() != nullptr));
 		}
 	};
 
