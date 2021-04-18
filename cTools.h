@@ -2065,54 +2065,77 @@ namespace ct // cTools
 	/////////////////////////////////////////////////////////////
 
 	template<typename T>
-	class cWeak
+	class cWeak : public ::std::weak_ptr<T>
 	{
-	private:
-		::std::weak_ptr<T> m_WeakPtr;
+		template<typename TArg>
+		using uConstructible = typename ::std::enable_if<::std::is_constructible<::std::weak_ptr<T>, TArg>::value>::type;
+
+		template<typename TArg>
+		using uAssignable = typename ::std::enable_if<::std::is_assignable<::std::weak_ptr<T>&, TArg>::value, cWeak&>::type;
 
 	public:
-		cWeak()
-		{
+		// construct default
+		cWeak() = default;
 
-		}
+		// construct from std::shared_ptr
+		template <typename T2, typename = uConstructible<const ::std::shared_ptr<T2>&>>
+		cWeak(const ::std::shared_ptr<T2>& vOther) noexcept : ::std::weak_ptr<T>(vOther) {}
 
-		cWeak(const ::std::shared_ptr<T>& vOther) noexcept
-		{
-			m_WeakPtr = vOther;
-		}
+		// construct from std::weak_ptr
+		template <typename T2, typename = uConstructible<const ::std::weak_ptr<T2>&>>
+		cWeak(const ::std::weak_ptr<T2>& vOther) noexcept : ::std::weak_ptr<T>(vOther) {}
 
-		cWeak(const ::std::weak_ptr<T>& vOther) noexcept
+		// construct from cWeak
+		template<typename T2, typename = uConstructible<const cWeak<T2>&>>
+		cWeak(const cWeak<T2>& vOther) noexcept : ::std::weak_ptr<T>(vOther) {}
+
+		bool valid() const noexcept
 		{
-			m_WeakPtr = vOther;
+			return !this->expired();
 		}
 
 		// check is not expired and direclty return a shared_ptr
-		::std::shared_ptr<T> getValidShared() const
+		::std::shared_ptr<T> getValidShared() noexcept
 		{
-			if (!m_WeakPtr.expired())
+			if (this->valid())
 			{
-				return m_WeakPtr.lock();
+				return this->lock();
 			}
 			return ::std::shared_ptr<T>();
 		}
 
 		// weak = weak
-		cWeak& operator=(const ::std::weak_ptr<T>& vWeak) noexcept
+		template<typename T2>
+		uAssignable<const cWeak<T2>&> operator=(const cWeak<T2>& vWeak) noexcept
 		{
-			m_WeakPtr = vWeak;
-			return m_WeakPtr;
+			this->::std::weak_ptr<T>::operator=(vWeak);
+			return *this;
+		}
+
+		template<typename T2>
+		uAssignable<const cWeak<T2>&> operator=(const ::std::weak_ptr<T2>& vWeak) noexcept
+		{
+			this->::std::weak_ptr<T>::operator=(vWeak);
+			return *this;
 		}
 
 		// weak = shared
-		cWeak& operator=(const ::std::shared_ptr<T>& vShared) noexcept
+		template<typename T2>
+		uAssignable<const cWeak<T2>&> operator=(const ::std::shared_ptr<T2>& vShared) noexcept
 		{
-			m_WeakPtr = vShared;
-			return m_WeakPtr;
+			this->::std::weak_ptr<T>::operator=(vShared);
+			return *this;
 		}
 
-		explicit operator bool() const noexcept 
+		cWeak& operator=(const ::std::weak_ptr<T>& vWeak) noexcept
 		{
-			return ((!m_WeakPtr.expired()) && (m_WeakPtr.lock() != nullptr));
+			this->::std::weak_ptr<T>::operator=(vWeak);
+			return *this;
+		}
+
+		explicit operator bool() const noexcept
+		{
+			return ((!this->expired()) && (this->lock() != nullptr));
 		}
 	};
 
