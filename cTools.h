@@ -2094,7 +2094,7 @@ namespace ct // cTools
 			return !this->expired();
 		}
 
-		// check is not expired and direclty return a shared_ptr
+		// if not expired, directly return a shared_ptr
 		::std::shared_ptr<T> getValidShared() noexcept
 		{
 			if (this->valid())
