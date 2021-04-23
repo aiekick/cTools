@@ -116,17 +116,6 @@ using namespace cocos2d;
 #ifdef WIN32
 #endif
 
-typedef signed char int8;
-typedef signed short int16;
-typedef signed int int32;
-typedef unsigned char uint8;
-typedef unsigned short uint16;
-typedef unsigned int uint32;
-typedef float float32;
-typedef double float64;
-typedef uint8 uint8;
-typedef uint8 byte;
-
 namespace ct // cTools
 {
 	::std::string toStr(const char* fmt, ...);
@@ -283,11 +272,11 @@ namespace ct // cTools
 	}
 
 	/// This function is used to ensure that a floating point number is not a NaN or infinity.
-	inline bool floatIsValid(float32 x)
+	inline bool floatIsValid(float x)
 	{
 		const union {
-			float32 f;
-			int32 i;
+			float f;
+			int32_t i;
 		} v = { x };
 		return (v.i & 0x7f800000) != 0x7f800000;
 	}
