@@ -68,17 +68,17 @@ namespace conf
 			return vDatas;
 		}
 		
-		tinyxml2::XMLError LoadConfigString(const std::string& vConfigString, const std::string& vUserDatas = "")
+		tinyxml2::XMLError LoadConfigString(const std::string& vConfigString, const std::string& vUserDatas = "", const std::string& vFirstElement = "config")
 		{
-			return parseConfigDatas(vConfigString, vUserDatas);
+			return parseConfigDatas(vConfigString, vUserDatas, vFirstElement);
 		}
 
-		std::string SaveConfigString(const std::string& vUserDatas = "")
+		std::string SaveConfigString(const std::string& vUserDatas = "", const std::string& vFirstElement = "config")
 		{
-			return "<config>\n" + getXml("\t", vUserDatas) + "</config>\n";
+			return "<" + vFirstElement + ">\n" + getXml("\t", vUserDatas) + "</" + vFirstElement + ">\n";
 		}
 
-		tinyxml2::XMLError LoadConfigFile(const std::string& vFilePathName, const std::string& vUserDatas = "")
+		tinyxml2::XMLError LoadConfigFile(const std::string& vFilePathName, const std::string& vUserDatas = "", const std::string& vFirstElement = "config")
 		{
 			tinyxml2::XMLError res = tinyxml2::XMLError::XML_CAN_NOT_CONVERT_TEXT;
 
@@ -89,7 +89,7 @@ namespace conf
 
 				strStream << docFile.rdbuf();//read the file
 
-				res = LoadConfigString(strStream.str(), vUserDatas);
+				res = LoadConfigString(strStream.str(), vUserDatas, vFirstElement);
 
 				docFile.close();
 			}
@@ -117,7 +117,7 @@ namespace conf
 			return res;
 		}
 
-		tinyxml2::XMLError parseConfigDatas(std::string vDatas, const std::string& vUserDatas = "")
+		tinyxml2::XMLError parseConfigDatas(std::string vDatas, const std::string& vUserDatas = "", const std::string& vFirstElement = "config")
 		{
 			tinyxml2::XMLError res = tinyxml2::XMLError::XML_CAN_NOT_CONVERT_TEXT;
 
@@ -130,7 +130,7 @@ namespace conf
 
 				if (res == tinyxml2::XMLError::XML_SUCCESS)
 				{
-					RecursParsingConfig(doc.FirstChildElement("config"), 0, vUserDatas);
+					RecursParsingConfig(doc.FirstChildElement(vFirstElement.c_str()), 0, vUserDatas);
 				}
 				else
 				{

@@ -413,12 +413,13 @@ namespace ct // cTools
 
 	public:
 		ActionTime();
-		void Fix(); // fixe the time marking
+		void Fix(); // fixe les marqueur de temps
+		void FixTime(double vValue); // fixe les marqueur de temps et set le temps
 		void Pause();
 		void Resume();
 		uint64_t Get() const;
 		double GetTime() const;
-		void setTime(double vValue);
+		void setTime(double vValue); // set le temps
 
 		// verifie si vMs millisecond depuis le dernier fix et donc si on peut agir
 		// vFix permet de fixer le temps pour la prochaine action 

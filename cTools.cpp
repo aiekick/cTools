@@ -398,9 +398,17 @@ ct::ActionTime::ActionTime()
 	lastTick = GetTicks();
 }
 
-void ct::ActionTime::Fix() // fixe le marqueur de temps
+void ct::ActionTime::Fix() // fixe les marqueur de temps
 {
 	lastTick = GetTicks();
+	pauseTick = GetTicks();
+	resumeTick = GetTicks();
+}
+
+void ct::ActionTime::FixTime(double vValue) // fixe les marqueur de temps
+{
+	Fix();
+	setTime(vValue);
 }
 
 void ct::ActionTime::Pause()
