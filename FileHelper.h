@@ -72,19 +72,19 @@ public: // funcs
 	void RegisterPath(FileLocation vLoc, const std::string& vPath);
 
 	std::string GetExistingFilePathForFile(const std::string& vFileName, bool vSilentMode = false);
-	std::string CorrectSlashTypeForFilePathName(const std::string &vFilePathName) const;
+	std::string CorrectSlashTypeForFilePathName(const std::string& vFilePathName) const;
 #ifdef _DEBUG
 	void Test_GetRelativePathToPath();
 #endif
 	std::string GetRelativePathToPath(const std::string& vFilePathName, const std::string& vRootPath);
 	bool IsAbsolutePath(const std::string& vFilePathName);
-	
+
 	void SetAppPath(const std::string& vPath);
-    std::string GetAppPath();
+	std::string GetAppPath();
 	std::string GetPathRelativeToApp(const std::string& vFilePathName);
-	
+
 	std::string GetCurDirectory() const;
-    bool SetCurDirectory(const std::string& vPath) const;
+	bool SetCurDirectory(const std::string& vPath) const;
 
 	std::string ComposePath(const std::string& vPath, const std::string& vFileName, const std::string& vExt) const;
 
@@ -96,14 +96,13 @@ public: // funcs
 	std::string LoadFileToString(const std::string& vFilePathName, bool vSilentMode = false);
 	void SaveStringToFile(const std::string& vString, const std::string& vFilePathName);
 
-	std::vector<uint8_t> LoadFileToBytes(const std::string& vFilePathName, int *vError = nullptr);
-	
+	std::vector<uint8_t> LoadFileToBytes(const std::string& vFilePathName, int* vError = nullptr);
 
 	void DestroyFile(const std::string& filePathName) const;
 
 	bool IsDirectoryExist(const std::string& name) const;
-    bool CreateDirectoryIfNotExist(const std::string& name) const;
-    bool CreatePathIfNotExist(const std::string& vPath) const;
+	bool CreateDirectoryIfNotExist(const std::string& name) const;
+	bool CreatePathIfNotExist(const std::string& vPath) const;
 
 	void OpenFile(const std::string& vShaderToOpen) const;
 	void OpenUrl(const std::string& vUrl) const;
@@ -116,7 +115,7 @@ public: // funcs
 
 	std::vector<std::string> GetAbsolutePathForFileLocation(const std::vector<std::string>& vRelativeFilePathNames, FileLocation vFileType);
 	std::string GetAbsolutePathForFileLocation(const std::string& vRelativeFilePathName, FileLocation vFileType);
-	
+
 	std::string LoadFile(const std::string& vFilePathName, FileLocation vFileType);
 	void SaveToFile(const std::string& vCode, const std::string& vFilePathName, FileLocation vFileType);
 
@@ -125,12 +124,12 @@ public: // funcs
 
 #ifdef USE_GLFW3
 public: /* clipboard */
-	void SaveInClipBoard(GLFWwindow *vWin, const std::string& vString);
-	std::string GetFromClipBoard(GLFWwindow *vWin);
+	void SaveInClipBoard(GLFWwindow* vWin, const std::string& vString);
+	std::string GetFromClipBoard(GLFWwindow* vWin);
 #endif
 
 public: // singleton
-	static FileHelper *Instance()
+	static FileHelper* Instance()
 	{
 		static FileHelper _Instance;
 		return &_Instance;

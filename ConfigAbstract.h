@@ -45,7 +45,7 @@ namespace conf
 		// replace patterns (who can break a xml code) by corresponding escaped pattern
 		std::string escapeXmlCode(std::string vDatas)
 		{
-			// escape some patterns 
+			// escape some patterns
 			// https://stackoverflow.com/questions/1091945/what-characters-do-i-need-to-escape-in-xml-documents/46637835#46637835
 			ct::replaceString(vDatas, "&", "&amp;"); // do that in first :) else it will modify the others code who are starting by &
 			ct::replaceString(vDatas, "<", "&lt;");
@@ -58,7 +58,7 @@ namespace conf
 		// replace xml excaped pattern by corresponding good pattern
 		std::string unEscapeXmlCode(std::string vDatas)
 		{
-			// unescape some patterns 
+			// unescape some patterns
 			// https://stackoverflow.com/questions/1091945/what-characters-do-i-need-to-escape-in-xml-documents/46637835#46637835
 			ct::replaceString(vDatas, "&lt;", "<");
 			ct::replaceString(vDatas, "&amp;", "&");
@@ -67,7 +67,7 @@ namespace conf
 			ct::replaceString(vDatas, "&gt;", ">");
 			return vDatas;
 		}
-		
+
 		tinyxml2::XMLError LoadConfigString(const std::string& vConfigString, const std::string& vUserDatas = "", const std::string& vFirstElement = "config")
 		{
 			return parseConfigDatas(vConfigString, vUserDatas, vFirstElement);
@@ -149,7 +149,7 @@ namespace conf
 		{
 			if (setFromXml(vElem, vParent, vUserDatas))
 			{
-				// CHILDS 
+				// CHILDS
 				// parse through all childs elements
 				for (tinyxml2::XMLElement* child = vElem->FirstChildElement(); child != 0; child = child->NextSiblingElement())
 				{
@@ -157,7 +157,7 @@ namespace conf
 				}
 			}
 		}
-		
+
 		std::string getTinyXml2ErrorMessage(tinyxml2::XMLError vErrorCode)
 		{
 			tinyxml2::XMLDocument doc;

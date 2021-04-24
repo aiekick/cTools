@@ -233,7 +233,6 @@ bool ct::StringToFloat(const ::std::string &vWord, float *vFloat)
 	float vUniform = 0.0f;
 	if (vWord.find_first_not_of("-+0123456789.") == ::std::string::npos)
 	{
-
 		ss.
 		IsItaFloat >> vUniform;
 		if (IsItaFloat)
@@ -850,7 +849,6 @@ ct::vec4<T> ct::clamp(const ct::vec4<T>& vValue, T vInf, T vSup)
 	vUniform.w = ct::clamp(vUniform.w, vInf, vSup);
 	return vUniform;
 }
-
 
 template<typename T>
 ct::vec2<T> ct::clamp(const ct::vec2<T>& vValue)

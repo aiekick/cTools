@@ -90,7 +90,7 @@ using namespace cocos2d;
 #ifdef _MSC_VER
 #define CTOOL_DEBUG_BREAK if(IsDebuggerPresent()) __debugbreak()
 #else
-#define CTOOL_DEBUG_BREAK 
+#define CTOOL_DEBUG_BREAK
 #endif
 
 #ifdef WXWIDGETS
@@ -120,7 +120,7 @@ namespace ct // cTools
 {
 	::std::string toStr(const char* fmt, ...);
 
-	template <typename T> ::std::string toStrFromArray(T *arr, int n, char delimiter = ';')
+	template <typename T> ::std::string toStrFromArray(T* arr, int n, char delimiter = ';')
 	{
 		::std::ostringstream os;
 		for (int i = 0; i < n; i++)
@@ -251,7 +251,7 @@ namespace ct // cTools
 
 	size_t GetCountOccurence(const ::std::string& vSrcString, const ::std::string& vStringToCount);
 	size_t GetCountOccurenceInSection(const ::std::string& vSrcString, size_t vStartPos, size_t vEndpos, const ::std::string
-	                                  & vStringToCount);
+		& vStringToCount);
 
 	// std::wstring to std::string
 	// std::wstring(unicode/multibytes/char16/wchar_t) to std::string(char)
@@ -297,8 +297,8 @@ namespace ct // cTools
 	// template <typename T> inline T clamp(const T& a, const T& b, const T& c) { return mini<const T&>(maxi<const T&>(a, b), c); }
 
 	template <typename T> inline T clamp(const T& n) { return n >= T(0) && n <= T(1) ? n : T(n > T(0)); } // clamp n => 0 to 1
-	template <typename T> inline T clamp(const T&  n, const T&  b) { return n >= T(0) && n <= b ? n : T(n > T(0))*b; } // clamp n => 0 to b
-	template <typename T> inline T clamp(const T&  n, const T&  a, const T& b) { return n >= a && n <= b ? n : n < a ? a : b; } // clamp n => a to b
+	template <typename T> inline T clamp(const T& n, const T& b) { return n >= T(0) && n <= b ? n : T(n > T(0)) * b; } // clamp n => 0 to b
+	template <typename T> inline T clamp(const T& n, const T& a, const T& b) { return n >= a && n <= b ? n : n < a ? a : b; } // clamp n => a to b
 
 	template <typename T> inline T abs(const T& a) { return a < 0 ? a * (T)-1 : a; }
 	template <typename T> inline T sign(const T& a) { return a < 0 ? (T)-1 : (T)1; }
@@ -327,7 +327,6 @@ namespace ct // cTools
 	public:
 		cCyclicArray()
 		{
-
 		}
 
 		void Init(T vDefaultValue, int vCount)
@@ -380,7 +379,6 @@ namespace ct // cTools
 			return value;
 		}
 
-
 		T GetMeanExceptValue(T vExceptValue)
 		{
 			T value = puDefaultValue;
@@ -422,7 +420,7 @@ namespace ct // cTools
 		void setTime(double vValue); // set le temps
 
 		// verifie si vMs millisecond depuis le dernier fix et donc si on peut agir
-		// vFix permet de fixer le temps pour la prochaine action 
+		// vFix permet de fixer le temps pour la prochaine action
 		// on pourrait vouloir interroger sans vouloir permettre la prochaine action
 		bool IsTimeToAct(long vMs, bool vFix);
 	};
@@ -499,7 +497,7 @@ namespace ct // cTools
 		size_t z; // depth for texture 3d
 
 #ifdef SDL2
-		SDL_Surface *surface;
+		SDL_Surface* surface;
 #endif
 
 		GLuint glTex;
@@ -515,10 +513,10 @@ namespace ct // cTools
 	struct Color
 	{
 		T r, g, b, a;
-		Color<T>(){r = g = b = a = (T)1;}
+		Color<T>() { r = g = b = a = (T)1; }
 		Color<T>(T _rgba) { setColor(_rgba, _rgba, _rgba, _rgba); }
 		Color<T>(T _rgb, T _a) { setColor(_rgb, _rgb, _rgb, _a); }
-		Color<T>(T _r, T _g, T _b, T _a, T _Div = (T)1){setColor(_r, _g, _b, _a, _Div);}
+		Color<T>(T _r, T _g, T _b, T _a, T _Div = (T)1) { setColor(_r, _g, _b, _a, _Div); }
 		Color<T>(T col[], int size, T range)
 		{
 			if (range == (T)0) range = (T)1;
@@ -568,12 +566,12 @@ namespace ct // cTools
 				a = (T)_a / Div;
 			}
 		}
-		void setColor(const Color<T> col){r = col.r;g = col.g;b = col.b;a = col.a;}
-		void Get3Arr(T col[3], T range = (T)1){col[0] = r * range;col[1] = g * range;col[2] = b * range;}
-		void Get4Arr(T col[4], T range = (T)1){col[0] = r * range;col[1] = g * range;col[2] = b * range;col[3] = a * range;}
+		void setColor(const Color<T> col) { r = col.r; g = col.g; b = col.b; a = col.a; }
+		void Get3Arr(T col[3], T range = (T)1) { col[0] = r * range; col[1] = g * range; col[2] = b * range; }
+		void Get4Arr(T col[4], T range = (T)1) { col[0] = r * range; col[1] = g * range; col[2] = b * range; col[3] = a * range; }
 #ifdef COCOS2D
-		cocos2d::Color3B GetCCColor3B(){cocos2d::Color3B col;col.r = r * 255;col.g = g * 255;col.b = b * 255;return col;}
-		cocos2d::Color4F GetCCColor4F(){cocos2d::Color4F col;col.r = r;col.g = g;col.b = b;col.a = a;return col;}
+		cocos2d::Color3B GetCCColor3B() { cocos2d::Color3B col; col.r = r * 255; col.g = g * 255; col.b = b * 255; return col; }
+		cocos2d::Color4F GetCCColor4F() { cocos2d::Color4F col; col.r = r; col.g = g; col.b = b; col.a = a; return col; }
 #endif
 		void setColorCanal(char canal, float value)
 		{
@@ -590,15 +588,15 @@ namespace ct // cTools
 			if (canal == 'a') a = value / 255.0f;
 		}
 #ifdef SDL2
-		SDL_Color GetSDLColor(){SDL_Color col;col.r = uint8(r * 255.0f);col.g = uint8(g * 255.0f);col.b = uint8(b * 255.0f);col.a = uint8(a * 255.0f);return col;}
+		SDL_Color GetSDLColor() { SDL_Color col; col.r = uint8(r * 255.0f); col.g = uint8(g * 255.0f); col.b = uint8(b * 255.0f); col.a = uint8(a * 255.0f); return col; }
 #endif
 #ifdef WXWIDGETS
-		wxColour GetWxColour(){return wxColour(r * 255, g * 255, b * 255);}
+		wxColour GetWxColour() { return wxColour(r * 255, g * 255, b * 255); }
 #endif
-		std::string GetColor3String(){return toStr(r) + ";" + toStr(g) + ";" + toStr(b);}
-		std::string GetColor4String(){return toStr(r) + ";" + toStr(g) + ";" + toStr(b) + ";" + toStr(a);}
+		std::string GetColor3String() { return toStr(r) + ";" + toStr(g) + ";" + toStr(b); }
+		std::string GetColor4String() { return toStr(r) + ";" + toStr(g) + ";" + toStr(b) + ";" + toStr(a); }
 #ifdef USE_IMGUI
-		ImVec4 ToImVec4(){return ImVec4(r, g, b, a);}
+		ImVec4 ToImVec4() { return ImVec4(r, g, b, a); }
 #endif
 	};
 	typedef Color<uint8_t> ui8Color;
@@ -615,7 +613,7 @@ namespace ct // cTools
 		template <typename U> vec2<T>(vec2<U> a) { x = (T)a.x; y = (T)a.y; }
 		vec2<T>(T a) { x = a; y = a; }
 		vec2<T>(T a, T b) { x = a; y = b; }
-		vec2<T>(::std::string vec, char c = ';', vec2<T> *def = nullptr)//may be in format "0.2f,0.3f,0.4f"
+		vec2<T>(::std::string vec, char c = ';', vec2<T>* def = nullptr)//may be in format "0.2f,0.3f,0.4f"
 		{
 			if (def)
 			{
@@ -668,8 +666,8 @@ namespace ct // cTools
 	template <typename T> inline vec2<T> operator / (vec2<T> v, T f) { return vec2<T>(v.x / f, v.y / f); }
 	template <typename T> inline vec2<T> operator / (T f, vec2<T> v) { return vec2<T>(f / v.x, f / v.y); }
 	template <typename T> inline vec2<T> operator / (vec2<T> v, vec2<T> f) { return vec2<T>(v.x / f.x, v.y / f.y); }
-	template <typename T> inline bool operator < (vec2<T> v, vec2<T> f) { return v.x < f.x && v.y < f.y; }
-	template <typename T> inline bool operator < (vec2<T> v, T f) { return v.x < f && v.y < f; }
+	template <typename T> inline bool operator < (vec2<T> v, vec2<T> f) { return v.x < f.x&& v.y < f.y; }
+	template <typename T> inline bool operator < (vec2<T> v, T f) { return v.x < f&& v.y < f; }
 	template <typename T> inline bool operator > (vec2<T> v, vec2<T> f) { return v.x > f.x && v.y > f.y; }
 	template <typename T> inline bool operator > (vec2<T> v, T f) { return v.x > f && v.y > f; }
 	template <typename T> inline bool operator <= (vec2<T> v, vec2<T> f) { return v.x <= f.x && v.y <= f.y; }
@@ -712,7 +710,7 @@ namespace ct // cTools
 
 	// specialization for float32 test to fvec2
 	inline bool valid(const fvec2& a) { return floatIsValid(a.x) && floatIsValid(a.y); }
-	
+
 	// specialization for fvec2
 	inline bool operator == (const fvec2& v, const fvec2& f) { return (IS_FLOAT_EQUAL(f.x, v.x) && IS_FLOAT_EQUAL(f.y, v.y)); }
 	inline bool operator != (const fvec2& v, const fvec2& f) { return (IS_FLOAT_DIFFERENT(f.x, v.x) || IS_FLOAT_DIFFERENT(f.y, v.y)); }
@@ -802,7 +800,7 @@ namespace ct // cTools
 		vec3(T xyz) : x(xyz), y(xyz), z(xyz) {}
 		vec3(T x, T y, T z) : x(x), y(y), z(z) {}
 		vec3(vec2<T> xy, T z) : x(xy.x), y(xy.y), z(z) {}
-		vec3(::std::string vec, char c = ';', vec3<T> *def = nullptr)//may be in format "0.2f,0.3f,0.4f"
+		vec3(::std::string vec, char c = ';', vec3<T>* def = nullptr)//may be in format "0.2f,0.3f,0.4f"
 		{
 			if (def)
 			{
@@ -851,8 +849,8 @@ namespace ct // cTools
 	template <typename T> inline vec3<T> operator / (vec3<T> v, T f) { return vec3<T>(v.x / f, v.y / f, v.z / f); }
 	template <typename T> inline vec3<T> operator / (T f, vec3<T> v) { return vec3<T>(f / v.x, f / v.y, f / v.z); }
 	template <typename T> inline vec3<T> operator / (vec3<T> v, vec3<T> f) { return vec3<T>(v.x / f.x, v.y / f.y, v.z / f.z); }
-	template <typename T> inline bool operator < (vec3<T> v, vec3<T> f) { return v.x < f.x && v.y < f.y && v.z < f.z; }
-	template <typename T> inline bool operator < (vec3<T> v, T f) { return v.x < f && v.y < f && v.z < f; }
+	template <typename T> inline bool operator < (vec3<T> v, vec3<T> f) { return v.x < f.x&& v.y < f.y&& v.z < f.z; }
+	template <typename T> inline bool operator < (vec3<T> v, T f) { return v.x < f&& v.y < f&& v.z < f; }
 	template <typename T> inline bool operator > (vec3<T> v, vec3<T> f) { return v.x > f.x && v.y > f.y && v.z > f.z; }
 	template <typename T> inline bool operator > (vec3<T> v, T f) { return v.x > f && v.y > f && v.z > f; }
 	template <typename T> inline bool operator <= (vec3<T> v, vec3<T> f) { return v.x <= f.x && v.y <= f.y && v.z <= f.z; }
@@ -890,7 +888,7 @@ namespace ct // cTools
 	// specialization for fvec2
 	inline bool operator == (const fvec3& v, const fvec3& f) { return IS_FLOAT_EQUAL(f.x, v.x) && IS_FLOAT_EQUAL(f.y, v.y) && IS_FLOAT_EQUAL(f.z, v.z); }
 	inline bool operator != (const fvec3& v, const fvec3& f) { return IS_FLOAT_DIFFERENT(f.x, v.x) || IS_FLOAT_DIFFERENT(f.y, v.y) || IS_FLOAT_DIFFERENT(f.z, v.z); }
-	
+
 	/////////////////////////////////////////////////////////////////////////
 
 	template <typename T>
@@ -906,7 +904,7 @@ namespace ct // cTools
 #ifdef USE_IMGUI
 		vec4<T>(const ImVec4& vec) { x = (T)vec.x; y = (T)vec.y; z = (T)vec.z; w = (T)vec.w; }
 #endif
-		vec4(::std::string vec, char c = ';', vec4<T> *def = nullptr)//may be in format "0.2f,0.3f,0.4f,0.8f"
+		vec4(::std::string vec, char c = ';', vec4<T>* def = nullptr)//may be in format "0.2f,0.3f,0.4f,0.8f"
 		{
 			if (def)
 			{
@@ -922,7 +920,7 @@ namespace ct // cTools
 			if (s > 2) z = result[2];
 			if (s > 3) w = result[3];
 		}
-		vec4(::std::string vec, char c = ';', int n = 4, vec4<T> *def = nullptr)//may be in format "0.2f,0.3f,0.4f,0.8f"
+		vec4(::std::string vec, char c = ';', int n = 4, vec4<T>* def = nullptr)//may be in format "0.2f,0.3f,0.4f,0.8f"
 		{
 			if (def)
 			{
@@ -1020,8 +1018,8 @@ namespace ct // cTools
 	template <typename T> inline vec4<T> operator * (vec4<T> v, vec4<T> f) { return vec4<T>(v.x * f.x, v.y * f.y, v.z * f.z, v.w * f.w); }
 	template <typename T> inline vec4<T> operator / (vec4<T> v, T f) { return vec4<T>(v.x / f, v.y / f, v.z / f, v.w / f); }
 	template <typename T> inline vec4<T> operator / (vec4<T> v, vec4<T> f) { return vec4<T>(v.x / f.x, v.y / f.y, v.z / f.z, v.w / f.w); }
-	template <typename T> inline bool operator < (vec4<T> v, vec4<T> f) { return v.x < f.x && v.y < f.y && v.z < f.z && v.w < f.w; }
-	template <typename T> inline bool operator < (vec4<T> v, T f) { return v.x < f && v.y < f && v.z < f && v.w < f; }
+	template <typename T> inline bool operator < (vec4<T> v, vec4<T> f) { return v.x < f.x&& v.y < f.y&& v.z < f.z&& v.w < f.w; }
+	template <typename T> inline bool operator < (vec4<T> v, T f) { return v.x < f&& v.y < f&& v.z < f&& v.w < f; }
 	template <typename T> inline bool operator > (vec4<T> v, vec4<T> f) { return v.x > f.x && v.y > f.y && v.z > f.z && v.w > f.w; }
 	template <typename T> inline bool operator > (vec4<T> v, T f) { return v.x > f && v.y > f && v.z > f && v.w > f; }
 	template <typename T> inline bool operator <= (vec4<T> v, vec4<T> f) { return v.x <= f.x && v.y <= f.y && v.z <= f.z && v.w <= f.w; }
@@ -1060,7 +1058,7 @@ namespace ct // cTools
 	// specialization for fvec4
 	inline bool operator == (const fvec4& v, const fvec4& f) { return IS_FLOAT_EQUAL(f.x, v.x) && IS_FLOAT_EQUAL(f.y, v.y) && IS_FLOAT_EQUAL(f.z, v.z) && IS_FLOAT_EQUAL(f.w, v.w); }
 	inline bool operator != (const fvec4& v, const fvec4& f) { return IS_FLOAT_DIFFERENT(f.x, v.x) || IS_FLOAT_DIFFERENT(f.y, v.y) || IS_FLOAT_DIFFERENT(f.z, v.z) || IS_FLOAT_DIFFERENT(f.w, v.w); }
-	
+
 	/////////////////////////////////////////////////////////////////////////
 
 #ifdef USE_IMGUI
@@ -1089,8 +1087,8 @@ namespace ct // cTools
 		vec2<T> leftBottom() { return vec2<T>(left, bottom); }
 		vec2<T> leftTop() { return vec2<T>(left, top); }
 		vec2<T> center() { return vec2<T>((left + right) / (T)2, (top + bottom) / (T)2); }
-		vec2<T> *vertices() { vec2<T> *buf = new vec2<T>[4]; buf[0] = leftBottom(); buf[1] = leftTop(); buf[2] = rightTop(); buf[3] = rightBottom(); return buf; }
-		vec2<T> *texCoords(T scaleX, T scaleY) { vec2<T> *buf = new vec2<T>[4]; buf[0] = vec2<T>((T)0, (T)0); buf[1] = vec2<T>((T)scaleX, (T)0); buf[2] = vec2<T>(scaleX, scaleY); buf[3] = vec2<T>((T)0, scaleY); return buf; }
+		vec2<T>* vertices() { vec2<T>* buf = new vec2<T>[4]; buf[0] = leftBottom(); buf[1] = leftTop(); buf[2] = rightTop(); buf[3] = rightBottom(); return buf; }
+		vec2<T>* texCoords(T scaleX, T scaleY) { vec2<T>* buf = new vec2<T>[4]; buf[0] = vec2<T>((T)0, (T)0); buf[1] = vec2<T>((T)scaleX, (T)0); buf[2] = vec2<T>(scaleX, scaleY); buf[3] = vec2<T>((T)0, scaleY); return buf; }
 		void setWidth(T vw) { w = vw; }
 		void setHeight(T vh) { h = vh; }
 		void SnackLeft(T vleft) { x = vleft; w -= vleft;	left = x; }
@@ -1127,7 +1125,7 @@ namespace ct // cTools
 		bool IsIntersectedByCircle(vec2<T> vPos, T vRadius) // only for axis aligned box
 		{
 			T d = maxi<T>(abs<T>(center() - vPos) - Size() / (T)2, (T)0).lengthSquared();
-			return d < vRadius * vRadius;
+			return d < vRadius* vRadius;
 		}
 		vec2<T> Size() { return vec2<T>(w, h); }
 	};
@@ -1160,7 +1158,7 @@ namespace ct // cTools
 			: lowerBound(vlowerBound), upperBound(vUpperBound)
 		{}
 		AABB(vec4<T> vVec4)
-			//: lowerBound(vlowerBound), upperBound(vUpperBound) 
+			//: lowerBound(vlowerBound), upperBound(vUpperBound)
 		{
 			lowerBound.x = vVec4.x;
 			lowerBound.y = vVec4.y;
@@ -1392,7 +1390,7 @@ namespace ct // cTools
 
 		AABBCC() : lowerBound((T)0), upperBound((T)0) {}
 		AABBCC(vec3<T> vlowerBound, vec3<T> vUpperBound)
-			//: lowerBound(vlowerBound), upperBound(vUpperBound) 
+			//: lowerBound(vlowerBound), upperBound(vUpperBound)
 		{
 			lowerBound.x = mini(vlowerBound.x, vUpperBound.x);
 			lowerBound.y = mini(vlowerBound.y, vUpperBound.y);
@@ -1693,7 +1691,7 @@ namespace ct // cTools
 			return uint64_t_value;
 		}*/
 
-		uint32_t GetU(bool *success = nullptr) const
+		uint32_t GetU(bool* success = nullptr) const
 		{
 			if (inputtype == "string")
 			{
@@ -1706,7 +1704,7 @@ namespace ct // cTools
 #endif
 				if (success)
 				{
-                    *success = res > 0;
+					*success = res > 0;
 				}
 
 				//tmp = StringToNumber<size_t>(string_value);
@@ -1854,7 +1852,7 @@ namespace ct // cTools
 	// Buffer a destroy apres utilisationBufferSize
 	// in : lst, offset
 	// out : return, BufferSize
-	template<typename T> T* GetNewBufferFromList(::std::list<T> &lst, int offsetBefore, int offsetAfter, int *BufferSize);
+	template<typename T> T* GetNewBufferFromList(::std::list<T>& lst, int offsetBefore, int offsetAfter, int* BufferSize);
 
 	/////////////////////////////////////////////////////////////
 	///////// GetNewBufferFromMap ///////////////////////////////
@@ -1863,18 +1861,18 @@ namespace ct // cTools
 	// Buffer a destroy apres utilisationBufferSize
 	// in : lst, offset
 	// out : return, BufferSize
-	template<typename T, typename P> P* GetNewBufferFromMap(::std::map<T, P> &mp, int offsetBefore, int offsetAfter, int *BufferSize);
+	template<typename T, typename P> P* GetNewBufferFromMap(::std::map<T, P>& mp, int offsetBefore, int offsetAfter, int* BufferSize);
 
 	/////////////////////////////////////////////////////////////
 	///////// DeleteObjectsAndClearPointerList //////////////////
 	/////////////////////////////////////////////////////////////
 
-	template<typename T> void DeleteObjectsAndClearPointerList(::std::list<T*> &lst);
-	template<typename T> void DeleteObjectsAndClearPointerVector(::std::vector<T*> &vec);
-	template<typename T> ::std::string VectorToString(::std::vector<T> &vec, char vCharDelimiter);
-	template<typename T> ::std::string VectorVec2ToString(::std::vector<vec2<T>> &vec, char vCharDelimiter);
-	template<typename T> ::std::string VectorVec3ToString(::std::vector<vec3<T>> &vec, char vCharDelimiter);
-	template<typename T> ::std::string VectorVec4ToString(::std::vector<vec4<T>> &vec, char vCharDelimiter);
+	template<typename T> void DeleteObjectsAndClearPointerList(::std::list<T*>& lst);
+	template<typename T> void DeleteObjectsAndClearPointerVector(::std::vector<T*>& vec);
+	template<typename T> ::std::string VectorToString(::std::vector<T>& vec, char vCharDelimiter);
+	template<typename T> ::std::string VectorVec2ToString(::std::vector<vec2<T>>& vec, char vCharDelimiter);
+	template<typename T> ::std::string VectorVec3ToString(::std::vector<vec3<T>>& vec, char vCharDelimiter);
+	template<typename T> ::std::string VectorVec4ToString(::std::vector<vec4<T>>& vec, char vCharDelimiter);
 
 	// return "vParamName=\"" + toStr(vValue) + "\";
 	template<typename T> ::std::string ParamToXMLString(::std::string vParamName, T vValue);
@@ -1952,7 +1950,7 @@ namespace ct // cTools
 	///////// DeleteObjectsAndClearPointerList //////////////////
 	/////////////////////////////////////////////////////////////
 
-	template<typename T> 
+	template<typename T>
 	ct::rect<T> GetScreenRectWithSize(ct::ivec2 vItemSize, ct::ivec2 vMaxSize, bool vLogError = true)
 	{
 		ct::rect<T> rc;
@@ -2128,5 +2126,4 @@ namespace ct // cTools
 			return ((!this->expired()) && (this->lock() != nullptr));
 		}
 	};
-
 } // namespace ct => cTools

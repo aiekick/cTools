@@ -50,57 +50,57 @@ SOFTWARE.
 // specific
 #ifdef WIN32
 	// includes
-	#include <windows.h>
-	#include <shellapi.h>
-	#pragma comment(lib,"shlwapi.lib")
-	#include <direct.h>
-	// defines
-	#define stat _stat
-	#define S_IFDIR _S_IFDIR
-	#define GetCurrentDir _getcwd
-	#define SetCurrentDir _chdir
+#include <windows.h>
+#include <shellapi.h>
+#pragma comment(lib,"shlwapi.lib")
+#include <direct.h>
+// defines
+#define stat _stat
+#define S_IFDIR _S_IFDIR
+#define GetCurrentDir _getcwd
+#define SetCurrentDir _chdir
 #elif defined(UNIX)
 	// includes
-	#include <unistd.h>
-	#include <sys/param.h>
-	#include <sys/file.h>
-	#include <sys/wait.h>
-	#include <ctype.h>
-	#include <pwd.h>
-	#include <time.h>
-	#include <signal.h>
-	#include <errno.h>
-	#include <fcntl.h>
-	#include <dirent.h>
-	#include <cstdlib>
-	#include <stdio.h>
-	#ifdef APPLE
-		#include <dlfcn.h>
-		#include <sys/syslimits.h> // PATH_MAX
-	#endif
-	#ifdef STDC_HEADERS
-		#include <stdlib.h>
-		#include <stddef.h>
-	#else
-		#ifdef HAVE_STDLIB_H
-			#include <stdlib.h>
-		#endif
-	#endif /* STDC_HEADERS */
-	#ifdef HAVE_STRING_H
-		#include <string.h>
-	#endif /* HAVE_STRING_H */
-	// defines
-	#define GetCurrentDir getcwd
-	#define SetCurrentDir chdir
-	#ifndef S_IFDIR
-		#define S_IFDIR __S_IFDIR
-	#endif
-	#ifndef MAX_PATH
-		#define MAX_PATH PATH_MAX
-	#endif
-	#ifndef PATH_MAX
-		#define PATH_MAX MAX_PATH
-	#endif
+#include <unistd.h>
+#include <sys/param.h>
+#include <sys/file.h>
+#include <sys/wait.h>
+#include <ctype.h>
+#include <pwd.h>
+#include <time.h>
+#include <signal.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <dirent.h>
+#include <cstdlib>
+#include <stdio.h>
+#ifdef APPLE
+#include <dlfcn.h>
+#include <sys/syslimits.h> // PATH_MAX
+#endif
+#ifdef STDC_HEADERS
+#include <stdlib.h>
+#include <stddef.h>
+#else
+#ifdef HAVE_STDLIB_H
+#include <stdlib.h>
+#endif
+#endif /* STDC_HEADERS */
+#ifdef HAVE_STRING_H
+#include <string.h>
+#endif /* HAVE_STRING_H */
+// defines
+#define GetCurrentDir getcwd
+#define SetCurrentDir chdir
+#ifndef S_IFDIR
+#define S_IFDIR __S_IFDIR
+#endif
+#ifndef MAX_PATH
+#define MAX_PATH PATH_MAX
+#endif
+#ifndef PATH_MAX
+#define PATH_MAX MAX_PATH
+#endif
 #endif
 
 PathStruct FileHelper::ParsePathFileName(const std::string& vPathFileName) const
@@ -154,7 +154,7 @@ PathStruct::PathStruct(const std::string& vPath, const std::string& vName, const
 	path = vPath;
 	name = vName;
 	ext = vExt;
-	
+
 	if (ext.empty())
 	{
 		const size_t lastPoint = name.find_last_of('.');
@@ -249,7 +249,7 @@ FileHelper::~FileHelper() = default;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-std::string FileHelper::LoadFileToString(const std::string& vFilePathName, bool vSilentMode)
+std::string FileHelper::LoadFileToString(const std::string & vFilePathName, bool vSilentMode)
 {
 	std::string fileCode;
 
@@ -273,7 +273,7 @@ std::string FileHelper::LoadFileToString(const std::string& vFilePathName, bool 
 	return fileCode;
 }
 
-void FileHelper::SaveStringToFile(const std::string& vString, const std::string& vFilePathName)
+void FileHelper::SaveStringToFile(const std::string & vString, const std::string & vFilePathName)
 {
 	std::ofstream fileWriter(vFilePathName, std::ios::out);
 	if (!fileWriter.bad())
@@ -283,7 +283,7 @@ void FileHelper::SaveStringToFile(const std::string& vString, const std::string&
 	}
 }
 
-std::vector<uint8_t> FileHelper::LoadFileToBytes(const std::string& vFilePathName, int *vError)
+std::vector<uint8_t> FileHelper::LoadFileToBytes(const std::string & vFilePathName, int* vError)
 {
 	std::vector<uint8_t> bytes;
 
@@ -298,7 +298,7 @@ std::vector<uint8_t> FileHelper::LoadFileToBytes(const std::string& vFilePathNam
 	if (intput_file != reinterpret_cast<FILE*>(NULL))
 	{
 		long fileSize = 0;
-		
+
 		// obtain file size:
 		fseek(intput_file, 0, SEEK_END);
 		fileSize = ftell(intput_file);
@@ -314,7 +314,6 @@ std::vector<uint8_t> FileHelper::LoadFileToBytes(const std::string& vFilePathNam
 	}
 	else
 	{
-
 	}
 
 	return bytes;
@@ -324,12 +323,12 @@ std::vector<uint8_t> FileHelper::LoadFileToBytes(const std::string& vFilePathNam
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void FileHelper::RegisterPath(FileLocation vLoc, const std::string& vPath)
+void FileHelper::RegisterPath(FileLocation vLoc, const std::string & vPath)
 {
 	puRegisteredPaths[vLoc] = vPath;
 }
 
-std::string FileHelper::GetExistingFilePathForFile(const std::string& vFileName, bool vSilentMode)
+std::string FileHelper::GetExistingFilePathForFile(const std::string & vFileName, bool vSilentMode)
 {
 	std::string res;
 
@@ -351,7 +350,7 @@ std::string FileHelper::GetExistingFilePathForFile(const std::string& vFileName,
 }
 
 /* correct file path between os and different slash type between window and unix */
-std::string FileHelper::CorrectSlashTypeForFilePathName(const std::string &vFilePathName) const
+std::string FileHelper::CorrectSlashTypeForFilePathName(const std::string & vFilePathName) const
 {
 	std::string res = vFilePathName;
 	ct::replaceString(res, "\\", puSlashType);
@@ -402,7 +401,7 @@ void FileHelper::Test_GetRelativePathToPath()
 }
 #endif
 
-std::string FileHelper::GetRelativePathToPath(const std::string& vFilePathName, const std::string& vRootPath)
+std::string FileHelper::GetRelativePathToPath(const std::string & vFilePathName, const std::string & vRootPath)
 {
 	std::string res = vFilePathName;
 
@@ -449,7 +448,7 @@ std::string FileHelper::GetRelativePathToPath(const std::string& vFilePathName, 
 
 				// assemble path
 				res.clear();
-				for (auto &it : outArr)
+				for (auto& it : outArr)
 				{
 					if (!res.empty())
 						res += puSlashType;
@@ -468,7 +467,7 @@ std::string FileHelper::GetRelativePathToPath(const std::string& vFilePathName, 
 	return res;
 }
 
-bool FileHelper::IsAbsolutePath(const std::string& vFilePathName)
+bool FileHelper::IsAbsolutePath(const std::string & vFilePathName)
 {
 	auto file = CorrectSlashTypeForFilePathName(vFilePathName);
 #ifdef WIN32
@@ -494,29 +493,29 @@ bool FileHelper::IsAbsolutePath(const std::string& vFilePathName)
 #if defined(APPLE)
 static std::string GetMacOsAppPath()
 {
-    Dl_info module_info;
-    if (dladdr((void*)GetMacOsAppPath, &module_info))
-    {
-        return std::string(module_info.dli_fname);
-    }
+	Dl_info module_info;
+	if (dladdr((void*)GetMacOsAppPath, &module_info))
+	{
+		return std::string(module_info.dli_fname);
+	}
 
-    return "";
+	return "";
 }
 #endif
 
-void FileHelper::SetAppPath(const std::string& vPath)
+void FileHelper::SetAppPath(const std::string & vPath)
 {
-    if (!vPath.empty())
-    {
-	    const std::string::size_type pos = vPath.find_last_of("\\/");
-        if (pos != std::string::npos)
-        {
-            FileHelper::AppPath = vPath.substr(0, pos);
-        }
-    }
+	if (!vPath.empty())
+	{
+		const std::string::size_type pos = vPath.find_last_of("\\/");
+		if (pos != std::string::npos)
+		{
+			FileHelper::AppPath = vPath.substr(0, pos);
+		}
+	}
 }
 
-std::string FileHelper::GetPathRelativeToApp(const std::string& vFilePathName)
+std::string FileHelper::GetPathRelativeToApp(const std::string & vFilePathName)
 {
 	return GetRelativePathToPath(vFilePathName, GetAppPath());
 }
@@ -525,26 +524,26 @@ std::string FileHelper::GetAppPath()
 {
 	if (FileHelper::AppPath.empty())
 	{
-        char buffer[MAX_PATH] = {};
+		char buffer[MAX_PATH] = {};
 #ifdef WIN32
-        GetModuleFileName(nullptr, buffer, MAX_PATH);
+		GetModuleFileName(nullptr, buffer, MAX_PATH);
 #elif defined(LINUX)
-        char szTmp[32];
-        sprintf(szTmp, "/proc/%d/exe", getpid());
-        int bytes = ct::mini<int>(readlink(szTmp, buffer, MAX_PATH), MAX_PATH - 1);
-        if(bytes >= 0)
-            buffer[bytes] = '\0';
+		char szTmp[32];
+		sprintf(szTmp, "/proc/%d/exe", getpid());
+		int bytes = ct::mini<int>(readlink(szTmp, buffer, MAX_PATH), MAX_PATH - 1);
+		if (bytes >= 0)
+			buffer[bytes] = '\0';
 #elif defined(APPLE)
 		std::string path = GetMacOsAppPath();
-        std::string::size_type pos = path.find_last_of("\\/");
+		std::string::size_type pos = path.find_last_of("\\/");
 		FileHelper::AppPath = path.substr(0, pos);
 #endif
 #if defined(WIN32) || defined(LINUX)
-        const std::string::size_type pos = std::string(buffer).find_last_of("\\/");
+		const std::string::size_type pos = std::string(buffer).find_last_of("\\/");
 		FileHelper::AppPath = std::string(buffer).substr(0, pos);
 #endif
 	}
-	
+
 	return FileHelper::AppPath;
 }
 
@@ -558,14 +557,14 @@ std::string FileHelper::GetCurDirectory() const
 	return "";
 }
 
-bool FileHelper::SetCurDirectory(const std::string& vPath) const
+bool FileHelper::SetCurDirectory(const std::string & vPath) const
 {
 	const auto path = CorrectSlashTypeForFilePathName(vPath);
 
-    return SetCurrentDir(path.c_str()) == 0;
+	return SetCurrentDir(path.c_str()) == 0;
 }
 
-std::string FileHelper::ComposePath(const std::string& vPath, const std::string& vFileName, const std::string& vExt) const
+std::string FileHelper::ComposePath(const std::string & vPath, const std::string & vFileName, const std::string & vExt) const
 {
 	const auto path = CorrectSlashTypeForFilePathName(vPath);
 	std::string res = path;
@@ -578,13 +577,13 @@ std::string FileHelper::ComposePath(const std::string& vPath, const std::string&
 	return res;
 }
 
-bool FileHelper::IsFileExist(const std::string& name, bool vSilentMode) const
+bool FileHelper::IsFileExist(const std::string & name, bool vSilentMode) const
 {
-    std::string fileToOpen = name;
+	std::string fileToOpen = name;
 	fileToOpen = CorrectSlashTypeForFilePathName(fileToOpen);
-    ct::replaceString(fileToOpen, "\"", "");
-    ct::replaceString(fileToOpen, "\n", "");
-    ct::replaceString(fileToOpen, "\r", "");
+	ct::replaceString(fileToOpen, "\"", "");
+	ct::replaceString(fileToOpen, "\n", "");
+	ct::replaceString(fileToOpen, "\r", "");
 
 	std::ifstream docFile(fileToOpen, std::ios::in);
 	if (docFile.is_open())
@@ -593,29 +592,29 @@ bool FileHelper::IsFileExist(const std::string& name, bool vSilentMode) const
 		return true;
 	}
 	else if (!vSilentMode)
-    {
-	    printf("FileHelper::IsFileExist : fail to found file \"%s\"\n", name.c_str());
-    }
+	{
+		printf("FileHelper::IsFileExist : fail to found file \"%s\"\n", name.c_str());
+	}
 
 	return false;
 }
 
-bool FileHelper::IsDirectoryExist(const std::string& name) const
+bool FileHelper::IsDirectoryExist(const std::string & name) const
 {
-    bool bExists = false;
+	bool bExists = false;
 
-    if (!name.empty())
-    {
-	    const std::string dir = CorrectSlashTypeForFilePathName(name);
+	if (!name.empty())
+	{
+		const std::string dir = CorrectSlashTypeForFilePathName(name);
 		struct stat sb;
 		if (stat(dir.c_str(), &sb))
 			bExists = (sb.st_mode & S_IFDIR);
-    }
+	}
 
 	return bExists;    // this is not a directory!
 }
 
-void FileHelper::DestroyFile(const std::string& vFilePathName) const
+void FileHelper::DestroyFile(const std::string & vFilePathName) const
 {
 	if (!vFilePathName.empty())
 	{
@@ -630,45 +629,45 @@ void FileHelper::DestroyFile(const std::string& vFilePathName) const
 	}
 }
 
-bool FileHelper::CreateDirectoryIfNotExist(const std::string& name) const
+bool FileHelper::CreateDirectoryIfNotExist(const std::string & name) const
 {
-    bool res = false;
+	bool res = false;
 
-    if (!name.empty())
-    {
-	    const auto filePathName = CorrectSlashTypeForFilePathName(name);
+	if (!name.empty())
+	{
+		const auto filePathName = CorrectSlashTypeForFilePathName(name);
 		if (!IsDirectoryExist(filePathName))
-        {
-            res = true;
+		{
+			res = true;
 
 #ifdef WIN32
-            CreateDirectory(filePathName.c_str(), nullptr);
+			CreateDirectory(filePathName.c_str(), nullptr);
 #elif defined(UNIX)
-            char buffer[MAX_PATH] = {};
-            snprintf(buffer, MAX_PATH, "mkdir -p %s", filePathName.c_str());
-            const int dir_err = std::system(buffer);
-            if (dir_err == -1)
-            {
+			char buffer[MAX_PATH] = {};
+			snprintf(buffer, MAX_PATH, "mkdir -p %s", filePathName.c_str());
+			const int dir_err = std::system(buffer);
+			if (dir_err == -1)
+			{
 				printf("FileHelper::CreateDirectoryIfNotExist : Error creating directory %s", filePathName.c_str());
-                res = false;
-            }
+				res = false;
+			}
 #endif
-        }
-    }
+		}
+	}
 
-    return res;
+	return res;
 }
 
-bool FileHelper::CreatePathIfNotExist(const std::string& vPath) const
+bool FileHelper::CreatePathIfNotExist(const std::string & vPath) const
 {
-    bool res = false;
+	bool res = false;
 
-    if (!vPath.empty())
+	if (!vPath.empty())
 	{
 		auto path = CorrectSlashTypeForFilePathName(vPath);
 		if (!IsDirectoryExist(path))
 		{
-		    res = true;
+			res = true;
 
 			ct::replaceString(path, "/", "|");
 			ct::replaceString(path, "\\", "|");
@@ -686,10 +685,10 @@ bool FileHelper::CreatePathIfNotExist(const std::string& vPath) const
 		}
 	}
 
-    return res;
+	return res;
 }
 
-std::string FileHelper::SimplifyFilePath(const std::string& vFilePath) const
+std::string FileHelper::SimplifyFilePath(const std::string & vFilePath) const
 {
 	std::string newPath = CorrectSlashTypeForFilePathName(vFilePath);
 
@@ -697,7 +696,7 @@ std::string FileHelper::SimplifyFilePath(const std::string& vFilePath) const
 	// by ex : script\\kifs\\../space3d.glsl => can be simplified in /script/space3d.glsl
 
 	size_t dpt = 0;
-	while((dpt = newPath.find("..")) != std::string::npos)
+	while ((dpt = newPath.find("..")) != std::string::npos)
 	{
 		ct::replaceString(newPath, "\\", puSlashType);
 		ct::replaceString(newPath, "/", puSlashType);
@@ -724,7 +723,7 @@ std::string FileHelper::SimplifyFilePath(const std::string& vFilePath) const
 	return newPath;
 }
 
-std::string FileHelper::GetID(const std::string& vPathFileName) const
+std::string FileHelper::GetID(const std::string & vPathFileName) const
 {
 	auto pathFileName = CorrectSlashTypeForFilePathName(vPathFileName);
 	return "";
@@ -734,7 +733,7 @@ std::string FileHelper::GetID(const std::string& vPathFileName) const
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void FileHelper::OpenFile(const std::string&vShaderToOpen) const
+void FileHelper::OpenFile(const std::string & vShaderToOpen) const
 {
 	const auto shaderToOpen = CorrectSlashTypeForFilePathName(vShaderToOpen);
 
@@ -758,18 +757,18 @@ void FileHelper::OpenFile(const std::string&vShaderToOpen) const
 	}
 #elif defined(LINUX)
 	int pid = fork();
-    if (pid == 0)
-    {
-        execl("/usr/bin/xdg-open", "xdg-open", shaderToOpen.c_str(), (char *)0);
-    }
+	if (pid == 0)
+	{
+		execl("/usr/bin/xdg-open", "xdg-open", shaderToOpen.c_str(), (char*)0);
+	}
 #elif defined(APPLE)
-    //string command = "open -a Tincta " + vShaderToOpen;
-    string command = "open " + shaderToOpen;
-    std::system(command.c_str());
+	//string command = "open -a Tincta " + vShaderToOpen;
+	string command = "open " + shaderToOpen;
+	std::system(command.c_str());
 #endif
 }
 
-void FileHelper::OpenUrl(const std::string& vUrl) const
+void FileHelper::OpenUrl(const std::string & vUrl) const
 {
 	const auto url = CorrectSlashTypeForFilePathName(vUrl);
 
@@ -778,15 +777,15 @@ void FileHelper::OpenUrl(const std::string& vUrl) const
 #elif defined(LINUX)
 	char buffer[MAX_PATH] = {};
 	snprintf(buffer, MAX_PATH, "<mybrowser> %s", url.c_str());
-    std::system(buffer);
+	std::system(buffer);
 #elif defined(APPLE)
-    //std::string sCmdOpenWith = "open -a Firefox " + vUrl;
-    std::string sCmdOpenWith = "open " + url;
-    std::system(sCmdOpenWith.c_str());
+	//std::string sCmdOpenWith = "open -a Firefox " + vUrl;
+	std::string sCmdOpenWith = "open " + url;
+	std::system(sCmdOpenWith.c_str());
 #endif
 }
 
-void FileHelper::SelectFile(const std::string& vFileToSelect) const
+void FileHelper::SelectFile(const std::string & vFileToSelect) const
 {
 	const auto fileToSelect = CorrectSlashTypeForFilePathName(vFileToSelect);
 
@@ -818,11 +817,11 @@ void FileHelper::SelectFile(const std::string& vFileToSelect) const
 #elif defined(LINUX)
 	// todo : is there a similar command on linux ?
 #elif defined(APPLE)
-    if (fileToSelect.size() > 0)
-    {
-        std::string sCmdOpenWith = "open -R " + fileToSelect;
-        std::system(sCmdOpenWith.c_str());
-    }
+	if (fileToSelect.size() > 0)
+	{
+		std::string sCmdOpenWith = "open -R " + fileToSelect;
+		std::system(sCmdOpenWith.c_str());
+	}
 #endif
 }
 
@@ -847,7 +846,7 @@ std::vector<std::string> FileHelper::GetDrives() const
 	return res;
 }
 
-std::string FileHelper::GetTimeStampToString(const std::string& vSeparator) const
+std::string FileHelper::GetTimeStampToString(const std::string & vSeparator) const
 {
 	std::string res;
 
@@ -861,7 +860,7 @@ std::string FileHelper::GetTimeStampToString(const std::string& vSeparator) cons
 	{
 		struct tm* parts = &partsStruct;
 #else
-	struct tm *parts = std::localtime(&now_c);
+	struct tm* parts = std::localtime(&now_c);
 	if (parts)
 	{
 #endif
@@ -872,7 +871,7 @@ std::string FileHelper::GetTimeStampToString(const std::string& vSeparator) cons
 		res = ct::toStr(year) + vSeparator + ct::toStr(month) + vSeparator + ct::toStr(day) + vSeparator + ct::toStr(seconds);
 	}
 	return res;
-}
+	}
 
 size_t FileHelper::GetTimeStampToNumber() const
 {
@@ -887,7 +886,7 @@ size_t FileHelper::GetTimeStampToNumber() const
 
 #ifdef USE_GLFW3
 // Need GLFW
-void FileHelper::SaveInClipBoard(GLFWwindow *vWin, const std::string& vString)
+void FileHelper::SaveInClipBoard(GLFWwindow * vWin, const std::string & vString)
 {
 	if (!vString.empty())
 	{
@@ -895,27 +894,26 @@ void FileHelper::SaveInClipBoard(GLFWwindow *vWin, const std::string& vString)
 	}
 }
 
-std::string FileHelper::GetFromClipBoard(GLFWwindow *vWin)
+std::string FileHelper::GetFromClipBoard(GLFWwindow * vWin)
 {
 	std::string res = glfwGetClipboardString(vWin);
 	return res;
 }
 #endif
 
-std::vector<std::string> FileHelper::GetAbsolutePathForFileLocation(const std::vector<std::string>& vRelativeFilePathNames, FileLocation vFileType)
+std::vector<std::string> FileHelper::GetAbsolutePathForFileLocation(const std::vector<std::string>&vRelativeFilePathNames, FileLocation vFileType)
 {
 	std::vector<std::string> res;
 
-	for (const auto &it : vRelativeFilePathNames)
+	for (const auto& it : vRelativeFilePathNames)
 	{
-
 		res.emplace_back(GetAbsolutePathForFileLocation(it, vFileType));
 	}
 
 	return res;
 }
 
-std::string FileHelper::GetAbsolutePathForFileLocation(const std::string& vRelativeFilePathName, FileLocation vFileType)
+std::string FileHelper::GetAbsolutePathForFileLocation(const std::string & vRelativeFilePathName, FileLocation vFileType)
 {
 	const std::string registeredPath = puRegisteredPaths[vFileType];
 	if (vRelativeFilePathName.find(registeredPath) != std::string::npos) // deja un chemin absolu
@@ -926,7 +924,7 @@ std::string FileHelper::GetAbsolutePathForFileLocation(const std::string& vRelat
 	return registeredPath + puSlashType + vRelativeFilePathName;
 }
 
-std::string FileHelper::LoadFile(const std::string& vFilePathName, FileLocation vFileType)
+std::string FileHelper::LoadFile(const std::string & vFilePathName, FileLocation vFileType)
 {
 	std::string file;
 	std::string filePathName;
@@ -940,15 +938,15 @@ std::string FileHelper::LoadFile(const std::string& vFilePathName, FileLocation 
 		strStream << docFile.rdbuf();//read the file
 
 		file = strStream.str();
-        ct::replaceString(file, "\r\n", "\n");
+		ct::replaceString(file, "\r\n", "\n");
 
-        docFile.close();
+		docFile.close();
 	}
 
 	return file;
 }
 
-void FileHelper::SaveToFile(const std::string& vCode, const std::string& vFilePathName, FileLocation vFileType)
+void FileHelper::SaveToFile(const std::string & vCode, const std::string & vFilePathName, FileLocation vFileType)
 {
 	std::string filePathName;
 
@@ -966,13 +964,12 @@ void FileHelper::SaveToFile(const std::string& vCode, const std::string& vFilePa
 /////////////// SPECIFIC FUNCTION ////////////////////////////
 //////////////////////////////////////////////////////////////
 
-std::string FileHelper::GetRelativePathToParent(const std::string& vFilePath, const std::string& vParentPath, bool vSilentMode) const
+std::string FileHelper::GetRelativePathToParent(const std::string & vFilePath, const std::string & vParentPath, bool vSilentMode) const
 {
 	std::string newPath = vFilePath;
 
 	if (IsFileExist(newPath, vSilentMode))
 	{
-
 	}
 	else
 	{
@@ -980,7 +977,6 @@ std::string FileHelper::GetRelativePathToParent(const std::string& vFilePath, co
 
 		if (IsFileExist(newPath, vSilentMode))
 		{
-
 		}
 		else
 		{
@@ -989,7 +985,6 @@ std::string FileHelper::GetRelativePathToParent(const std::string& vFilePath, co
 
 			if (IsFileExist(newPath, vSilentMode))
 			{
-
 			}
 			else if (!vSilentMode)
 			{

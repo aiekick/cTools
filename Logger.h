@@ -61,13 +61,13 @@ protected:
 	static std::mutex Logger_Mutex;
 
 private:
-	static ofstream *debugLogFile;
-	static wofstream *wdebugLogFile;
+	static ofstream* debugLogFile;
+	static wofstream* wdebugLogFile;
 	int64 lastTick = 0;
 
 private:
-	void LogString(const std::string *vFunction, const int *vLine, const char* vStr);
-	void LogString(const std::string *vFunction, const int *vLine, const char* fmt, va_list vArgs);
+	void LogString(const std::string* vFunction, const int* vLine, const char* vStr);
+	void LogString(const std::string* vFunction, const int* vLine, const char* fmt, va_list vArgs);
 
 public:
 	static Logger* Instance()

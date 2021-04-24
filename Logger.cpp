@@ -39,11 +39,11 @@ SOFTWARE.
 ////////////////////////////////////////////////////////////////////////////////
 
 // singleton
-ofstream *Logger::debugLogFile = new ofstream("debug.log", ios::out);
+ofstream* Logger::debugLogFile = new ofstream("debug.log", ios::out);
 //wofstream *Logger::wdebugLogFile = new wofstream("wdebug.log", ios::out);
 std::mutex Logger::Logger_Mutex;
 
-Logger::Logger(void) 
+Logger::Logger(void)
 {
 #if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
 	ZoneScoped;
@@ -55,7 +55,7 @@ Logger::Logger(void)
 	lck.unlock();
 }
 
-Logger::~Logger(void) 
+Logger::~Logger(void)
 {
 #if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
 	ZoneScoped;
@@ -63,7 +63,7 @@ Logger::~Logger(void)
 	Close();
 }
 
-void Logger::LogString(const std::string *vFunction, const int *vLine, const char* vStr)
+void Logger::LogString(const std::string* vFunction, const int* vLine, const char* vStr)
 {
 	const int64 ticks = ct::GetTicks();
 	const double time = (ticks - lastTick) / 100.0;
@@ -73,7 +73,7 @@ void Logger::LogString(const std::string *vFunction, const int *vLine, const cha
 	if (vFunction && vLine)
 		w = snprintf(TempBufferBis, 1024 * 3, "[%.3fs][%s:%i] => %s", time, vFunction->c_str(), *vLine, vStr);
 	else
-		w = snprintf(TempBufferBis, 3072, "[%.3fs]%s", time,  vStr);
+		w = snprintf(TempBufferBis, 3072, "[%.3fs]%s", time, vStr);
 	if (w)
 	{
 		const std::string msg = std::string(TempBufferBis, w);
@@ -87,7 +87,7 @@ void Logger::LogString(const std::string *vFunction, const int *vLine, const cha
 	}
 }
 
-void Logger::LogString(const std::string *vFunction, const int *vLine, const char* fmt, va_list vArgs)
+void Logger::LogString(const std::string* vFunction, const int* vLine, const char* fmt, va_list vArgs)
 {
 	static char TempBuffer[3072 + 1];//3072 = 1024 * 3
 	int w = vsnprintf(TempBuffer, 3072, fmt, vArgs);
@@ -188,16 +188,16 @@ void Logger::LogGLError(const std::string& vFile, const std::string& vFunc, int 
 	if (err != GL_NO_ERROR)
 	{
 		std::string error;
-		
+
 		switch (err)
 		{
-			case GL_INVALID_OPERATION:				error = "INVALID_OPERATION";				break;
-			case GL_INVALID_ENUM:					error = "INVALID_ENUM";						break;
-			case GL_INVALID_VALUE:					error = "INVALID_VALUE";					break;
-			case GL_OUT_OF_MEMORY:					error = "OUT_OF_MEMORY";					break;
-			case GL_INVALID_FRAMEBUFFER_OPERATION:  error = "INVALID_FRAMEBUFFER_OPERATION";	break;
-			case GL_STACK_UNDERFLOW:				error = "GL_STACK_UNDERFLOW";				break;
-			case GL_STACK_OVERFLOW:					error = "GL_STACK_OVERFLOW";				break;
+		case GL_INVALID_OPERATION:				error = "INVALID_OPERATION";				break;
+		case GL_INVALID_ENUM:					error = "INVALID_ENUM";						break;
+		case GL_INVALID_VALUE:					error = "INVALID_VALUE";					break;
+		case GL_OUT_OF_MEMORY:					error = "OUT_OF_MEMORY";					break;
+		case GL_INVALID_FRAMEBUFFER_OPERATION:  error = "INVALID_FRAMEBUFFER_OPERATION";	break;
+		case GL_STACK_UNDERFLOW:				error = "GL_STACK_UNDERFLOW";				break;
+		case GL_STACK_OVERFLOW:					error = "GL_STACK_OVERFLOW";				break;
 		}
 
 		if (!error.empty())
@@ -205,7 +205,7 @@ void Logger::LogGLError(const std::string& vFile, const std::string& vFunc, int 
 #ifdef USE_GLFW3
 			GLFWwindow* currentWindow = glfwGetCurrentContext();
 			error = "thread(" + ct::toStr(currentWindow) + ") ";
-#endif 
+#endif
 			error += "OpenGL error : " + error + " in " + vFile + " " + vFunc + " " + ct::toStr(vLine) + " " + vGLFunc;
 			const int64 ticks = ct::GetTicks();
 			const float time = (ticks - lastTick) / 1000.0f;
