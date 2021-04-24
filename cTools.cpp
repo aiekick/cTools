@@ -557,9 +557,9 @@ T* ct::GetNewBufferFromList(::std::list<T>& lst, int offsetBefore, int offsetAft
 	if (count > 0)
 	{
 		*BufferSize = count + offsetBefore + offsetAfter;
-		T* Buffer = new T[(*BufferSize)]; int idx = offsetBefore;
+		T* Buffer = new T[(*BufferSize)]; size_t idx = offsetBefore;
 		// before init
-		for (size_t i = 0; i < offsetBefore; i++)
+		for (size_t i = 0; i < (size_t)offsetBefore; i++)
 		{
 			Buffer[i] = T();
 		}
@@ -570,7 +570,7 @@ T* ct::GetNewBufferFromList(::std::list<T>& lst, int offsetBefore, int offsetAft
 			Buffer[idx++] = obj;
 		}
 		// after init
-		for (size_t i = 0; i < offsetAfter; i++)
+		for (size_t i = 0; i < (size_t)offsetAfter; i++)
 		{
 			Buffer[idx + i] = T();
 		}

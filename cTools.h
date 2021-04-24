@@ -2052,6 +2052,21 @@ namespace ct // cTools
 	///////// EASY WEAK_PTR /////////////////////////////////////
 	/////////////////////////////////////////////////////////////
 
+#if 1
+	template <bool _Test, class _Ty = void>
+	using ct_enable_if_t = typename ::std::enable_if<_Test, _Ty>::type;
+
+	template <class _Yty, class _Ty>
+	struct ct_SP_pointer_compatible : ::std::is_convertible<_Yty*, _Ty*>::type {};
+	template <class _Uty, size_t _Ext>
+	struct ct_SP_pointer_compatible<_Uty[_Ext], _Uty[]> : ::std::true_type {};
+	template <class _Uty, size_t _Ext>
+	struct ct_SP_pointer_compatible<_Uty[_Ext], const _Uty[]> : ::std::true_type {};
+	template <class _Uty, size_t _Ext>
+	struct ct_SP_pointer_compatible<_Uty[_Ext], volatile _Uty[]> : ::std::true_type {};
+	template <class _Uty, size_t _Ext>
+	struct ct_SP_pointer_compatible<_Uty[_Ext], const volatile _Uty[]> : ::std::true_type {	};
+
 	template<typename T>
 	class cWeak : public ::std::weak_ptr<T>
 	{
@@ -2061,21 +2076,24 @@ namespace ct // cTools
 		template<typename TArg>
 		using uAssignable = typename ::std::enable_if<::std::is_assignable<::std::weak_ptr<T>&, TArg>::value, cWeak&>::type;
 
+		template<typename TArg>
+		using uConvertible = typename ::std::enable_if<::std::is_convertible<::std::weak_ptr<T>&, TArg>::value, cWeak&>::type;
+
 	public:
-		// construct default
-		cWeak() = default;
+		constexpr cWeak() noexcept {}
 
-		// construct from std::shared_ptr
-		template <typename T2, typename = uConstructible<const ::std::shared_ptr<T2>&>>
-		cWeak(const ::std::shared_ptr<T2>& vOther) noexcept : ::std::weak_ptr<T>(vOther) {}
+		cWeak(const cWeak& _Other) noexcept : ::std::weak_ptr<T>(_Other) {}
 
-		// construct from std::weak_ptr
-		template <typename T2, typename = uConstructible<const ::std::weak_ptr<T2>&>>
-		cWeak(const ::std::weak_ptr<T2>& vOther) noexcept : ::std::weak_ptr<T>(vOther) {}
+		template <class T2, ct_enable_if_t<ct_SP_pointer_compatible<T2, T>::value, int> = 0>
+		cWeak(const ::std::shared_ptr<T2>& _Other) noexcept : ::std::weak_ptr<T>(_Other) {}
 
-		// construct from cWeak
-		template<typename T2, typename = uConstructible<const cWeak<T2>&>>
-		cWeak(const cWeak<T2>& vOther) noexcept : ::std::weak_ptr<T>(vOther) {}
+		template <class T2, ct_enable_if_t<ct_SP_pointer_compatible<T2, T>::value, int> = 0>
+		cWeak(const ::std::weak_ptr<T2>& _Other) noexcept : ::std::weak_ptr<T>(_Other) {}
+
+		cWeak(::std::weak_ptr<T>&& _Other) noexcept : ::std::weak_ptr<T>(_Other) {}
+
+		template <class T2, ct_enable_if_t<ct_SP_pointer_compatible<T2, T>::value, int> = 0>
+		cWeak(::std::weak_ptr<T2>&& _Other) noexcept : ::std::weak_ptr<T>(_Other) {}
 
 		bool valid() const noexcept
 		{
@@ -2126,4 +2144,101 @@ namespace ct // cTools
 			return ((!this->expired()) && (this->lock() != nullptr));
 		}
 	};
+#else
+	template<typename T>
+	class cWeak
+	{
+	private:
+		::std::weak_ptr<T> m_WeakPtr;
+
+	public:
+		constexpr cWeak() noexcept {}
+
+		cWeak(const cWeak& _Other) noexcept : m_WeakPtr(_Other) {}
+		
+		template <class T2>
+		cWeak(const ::std::shared_ptr<T2>& _Other) noexcept : m_WeakPtr(_Other) {}
+
+		template <class T2>
+		cWeak(const cWeak<T2>& _Other) noexcept : cWeak<T>(_Other) {}
+
+		cWeak(cWeak<T>&& _Other) noexcept : m_WeakPtr(_Other) {}
+
+		template <class T2>
+		cWeak(cWeak<T2>&& _Other) noexcept : m_WeakPtr(_Other) {}
+
+		bool valid() const noexcept
+		{
+			return !m_WeakPtr.expired();
+		}
+
+		// if not expired, directly return a shared_ptr
+		::std::shared_ptr<T> getValidShared() noexcept
+		{
+			if (m_WeakPtr.valid())
+			{
+				return m_WeakPtr.lock();
+			}
+			return ::std::shared_ptr<T>();
+		}
+
+		cWeak& operator=(const cWeak& _Right) noexcept
+		{
+			cWeak(_Right).swap(m_WeakPtr);
+			return *this;
+		}
+
+		template <class T2>
+		cWeak& operator=(const cWeak<T2>& _Right) noexcept
+		{
+			cWeak(_Right).swap(m_WeakPtr);
+			return *this;
+		}
+
+		cWeak& operator=(cWeak&& _Right) noexcept
+		{
+			cWeak(::std::move(_Right)).swap(m_WeakPtr);
+			return m_WeakPtr;
+		}
+
+		template <class T2>
+		cWeak& operator=(cWeak<T2>&& _Right) noexcept
+		{
+			cWeak(::std::move(_Right)).swap(m_WeakPtr);
+			return m_WeakPtr;
+		}
+
+		template <class T2>
+		cWeak& operator=(const ::std::shared_ptr<T2>& _Right) noexcept
+		{
+			cWeak(_Right).swap(m_WeakPtr);
+			return m_WeakPtr;
+		}
+
+		void reset() noexcept 
+		{
+			m_WeakPtr.reset();
+		}
+
+		void swap(cWeak& _Other) noexcept
+		{
+			m_WeakPtr.swap(_Other);
+		}
+
+		_NODISCARD bool expired() const noexcept 
+		{
+			return m_WeakPtr.expired();
+		}
+
+		::std::shared_ptr<T> lock() const noexcept 
+		{
+			return m_WeakPtr.lock();
+		}
+
+		explicit operator bool() const noexcept
+		{
+			return ((!m_WeakPtr.expired()) && (m_WeakPtr.lock() != nullptr));
+		}
+	};
+#endif
 } // namespace ct => cTools
