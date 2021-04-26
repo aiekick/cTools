@@ -631,8 +631,11 @@ namespace ct // cTools
 		T operator () (size_t i) const { return (&x)[i]; }
 		T operator [] (size_t i) const { return (&x)[i]; }
 		T& operator () (size_t i) { return (&x)[i]; }
-		void operator ++ () { x++; y++; }
-		void operator -- () { x--; y--; }
+		// https://en.cppreference.com/w/cpp/language/operator_incdec
+		T& operator ++ () { x++; y++; } // pre inc
+		T& operator -- () { x--; y--; } // pre dec
+		T operator ++ (int v) { vec2<T> tmp; ++tmp; return tmp; } // post inc
+		T operator -- (int v) { vec2<T> tmp; --tmp; return tmp; } // post inc
 		void operator += (const vec2<T>& v) { x += v.x; y += v.y; }
 		void operator -= (const vec2<T>& v) { x -= v.x; y -= v.y; }
 		bool operator == (const vec2<T>& v) { return (x == v.x) && (y == v.y); }
@@ -653,7 +656,12 @@ namespace ct // cTools
 		T ratioXY() { if (y > (T)0) return x / y; return (T)0; }
 		T ratioYX() { if (x > (T)0) return y / x; return (T)0; }
 	};
-	//template <typename T, typename Y> inline vec2<T> vec2<T>(vec2<Y> a) { return vec2<T>((Y)a.x, (Y)a.y); }
+	// https://en.cppreference.com/w/cpp/language/operator_incdec
+	template <typename T> inline vec2<T>& operator ++ (vec2<T>& v) { v++; return v; } // pre inc
+	template <typename T> inline vec2<T>& operator -- (vec2<T>& v) { v--; return v; } // pre dec
+	template <typename T> inline vec2<T> operator ++ (vec2<T>& v, int) { return vec2<T> a = v; ++a; return a; } // post inc
+	template <typename T> inline vec2<T> operator -- (vec2<T>& v, int) { return vec2<T> a = v; --a; return a; } // post dec
+
 	template <typename T> inline vec2<T> operator + (vec2<T> v, T f) { return vec2<T>(v.x + f, v.y + f); }
 	template <typename T> inline vec2<T> operator + (T f, vec2<T> v) { return vec2<T>(v.x + f, v.y + f); }
 	template <typename T> inline vec2<T> operator + (vec2<T> v, vec2<T> f) { return vec2<T>(v.x + f.x, v.y + f.y); }
@@ -690,19 +698,19 @@ namespace ct // cTools
 	template <typename T> inline vec2<T> cos(vec2<T> a) { return vec2<T>(cos<T>(a.x), cos<T>(a.y)); }
 	template <typename T> inline vec2<T> tan(vec2<T> a) { return vec2<T>(tan<T>(a.x), tan<T>(a.y)); }
 	template <typename T> inline vec2<T> atan(vec2<T> a) { return vec2<T>(atan<T>(a.x), atan<T>(a.y)); }
-	typedef vec2<double> dvec2;
-	typedef vec2<float> fvec2;
-	typedef vec2<bool> bvec2;
-	typedef vec2<int8_t> i8vec2;
-	typedef vec2<int16_t> i16vec2;
-	typedef vec2<int32_t> ivec2;
-	typedef vec2<int32_t> i32vec2;
-	typedef vec2<int64_t> i64vec2;
-	typedef vec2<uint8_t> u8vec2;
-	typedef vec2<uint16_t> u16vec2;
-	typedef vec2<uint32_t> uvec2;
-	typedef vec2<uint32_t> u32vec2;
-	typedef vec2<uint64_t> u64vec2;
+	using dvec2 = vec2<double>;
+	using fvec2 = vec2<float>;
+	using bvec2 = vec2<bool>;
+	using i8vec2 = vec2<int8_t>;
+	using i16vec2 = vec2<int16_t>;
+	using ivec2 = vec2<int32_t>;
+	using i32vec2 = vec2<int32_t>;
+	using i64vec2 = vec2<int64_t>;
+	using u8vec2 = vec2<uint8_t>;
+	using u16vec2 = vec2<uint16_t>;
+	using uvec2 = vec2<uint32_t>;
+	using u32vec2 = vec2<uint32_t>;
+	using u64vec2 = vec2<uint64_t>;
 
 	// convert
 	inline fvec2 convert(const ivec2& v) { return fvec2((float)v.x, (float)v.y); }
@@ -802,12 +810,7 @@ namespace ct // cTools
 		vec3(vec2<T> xy, T z) : x(xy.x), y(xy.y), z(z) {}
 		vec3(::std::string vec, char c = ';', vec3<T>* def = nullptr)//may be in format "0.2f,0.3f,0.4f"
 		{
-			if (def)
-			{
-				x = def->x;
-				y = def->y;
-				z = def->z;
-			}
+			if (def) { x = def->x; y = def->y; z = def->z; }
 			::std::vector<T> result = StringToNumberVector<T>(vec, c);
 			const size_t s = result.size();
 			if (s > 0) x = result[0];
@@ -821,10 +824,15 @@ namespace ct // cTools
 		vec2<T> xz() { return vec2<T>(x, z); }
 		vec2<T> yz() { return vec2<T>(y, z); }
 		vec3 yzx() { return vec3(y, z, x); }
-		void operator += (const vec3& v) { x += v.x; y += v.y; z += v.z; }
-		bool operator == (const vec3& v) { return (x == v.x && y == v.y && z == v.z); }
-		bool operator != (const vec3& v) { return (x != v.x || y != v.y || z != v.z); }
-		void operator -= (const vec3& v) { x -= v.x; y -= v.y; z -= v.z; }
+		// https://en.cppreference.com/w/cpp/language/operator_incdec
+		T& operator ++ () { x++; y++; } // pre inc
+		T& operator -- () { x--; y--; } // pre dec
+		T operator ++ (int v) { vec3<T> tmp; ++tmp; return tmp; } // post inc
+		T operator -- (int v) { vec3<T> tmp; --tmp; return tmp; } // post inc
+		void operator += (const vec3<T>& v) { x += v.x; y += v.y; z += v.z; }
+		bool operator == (const vec3<T>& v) { return (x == v.x && y == v.y && z == v.z); }
+		bool operator != (const vec3<T>& v) { return (x != v.x || y != v.y || z != v.z); }
+		void operator -= (const vec3<T>& v) { x -= v.x; y -= v.y; z -= v.z; }
 		void operator *= (T a) { x *= a; y *= a; z *= a; }
 		void operator /= (T a) { x /= a; y /= a; z /= a; }
 		T length() { return (T)sqrtf((float)lengthSquared()); }
@@ -837,6 +845,11 @@ namespace ct // cTools
 		bool emptyOR() { return x == (T)0 || y == (T)0 || z == (T)0; }
 		std::string string(char c = ';') { return toStr(x) + c + toStr(y) + c + toStr(z); }
 	};
+	// https://en.cppreference.com/w/cpp/language/operator_incdec
+	template <typename T> inline vec3<T>& operator ++ (vec3<T>& v) { v++; return v; } // pre inc
+	template <typename T> inline vec3<T>& operator -- (vec3<T>& v) { v--; return v; } // pre dec
+	template <typename T> inline vec3<T> operator ++ (vec3<T>& v, int) { return vec3<T> a = v; ++a; return a; } // post inc
+	template <typename T> inline vec3<T> operator -- (vec3<T>& v, int) { return vec3<T> a = v; --a; return a; } // post dec
 	template <typename T> inline vec3<T> operator + (vec3<T> v, T f) { return vec3<T>(v.x + f, v.y + f, v.z + f); }
 	template <typename T> inline vec3<T> operator + (vec3<T> v, vec3<T> f) { return vec3<T>(v.x + f.x, v.y + f.y, v.z + f.z); }
 	template <typename T> inline vec3<T> operator + (T f, vec3<T> v) { return vec3<T>(f + v.x, f + v.y, f + v.z); }
@@ -868,20 +881,20 @@ namespace ct // cTools
 	template <typename T> inline T dotS(vec3<T> a, vec3<T> b) { return a.x * b.x + a.y * b.y + a.z * b.z; }
 	template <typename T> inline vec3<T> cCross(vec3<T> a, vec3<T> b) { return vec3<T>(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x); }
 	template <typename T> inline vec3<T> cReflect(vec3<T> I, vec3<T> N) { return I - (T)2 * dotS(N, I) * N; }
-	typedef vec3<double> dvec3;
-	typedef vec3<float> fvec3;
-	typedef vec3<bool> bvec3;
-	typedef vec3<int> ivec3;
-	typedef vec3<int8_t> i8vec3;
-	typedef vec3<int16_t> i16vec3;
-	typedef vec3<int32_t> ivec3;
-	typedef vec3<int32_t> i32vec3;
-	typedef vec3<int64_t> i64vec3;
-	typedef vec3<uint8_t> u8vec3;
-	typedef vec3<uint16_t> u16vec3;
-	typedef vec3<uint32_t> uvec3;
-	typedef vec3<uint32_t> u32vec3;
-	typedef vec3<uint64_t> u64vec3;
+	using dvec3 = vec3<double>;
+	using fvec3 = vec3<float>;
+	using bvec3 = vec3<bool>;
+	using ivec3 = vec3<int>;
+	using i8vec3 = vec3<int8_t>;
+	using i16vec3 = vec3<int16_t>;
+	using ivec3 = vec3<int32_t>;
+	using i32vec3 = vec3<int32_t>;
+	using i64vec3 = vec3<int64_t>;
+	using u8vec3 = vec3<uint8_t>;
+	using u16vec3 = vec3<uint16_t>;
+	using uvec3 = vec3<uint32_t>;
+	using u32vec3 = vec3<uint32_t>;
+	using u64vec3 = vec3<uint64_t>;
 
 	// specialization for float32 test to fvec3
 	inline bool valid(const fvec3& a) { return floatIsValid(a.x) && floatIsValid(a.y) && floatIsValid(a.z); }
@@ -964,7 +977,11 @@ namespace ct // cTools
 			}
 		}
 		void Set(T vX, T vY, T vZ, T vW) { x = vX; y = vY; z = vZ; w = vW; }
-		vec4 operator -() { return vec4(-x, -y, -z, -w); }
+		T& operator ++ () { x++; y++; } // pre inc
+		T& operator -- () { x--; y--; } // pre dec
+		T operator ++ (int v) { vec4<T> tmp; ++tmp; return tmp; } // post inc
+		T operator -- (int v) { vec4<T> tmp; --tmp; return tmp; } // post inc
+		vec4<T> operator -() { return vec4(-x, -y, -z, -w); }
 		vec2<T> SizeLBRT() { return vec2<T>(z - x, w - y); }// Considere vec4 as a rect with LBRT for have size LBRT Mean => x = Left, y = Bottom, z = Right, w = Top
 		vec3<T> xyz() { return vec3<T>(x, y, z); }
 		vec2<T> xy() { return vec2<T>(x, y); }
@@ -1009,6 +1026,11 @@ namespace ct // cTools
 		T sumAbs() { return abs<T>(x) + abs<T>(y) + abs<T>(z) + abs<T>(w); }
 		std::string string(char c = ';') { return toStr(x) + c + toStr(y) + c + toStr(z) + c + toStr(w); }
 	};
+	// https://en.cppreference.com/w/cpp/language/operator_incdec
+	template <typename T> inline vec4<T>& operator ++ (vec4<T>& v) { v++; return v; } // pre inc
+	template <typename T> inline vec4<T>& operator -- (vec4<T>& v) { v--; return v; } // pre dec
+	template <typename T> inline vec4<T> operator ++ (vec4<T>& v, int) { return vec4<T> a = v; ++a; return a; } // post inc
+	template <typename T> inline vec4<T> operator -- (vec4<T>& v, int) { return vec4<T> a = v; --a; return a; } // post dec
 	template <typename T> inline vec4<T> operator + (vec4<T> v, T f) { return vec4<T>(v.x + f, v.y + f, v.z + f, v.w + f); }
 	template <typename T> inline vec4<T> operator + (vec4<T> v, vec4<T> f) { return vec4<T>(v.x + f.x, v.y + f.y, v.z + f.z, v.w + f.w); }
 	template <typename T> inline vec4<T> operator - (vec4<T> v, T f) { return vec4<T>(v.x - f, v.y - f, v.z - f, v.w - f); }
@@ -1037,20 +1059,20 @@ namespace ct // cTools
 	template <typename T> inline vec4<T> sin(vec4<T> a) { return vec4<T>(sin<T>(a.x), sin<T>(a.y), sin<T>(a.z), sin<T>(a.w)); }
 	template <typename T> inline vec4<T> cos(vec4<T> a) { return vec4<T>(cos<T>(a.x), cos<T>(a.y), cos<T>(a.z), cos<T>(a.w)); }
 	template <typename T> inline vec4<T> tan(vec4<T> a) { return vec4<T>(tan<T>(a.x), tan<T>(a.y), tan<T>(a.z), tan<T>(a.w)); }
-	typedef vec4<double> dvec4;
-	typedef vec4<float> fvec4;
-	typedef vec4<bool> bvec4;
-	typedef vec4<int> ivec4;
-	typedef vec4<int8_t> i8vec4;
-	typedef vec4<int16_t> i16vec4;
-	typedef vec4<int32_t> ivec4;
-	typedef vec4<int32_t> i32vec4;
-	typedef vec4<int64_t> i64vec4;
-	typedef vec4<uint8_t> u8vec4;
-	typedef vec4<uint16_t> u16vec4;
-	typedef vec4<uint32_t> uvec4;
-	typedef vec4<uint32_t> u32vec4;
-	typedef vec4<uint64_t> u64vec4;
+	using dvec4 = vec4<double>;
+	using fvec4 = vec4<float>;
+	using bvec4 = vec4<bool>;
+	using ivec4 = vec4<int>;
+	using i8vec4 = vec4<int8_t>;
+	using i16vec4 = vec4<int16_t>;
+	using ivec4 = vec4<int32_t>;
+	using i32vec4 = vec4<int32_t>;
+	using i64vec4 = vec4<int64_t>;
+	using u8vec4 = vec4<uint8_t>;
+	using u16vec4 = vec4<uint16_t>;
+	using uvec4 = vec4<uint32_t>;
+	using u32vec4 = vec4<uint32_t>;
+	using u64vec4 = vec4<uint64_t>;
 
 	// specialization for float32 test to fvec4
 	inline bool valid(const fvec4& a) { return floatIsValid(a.x) && floatIsValid(a.y) && floatIsValid(a.z) && floatIsValid(a.w); }
@@ -2155,7 +2177,7 @@ namespace ct // cTools
 		constexpr cWeak() noexcept {}
 
 		cWeak(const cWeak& _Other) noexcept : m_WeakPtr(_Other) {}
-		
+
 		template <class T2>
 		cWeak(const ::std::shared_ptr<T2>& _Other) noexcept : m_WeakPtr(_Other) {}
 
@@ -2215,7 +2237,7 @@ namespace ct // cTools
 			return m_WeakPtr;
 		}
 
-		void reset() noexcept 
+		void reset() noexcept
 		{
 			m_WeakPtr.reset();
 		}
@@ -2225,12 +2247,12 @@ namespace ct // cTools
 			m_WeakPtr.swap(_Other);
 		}
 
-		_NODISCARD bool expired() const noexcept 
+		_NODISCARD bool expired() const noexcept
 		{
 			return m_WeakPtr.expired();
 		}
 
-		::std::shared_ptr<T> lock() const noexcept 
+		::std::shared_ptr<T> lock() const noexcept
 		{
 			return m_WeakPtr.lock();
 		}
