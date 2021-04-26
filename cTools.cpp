@@ -316,7 +316,7 @@ size_t ct::GetCountOccurence(const ::std::string& vSrcString, const ::std::strin
 	size_t pos = 0;
 	while ((pos = vSrcString.find(vStringToCount, pos)) != ::std::string::npos)
 	{
-		count++;
+		++count;
 		pos += vStringToCount.length();
 	}
 	return count;
@@ -330,7 +330,7 @@ size_t ct::GetCountOccurenceInSection(const ::std::string& vSrcString, size_t vS
 	{
 		if (pos < vEndpos)
 		{
-			count++;
+			++count;
 			pos += vStringToCount.length();
 		}
 	}
@@ -559,7 +559,7 @@ T* ct::GetNewBufferFromList(::std::list<T>& lst, int offsetBefore, int offsetAft
 		*BufferSize = count + offsetBefore + offsetAfter;
 		T* Buffer = new T[(*BufferSize)]; size_t idx = offsetBefore;
 		// before init
-		for (size_t i = 0; i < (size_t)offsetBefore; i++)
+		for (size_t i = 0; i < (size_t)offsetBefore; ++i)
 		{
 			Buffer[i] = T();
 		}
@@ -570,7 +570,7 @@ T* ct::GetNewBufferFromList(::std::list<T>& lst, int offsetBefore, int offsetAft
 			Buffer[idx++] = obj;
 		}
 		// after init
-		for (size_t i = 0; i < (size_t)offsetAfter; i++)
+		for (size_t i = 0; i < (size_t)offsetAfter; ++i)
 		{
 			Buffer[idx + i] = T();
 		}
@@ -595,7 +595,7 @@ P* ct::GetNewBufferFromMap(::std::map<T, P>& mp, int offsetBefore, int offsetAft
 		*BufferSize = count + offsetBefore + offsetAfter;
 		P* Buffer = new P[(*BufferSize)]; int idx = offsetBefore;
 		// before init
-		for (size_t i = 0; i < (size_t)offsetBefore; i++)
+		for (size_t i = 0; i < (size_t)offsetBefore; ++i)
 		{
 			Buffer[i] = P();
 		}
@@ -608,7 +608,7 @@ P* ct::GetNewBufferFromMap(::std::map<T, P>& mp, int offsetBefore, int offsetAft
 			Buffer[idx++] = obj;
 		}
 		// after init
-		for (size_t i = 0; i < (size_t)offsetAfter; i++)
+		for (size_t i = 0; i < (size_t)offsetAfter; ++i)
 		{
 			Buffer[idx + i] = P();
 		}
@@ -985,7 +985,7 @@ std::string ct::FormatNum(size_t vNum, int vDecimalCount)
 			// Handle special case where we round up to the next abbreviation
 			if ((vNum == 1000) && (i < abbrevLength - 1)) {
 				vNum = 1;
-				i++;
+				++i;
 			}
 
 			// Add the letter for the abbreviation

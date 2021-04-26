@@ -426,23 +426,23 @@ std::string FileHelper::GetRelativePathToPath(const std::string & vFilePathName,
 						if (rootArr[ro] != inArr[in])
 						{
 							outArr.emplace_back("..");
-							ro++;
+							++ro;
 						}
 						else
 						{
-							ro++;
-							in++;
+							++ro;
+							++in;
 						}
 					}
 					else if (ro < rootArr.size()) // rootArr > inArr
 					{
 						outArr.emplace_back("..");
-						ro++;
+						++ro;
 					}
 					else if (in < inArr.size()) // rootArr < inArr
 					{
 						outArr.emplace_back(inArr[in]);
-						in++;
+						++in;
 					}
 				}
 

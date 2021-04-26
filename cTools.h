@@ -123,7 +123,7 @@ namespace ct // cTools
 	template <typename T> ::std::string toStrFromArray(T* arr, int n, char delimiter = ';')
 	{
 		::std::ostringstream os;
-		for (int i = 0; i < n; i++)
+		for (int i = 0; i < n; ++i)
 		{
 			os << arr[i];
 			if (i < n - 1)
@@ -334,7 +334,7 @@ namespace ct // cTools
 			puDefaultValue = vDefaultValue;
 			puCount = vCount;
 
-			for (int i = 0; i < puCount; i++)
+			for (int i = 0; i < puCount; ++i)
 			{
 				puArray.emplace_back(puDefaultValue);
 			}
@@ -387,7 +387,7 @@ namespace ct // cTools
 			{
 				if (*it != vExceptValue)
 				{
-					count++;
+					++count;
 					value += *it;
 				}
 			}
@@ -632,8 +632,8 @@ namespace ct // cTools
 		T operator [] (size_t i) const { return (&x)[i]; }
 		T& operator () (size_t i) { return (&x)[i]; }
 		// https://en.cppreference.com/w/cpp/language/operator_incdec
-		T& operator ++ () { x++; y++; } // pre inc
-		T& operator -- () { x--; y--; } // pre dec
+		T& operator ++ () { ++x; ++y; } // pre inc
+		T& operator -- () { --x; --y; } // pre dec
 		T operator ++ (int v) { vec2<T> tmp; ++tmp; return tmp; } // post inc
 		T operator -- (int v) { vec2<T> tmp; --tmp; return tmp; } // post inc
 		void operator += (const vec2<T>& v) { x += v.x; y += v.y; }
@@ -657,8 +657,8 @@ namespace ct // cTools
 		T ratioYX() { if (x > (T)0) return y / x; return (T)0; }
 	};
 	// https://en.cppreference.com/w/cpp/language/operator_incdec
-	template <typename T> inline vec2<T>& operator ++ (vec2<T>& v) { v++; return v; } // pre inc
-	template <typename T> inline vec2<T>& operator -- (vec2<T>& v) { v--; return v; } // pre dec
+	template <typename T> inline vec2<T>& operator ++ (vec2<T>& v) { ++v; return v; } // pre inc
+	template <typename T> inline vec2<T>& operator -- (vec2<T>& v) { --v; return v; } // pre dec
 	template <typename T> inline vec2<T> operator ++ (vec2<T>& v, int) { return vec2<T> a = v; ++a; return a; } // post inc
 	template <typename T> inline vec2<T> operator -- (vec2<T>& v, int) { return vec2<T> a = v; --a; return a; } // post dec
 
@@ -825,8 +825,8 @@ namespace ct // cTools
 		vec2<T> yz() { return vec2<T>(y, z); }
 		vec3 yzx() { return vec3(y, z, x); }
 		// https://en.cppreference.com/w/cpp/language/operator_incdec
-		T& operator ++ () { x++; y++; } // pre inc
-		T& operator -- () { x--; y--; } // pre dec
+		T& operator ++ () { ++x; ++y; } // pre inc
+		T& operator -- () { --x; --y; } // pre dec
 		T operator ++ (int v) { vec3<T> tmp; ++tmp; return tmp; } // post inc
 		T operator -- (int v) { vec3<T> tmp; --tmp; return tmp; } // post inc
 		void operator += (const vec3<T>& v) { x += v.x; y += v.y; z += v.z; }
@@ -846,8 +846,8 @@ namespace ct // cTools
 		std::string string(char c = ';') { return toStr(x) + c + toStr(y) + c + toStr(z); }
 	};
 	// https://en.cppreference.com/w/cpp/language/operator_incdec
-	template <typename T> inline vec3<T>& operator ++ (vec3<T>& v) { v++; return v; } // pre inc
-	template <typename T> inline vec3<T>& operator -- (vec3<T>& v) { v--; return v; } // pre dec
+	template <typename T> inline vec3<T>& operator ++ (vec3<T>& v) { ++v; return v; } // pre inc
+	template <typename T> inline vec3<T>& operator -- (vec3<T>& v) { --v; return v; } // pre dec
 	template <typename T> inline vec3<T> operator ++ (vec3<T>& v, int) { return vec3<T> a = v; ++a; return a; } // post inc
 	template <typename T> inline vec3<T> operator -- (vec3<T>& v, int) { return vec3<T> a = v; --a; return a; } // post dec
 	template <typename T> inline vec3<T> operator + (vec3<T> v, T f) { return vec3<T>(v.x + f, v.y + f, v.z + f); }
@@ -977,8 +977,8 @@ namespace ct // cTools
 			}
 		}
 		void Set(T vX, T vY, T vZ, T vW) { x = vX; y = vY; z = vZ; w = vW; }
-		T& operator ++ () { x++; y++; } // pre inc
-		T& operator -- () { x--; y--; } // pre dec
+		T& operator ++ () { ++x; ++y; } // pre inc
+		T& operator -- () { --x; --y; } // pre dec
 		T operator ++ (int v) { vec4<T> tmp; ++tmp; return tmp; } // post inc
 		T operator -- (int v) { vec4<T> tmp; --tmp; return tmp; } // post inc
 		vec4<T> operator -() { return vec4(-x, -y, -z, -w); }
@@ -1027,8 +1027,8 @@ namespace ct // cTools
 		std::string string(char c = ';') { return toStr(x) + c + toStr(y) + c + toStr(z) + c + toStr(w); }
 	};
 	// https://en.cppreference.com/w/cpp/language/operator_incdec
-	template <typename T> inline vec4<T>& operator ++ (vec4<T>& v) { v++; return v; } // pre inc
-	template <typename T> inline vec4<T>& operator -- (vec4<T>& v) { v--; return v; } // pre dec
+	template <typename T> inline vec4<T>& operator ++ (vec4<T>& v) { ++v; return v; } // pre inc
+	template <typename T> inline vec4<T>& operator -- (vec4<T>& v) { --v; return v; } // pre dec
 	template <typename T> inline vec4<T> operator ++ (vec4<T>& v, int) { return vec4<T> a = v; ++a; return a; } // post inc
 	template <typename T> inline vec4<T> operator -- (vec4<T>& v, int) { return vec4<T> a = v; --a; return a; } // post dec
 	template <typename T> inline vec4<T> operator + (vec4<T> v, T f) { return vec4<T>(v.x + f, v.y + f, v.z + f, v.w + f); }
