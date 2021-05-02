@@ -250,8 +250,9 @@ namespace ct // cTools
 	bool replaceString(::std::string& str, const ::std::string& oldStr, const ::std::string& newStr);
 
 	size_t GetCountOccurence(const ::std::string& vSrcString, const ::std::string& vStringToCount);
-	size_t GetCountOccurenceInSection(const ::std::string& vSrcString, size_t vStartPos, size_t vEndpos, const ::std::string
-		& vStringToCount);
+	size_t GetCountOccurenceInSection(const ::std::string& vSrcString, size_t vStartPos, size_t vEndpos, const ::std::string& vStringToCount);
+	size_t GetCountOccurence(const ::std::string& vSrcString, const char& vStringToCount);
+	size_t GetCountOccurenceInSection(const ::std::string& vSrcString, size_t vStartPos, size_t vEndpos, const char& vStringToCount);
 
 	// std::wstring to std::string
 	// std::wstring(unicode/multibytes/char16/wchar_t) to std::string(char)

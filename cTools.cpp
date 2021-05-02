@@ -314,15 +314,45 @@ size_t ct::GetCountOccurence(const ::std::string& vSrcString, const ::std::strin
 {
 	size_t count = 0;
 	size_t pos = 0;
+	const auto len = vStringToCount.length();
 	while ((pos = vSrcString.find(vStringToCount, pos)) != ::std::string::npos)
 	{
 		++count;
-		pos += vStringToCount.length();
+		pos += len;
 	}
 	return count;
 }
-size_t ct::GetCountOccurenceInSection(const ::std::string& vSrcString, size_t vStartPos, size_t vEndpos, const ::std::string
-	& vStringToCount)
+size_t ct::GetCountOccurenceInSection(const ::std::string& vSrcString, size_t vStartPos, size_t vEndpos, const ::std::string& vStringToCount)
+{
+	size_t count = 0;
+	size_t pos = vStartPos;
+	const auto len = vStringToCount.length();
+	while (pos < vEndpos && (pos = vSrcString.find(vStringToCount, pos)) != ::std::string::npos)
+	{
+		if (pos < vEndpos)
+		{
+			++count;
+			pos += len;
+		}
+	}
+	return count;
+}
+
+// can be more fast if char is used
+size_t ct::GetCountOccurence(const ::std::string& vSrcString, const char& vStringToCount)
+{
+	size_t count = 0;
+	size_t pos = 0;
+	while ((pos = vSrcString.find(vStringToCount, pos)) != ::std::string::npos)
+	{
+		++count;
+		pos++;
+	}
+	return count;
+}
+
+// can be more fast if char is used
+size_t ct::GetCountOccurenceInSection(const ::std::string& vSrcString, size_t vStartPos, size_t vEndpos, const char& vStringToCount)
 {
 	size_t count = 0;
 	size_t pos = vStartPos;
@@ -331,12 +361,11 @@ size_t ct::GetCountOccurenceInSection(const ::std::string& vSrcString, size_t vS
 		if (pos < vEndpos)
 		{
 			++count;
-			pos += vStringToCount.length();
+			pos++;
 		}
 	}
 	return count;
 }
-
 // std::wstring to std::string
 // std::wstring(unicode/multibytes/char16/wchar_t) to std::string(char)
 std::string ct::wstring_to_string(const std::wstring& wstr)
