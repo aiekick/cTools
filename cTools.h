@@ -635,8 +635,8 @@ namespace ct // cTools
 		// https://en.cppreference.com/w/cpp/language/operator_incdec
 		T& operator ++ () { ++x; ++y; } // pre inc
 		T& operator -- () { --x; --y; } // pre dec
-		T operator ++ (int v) { vec2<T> tmp; ++tmp; return tmp; } // post inc
-		T operator -- (int v) { vec2<T> tmp; --tmp; return tmp; } // post inc
+		T operator ++ (int) { vec2<T> tmp; ++tmp; return tmp; } // post inc
+		T operator -- (int) { vec2<T> tmp; --tmp; return tmp; } // post inc
 		void operator += (const vec2<T>& v) { x += v.x; y += v.y; }
 		void operator -= (const vec2<T>& v) { x -= v.x; y -= v.y; }
 		bool operator == (const vec2<T>& v) { return (x == v.x) && (y == v.y); }
@@ -660,8 +660,8 @@ namespace ct // cTools
 	// https://en.cppreference.com/w/cpp/language/operator_incdec
 	template <typename T> inline vec2<T>& operator ++ (vec2<T>& v) { ++v; return v; } // pre inc
 	template <typename T> inline vec2<T>& operator -- (vec2<T>& v) { --v; return v; } // pre dec
-	template <typename T> inline vec2<T> operator ++ (vec2<T>& v, int) { return vec2<T> a = v; ++a; return a; } // post inc
-	template <typename T> inline vec2<T> operator -- (vec2<T>& v, int) { return vec2<T> a = v; --a; return a; } // post dec
+	template <typename T> inline vec2<T> operator ++ (vec2<T>& v, int) { vec2<T> a = v; ++a; return a; } // post inc
+	template <typename T> inline vec2<T> operator -- (vec2<T>& v, int) { vec2<T> a = v; --a; return a; } // post dec
 
 	template <typename T> inline vec2<T> operator + (vec2<T> v, T f) { return vec2<T>(v.x + f, v.y + f); }
 	template <typename T> inline vec2<T> operator + (T f, vec2<T> v) { return vec2<T>(v.x + f, v.y + f); }
@@ -828,8 +828,8 @@ namespace ct // cTools
 		// https://en.cppreference.com/w/cpp/language/operator_incdec
 		T& operator ++ () { ++x; ++y; } // pre inc
 		T& operator -- () { --x; --y; } // pre dec
-		T operator ++ (int v) { vec3<T> tmp; ++tmp; return tmp; } // post inc
-		T operator -- (int v) { vec3<T> tmp; --tmp; return tmp; } // post inc
+		T operator ++ (int) { vec3<T> tmp; ++tmp; return tmp; } // post inc
+		T operator -- (int) { vec3<T> tmp; --tmp; return tmp; } // post inc
 		void operator += (const vec3<T>& v) { x += v.x; y += v.y; z += v.z; }
 		bool operator == (const vec3<T>& v) { return (x == v.x && y == v.y && z == v.z); }
 		bool operator != (const vec3<T>& v) { return (x != v.x || y != v.y || z != v.z); }
@@ -849,8 +849,8 @@ namespace ct // cTools
 	// https://en.cppreference.com/w/cpp/language/operator_incdec
 	template <typename T> inline vec3<T>& operator ++ (vec3<T>& v) { ++v; return v; } // pre inc
 	template <typename T> inline vec3<T>& operator -- (vec3<T>& v) { --v; return v; } // pre dec
-	template <typename T> inline vec3<T> operator ++ (vec3<T>& v, int) { return vec3<T> a = v; ++a; return a; } // post inc
-	template <typename T> inline vec3<T> operator -- (vec3<T>& v, int) { return vec3<T> a = v; --a; return a; } // post dec
+	template <typename T> inline vec3<T> operator ++ (vec3<T>& v, int) { vec3<T> a = v; ++a; return a; } // post inc
+	template <typename T> inline vec3<T> operator -- (vec3<T>& v, int) { vec3<T> a = v; --a; return a; } // post dec
 	template <typename T> inline vec3<T> operator + (vec3<T> v, T f) { return vec3<T>(v.x + f, v.y + f, v.z + f); }
 	template <typename T> inline vec3<T> operator + (vec3<T> v, vec3<T> f) { return vec3<T>(v.x + f.x, v.y + f.y, v.z + f.z); }
 	template <typename T> inline vec3<T> operator + (T f, vec3<T> v) { return vec3<T>(f + v.x, f + v.y, f + v.z); }
@@ -980,8 +980,8 @@ namespace ct // cTools
 		void Set(T vX, T vY, T vZ, T vW) { x = vX; y = vY; z = vZ; w = vW; }
 		T& operator ++ () { ++x; ++y; } // pre inc
 		T& operator -- () { --x; --y; } // pre dec
-		T operator ++ (int v) { vec4<T> tmp; ++tmp; return tmp; } // post inc
-		T operator -- (int v) { vec4<T> tmp; --tmp; return tmp; } // post inc
+		T operator ++ (int) { vec4<T> tmp; ++tmp; return tmp; } // post inc
+		T operator -- (int) { vec4<T> tmp; --tmp; return tmp; } // post inc
 		vec4<T> operator -() { return vec4(-x, -y, -z, -w); }
 		vec2<T> SizeLBRT() { return vec2<T>(z - x, w - y); }// Considere vec4 as a rect with LBRT for have size LBRT Mean => x = Left, y = Bottom, z = Right, w = Top
 		vec3<T> xyz() { return vec3<T>(x, y, z); }
@@ -1030,8 +1030,8 @@ namespace ct // cTools
 	// https://en.cppreference.com/w/cpp/language/operator_incdec
 	template <typename T> inline vec4<T>& operator ++ (vec4<T>& v) { ++v; return v; } // pre inc
 	template <typename T> inline vec4<T>& operator -- (vec4<T>& v) { --v; return v; } // pre dec
-	template <typename T> inline vec4<T> operator ++ (vec4<T>& v, int) { return vec4<T> a = v; ++a; return a; } // post inc
-	template <typename T> inline vec4<T> operator -- (vec4<T>& v, int) { return vec4<T> a = v; --a; return a; } // post dec
+	template <typename T> inline vec4<T> operator ++ (vec4<T>& v, int) { vec4<T> a = v; ++a; return a; } // post inc
+	template <typename T> inline vec4<T> operator -- (vec4<T>& v, int) { vec4<T> a = v; --a; return a; } // post dec
 	template <typename T> inline vec4<T> operator + (vec4<T> v, T f) { return vec4<T>(v.x + f, v.y + f, v.z + f, v.w + f); }
 	template <typename T> inline vec4<T> operator + (vec4<T> v, vec4<T> f) { return vec4<T>(v.x + f.x, v.y + f.y, v.z + f.z, v.w + f.w); }
 	template <typename T> inline vec4<T> operator - (vec4<T> v, T f) { return vec4<T>(v.x - f, v.y - f, v.z - f, v.w - f); }
