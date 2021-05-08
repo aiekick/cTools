@@ -120,16 +120,20 @@ namespace ct // cTools
 {
 	::std::string toStr(const char* fmt, ...);
 
-	template <typename T> ::std::string toStrFromArray(T* arr, int n, char delimiter = ';')
+	template <typename T> ::std::string toStrFromArray(T* arr, size_t n, char delimiter = ';')
 	{
-		::std::ostringstream os;
-		for (int i = 0; i < n; ++i)
+		if (arr)
 		{
-			os << arr[i];
-			if (i < n - 1)
-				os << delimiter;
+			::std::ostringstream os;
+			for (size_t i = 0; i < n; ++i)
+			{
+				os << arr[i];
+				if (i < n - 1)
+					os << delimiter;
+			}
+			return os.str();
 		}
-		return os.str();
+		return "";
 	}
 
 	template <typename T> ::std::string toStr(T t)
@@ -167,12 +171,13 @@ namespace ct // cTools
 #endif
 
 #define	_maxFloat		FLT_MAX
-#define	_epsilon		FLT_EPSILON
 #define _pi				3.14159265359f
 #define _2pi			6.28318530717f
 
-#define IS_FLOAT_DIFFERENT(a,b) (fabs((a) - (b)) > _epsilon)
-#define IS_FLOAT_EQUAL(a,b) (fabs((a) - (b)) <_epsilon)
+#define IS_FLOAT_DIFFERENT(a,b) (fabs((a) - (b)) > FLT_EPSILON)
+#define IS_FLOAT_EQUAL(a,b) (fabs((a) - (b)) < FLT_EPSILON)
+#define IS_DOUBLE_DIFFERENT(a,b) (fabs((a) - (b)) > DBL_EPSILON)
+#define IS_DOUBLE_EQUAL(a,b) (fabs((a) - (b)) < DBL_EPSILON)
 
 #define UNUSED(param) (void)param
 
@@ -542,11 +547,11 @@ namespace ct // cTools
 		}
 		Color<T> RandomColor()
 		{
-			int r = (rand() % (256)); // 0 � 3
-			int g = (rand() % (256)); // 0 � 3
-			int b = (rand() % (256)); // 0 � 3
-			int a = 255;
-			return Color(r, g, b, a);
+			int _r = (rand() % (256)); // 0 a 3
+			int _g = (rand() % (256)); // 0 a 3
+			int _b = (rand() % (256)); // 0 a 3
+			int _a = 255;
+			return Color(_r, _g, _b, _a);
 		}
 		void setColor(T _r, T _g, T _b, T _a, T Div = (T)1)
 		{
@@ -567,7 +572,7 @@ namespace ct // cTools
 				a = (T)_a / Div;
 			}
 		}
-		void setColor(const Color<T> col) { r = col.r; g = col.g; b = col.b; a = col.a; }
+		void setColor(const Color<T>& col) { r = col.r; g = col.g; b = col.b; a = col.a; }
 		void Get3Arr(T col[3], T range = (T)1) { col[0] = r * range; col[1] = g * range; col[2] = b * range; }
 		void Get4Arr(T col[4], T range = (T)1) { col[0] = r * range; col[1] = g * range; col[2] = b * range; col[3] = a * range; }
 #ifdef COCOS2D
@@ -989,7 +994,7 @@ namespace ct // cTools
 		vec2<T> zw() { return vec2<T>(z, w); }
 		vec2<T> pos() { return xy(); }
 		vec2<T> size() { return zw(); }
-		T operator [] (const int& i)
+		T operator [] (const size_t& i)
 		{
 			switch (i)
 			{
@@ -1001,7 +1006,7 @@ namespace ct // cTools
 			assert(false);
 			return 0;
 		}
-		void Set(const int& i, T v)
+		void Set(const size_t& i, T v)
 		{
 			switch (i)
 			{
@@ -1289,10 +1294,10 @@ namespace ct // cTools
 		bool Contains(const AABB<T>& aabb) const
 		{
 			bool result = true;
-			result = result && lowerBound.x <= aabb.lowerBound.x;
-			result = result && lowerBound.y <= aabb.lowerBound.y;
-			result = result && aabb.upperBound.x <= upperBound.x;
-			result = result && aabb.upperBound.y <= upperBound.y;
+			result &= lowerBound.x <= aabb.lowerBound.x;
+			result &= lowerBound.y <= aabb.lowerBound.y;
+			result &= aabb.upperBound.x <= upperBound.x;
+			result &= aabb.upperBound.y <= upperBound.y;
 			return result;
 		}
 
@@ -1300,20 +1305,20 @@ namespace ct // cTools
 		bool ContainsPoint(const vec2<T>& pt) const
 		{
 			bool result = true;
-			result = result && lowerBound.x <= pt.x;
-			result = result && lowerBound.y <= pt.y;
-			result = result && pt.x <= upperBound.x;
-			result = result && pt.y <= upperBound.y;
+			result &= lowerBound.x <= pt.x;
+			result &= lowerBound.y <= pt.y;
+			result &= pt.x <= upperBound.x;
+			result &= pt.y <= upperBound.y;
 			return result;
 		}
 
 		bool Intersects(const AABB<T>& other)
 		{
 			bool result = true;
-			result = result || lowerBound.x <= other.lowerBound.x;
-			result = result || lowerBound.y <= other.lowerBound.y;
-			result = result || other.upperBound.x <= upperBound.x;
-			result = result || other.upperBound.y <= upperBound.y;
+			result |= lowerBound.x <= other.lowerBound.x;
+			result |= lowerBound.y <= other.lowerBound.y;
+			result |= other.upperBound.x <= upperBound.x;
+			result |= other.upperBound.y <= upperBound.y;
 			return result;
 		}
 #ifdef BOX2D
@@ -1500,12 +1505,12 @@ namespace ct // cTools
 		bool Contains(const AABBCC<T>& aabb) const
 		{
 			bool result = true;
-			result = result && lowerBound.x <= aabb.lowerBound.x;
-			result = result && lowerBound.y <= aabb.lowerBound.y;
-			result = result && lowerBound.z <= aabb.lowerBound.z;
-			result = result && aabb.upperBound.x <= upperBound.x;
-			result = result && aabb.upperBound.y <= upperBound.y;
-			result = result && aabb.upperBound.z <= upperBound.z;
+			result &= lowerBound.x <= aabb.lowerBound.x;
+			result &= lowerBound.y <= aabb.lowerBound.y;
+			result &= lowerBound.z <= aabb.lowerBound.z;
+			result &= aabb.upperBound.x <= upperBound.x;
+			result &= aabb.upperBound.y <= upperBound.y;
+			result &= aabb.upperBound.z <= upperBound.z;
 			return result;
 		}
 
@@ -1513,24 +1518,24 @@ namespace ct // cTools
 		bool ContainsPoint(const vec3<T>& pt) const
 		{
 			bool result = true;
-			result = result && lowerBound.x <= pt.x;
-			result = result && lowerBound.y <= pt.y;
-			result = result && lowerBound.z <= pt.z;
-			result = result && pt.x <= upperBound.x;
-			result = result && pt.y <= upperBound.y;
-			result = result && pt.z <= upperBound.z;
+			result &= lowerBound.x <= pt.x;
+			result &= lowerBound.y <= pt.y;
+			result &= lowerBound.z <= pt.z;
+			result &= pt.x <= upperBound.x;
+			result &= pt.y <= upperBound.y;
+			result &= pt.z <= upperBound.z;
 			return result;
 		}
 
 		bool Intersects(const AABBCC<T>& other) const
 		{
 			bool result = true;
-			result = result || lowerBound.x <= other.lowerBound.x;
-			result = result || lowerBound.y <= other.lowerBound.y;
-			result = result || lowerBound.z <= other.lowerBound.z;
-			result = result || other.upperBound.x <= upperBound.x;
-			result = result || other.upperBound.y <= upperBound.y;
-			result = result || other.upperBound.z <= upperBound.z;
+			result |= lowerBound.x <= other.lowerBound.x;
+			result |= lowerBound.y <= other.lowerBound.y;
+			result |= lowerBound.z <= other.lowerBound.z;
+			result |= other.upperBound.x <= upperBound.x;
+			result |= other.upperBound.y <= upperBound.y;
+			result |= other.upperBound.z <= upperBound.z;
 			return result;
 		}
 
@@ -1660,7 +1665,7 @@ namespace ct // cTools
 
 		::std::string GetInputType() const { return inputtype; }
 		::std::string GetDataType() const { return datatype; }
-		void setCustomDataType(::std::string vDataType) { datatype = vDataType; }
+		void setCustomDataType(const ::std::string& vDataType) { datatype = vDataType; }
 
 		bool operator == (variant<T> v)
 		{
@@ -1677,9 +1682,9 @@ namespace ct // cTools
 				if (inputtype == "bool")
 					return bool_value == v.bool_value;
 				if (inputtype == "float")
-					return float_value == v.float_value;
+					return IS_FLOAT_EQUAL(float_value, v.float_value);
 				if (inputtype == "double")
-					return double_value == v.double_value;
+					return IS_DOUBLE_EQUAL(double_value, v.double_value);
 				if (inputtype == "int")
 					return int_value == v.int_value;
 				if (inputtype == "long")
