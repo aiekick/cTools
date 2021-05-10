@@ -634,9 +634,7 @@ namespace ct // cTools
 #ifdef USE_IMGUI
 		vec2<T>(const ImVec2& vec) { x = (T)vec.x; y = (T)vec.y; }
 #endif
-		T operator () (size_t i) const { return (&x)[i]; }
-		T operator [] (size_t i) const { return (&x)[i]; }
-		T& operator () (size_t i) { return (&x)[i]; }
+		T& operator [] (size_t i) { return (&x)[i]; }
 		// https://en.cppreference.com/w/cpp/language/operator_incdec
 		T& operator ++ () { ++x; ++y; } // pre inc
 		T& operator -- () { --x; --y; } // pre dec
@@ -667,7 +665,6 @@ namespace ct // cTools
 	template <typename T> inline vec2<T>& operator -- (vec2<T>& v) { --v; return v; } // pre dec
 	template <typename T> inline vec2<T> operator ++ (vec2<T>& v, int) { vec2<T> a = v; ++a; return a; } // post inc
 	template <typename T> inline vec2<T> operator -- (vec2<T>& v, int) { vec2<T> a = v; --a; return a; } // post dec
-
 	template <typename T> inline vec2<T> operator + (vec2<T> v, T f) { return vec2<T>(v.x + f, v.y + f); }
 	template <typename T> inline vec2<T> operator + (T f, vec2<T> v) { return vec2<T>(v.x + f, v.y + f); }
 	template <typename T> inline vec2<T> operator + (vec2<T> v, vec2<T> f) { return vec2<T>(v.x + f.x, v.y + f.y); }
@@ -823,6 +820,7 @@ namespace ct // cTools
 			if (s > 1) y = result[1];
 			if (s > 2) z = result[2];
 		}
+		T& operator [] (size_t i) { return (&x)[i]; }
 		vec3 Offset(T vX, T vY, T vZ) { return vec3(x + vX, y + vY, z + vZ); }
 		void Set(T vX, T vY, T vZ) { x = vX; y = vY; z = vZ; }
 		vec3 operator -() const { return vec3(-x, -y, -z); }
@@ -994,28 +992,7 @@ namespace ct // cTools
 		vec2<T> zw() { return vec2<T>(z, w); }
 		vec2<T> pos() { return xy(); }
 		vec2<T> size() { return zw(); }
-		T operator [] (const size_t& i)
-		{
-			switch (i)
-			{
-			case 0: return x;
-			case 1: return y;
-			case 2: return z;
-			case 3: return w;
-			}
-			assert(false);
-			return 0;
-		}
-		void Set(const size_t& i, T v)
-		{
-			switch (i)
-			{
-			case 0: x = v; break;
-			case 1: y = v; break;
-			case 2: z = v; break;
-			case 3: w = v; break;
-			}
-		}
+		T& operator [] (size_t i) { return (&x)[i]; }
 		void operator += (const vec4& v) { x += v.x; y += v.y; z += v.z; w += v.w; }
 		bool operator == (const vec4& v) { return (x == v.x && y == v.y && z == v.z && w == v.w); }
 		bool operator != (const vec4& v) { return (x != v.x || y != v.y || z != v.z || w != v.w); }
