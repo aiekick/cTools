@@ -2144,11 +2144,22 @@ namespace ct // cTools
 			return *this;
 		}
 
+		bool operator<(const ::std::weak_ptr<T>& vWeak) noexcept
+		{
+			return this->::std::weak_ptr<T>::operator<(vWeak);
+		}
 		explicit operator bool() const noexcept
 		{
 			return ((!this->expired()) && (this->lock() != nullptr));
 		}
 	};
+	template<typename T>
+	bool operator<(const cWeak<T>& vWeakA, const cWeak<T>& vWeakB) noexcept
+	{
+		if (vWeakA.expired() || vWeakB.expired())
+			return false;
+		return (vWeakA.lock() < vWeakB.lock());
+	}
 #else
 	template<typename T>
 	class cWeak
