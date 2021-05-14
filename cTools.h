@@ -2278,15 +2278,11 @@ namespace ct // cTools
 		size_t counter = 0;
 
 	public:
-		cPtr()
-		{
-			pcounter = &counter;
-			pptr = &ptr;
-		}
+		cPtr() { pcounter = &counter; pptr = &ptr; }
 		template<typename... Values>
-		cPtr(Values... params) : cPtr()
+		cPtr(Values&&... params) : cPtr()
 		{
-			ptr = new T(static_cast<Test>(std::forward<Values>(params))...);
+			ptr = new T(std::forward<Values>(params)...);
 			pptr = &ptr;
 			++(*pcounter);
 
@@ -2298,10 +2294,7 @@ namespace ct // cTools
 			pcounter = vPtr.pcounter;
 			++(*pcounter);
 		}
-		~cPtr()
-		{
-			reset();
-		}
+		~cPtr() { reset(); }
 		void operator=(const cPtr& vPtr)
 		{
 			// we destroy this one before affect another
@@ -2322,26 +2315,19 @@ namespace ct // cTools
 				*pptr = nullptr;
 			}
 		}
-		operator bool() const
-		{
-			return (*pptr != nullptr);
-		}
-		T* operator->()
-		{
-			return (*pptr);
-		}
-		T* get()
-		{
-			return (*pptr);
-		}
-		intptr_t getId()
-		{
-			return (intptr_t)(*pptr);
-		}
-		size_t getCount()
-		{
-			return *pcounter;
-		}
+
+		operator bool() const { return (*pptr != nullptr); }
+		T* operator->() { return (*pptr); }
+		T* get() const noexcept { return (*pptr); }
+		intptr_t getId() { return (intptr_t)(*pptr); }
+		size_t getCount() { return *pcounter; }
+
+		bool operator==(const cPtr& vRight) noexcept { return (*pptr) == (*vRight.pptr); }
+		bool operator!=(const cPtr& vRight) noexcept { return (*pptr) != (*vRight.pptr); }
+		bool operator<(const cPtr& vRight) noexcept { return (*pptr) < (*vRight.pptr); }
+		bool operator>=(const cPtr& vRight) noexcept { return (*pptr) >= (*vRight.pptr); }
+		bool operator>(const cPtr& vRight) noexcept { return (*pptr) > (*vRight.pptr); }
+		bool operator<=(const cPtr& vRight) noexcept { return (*pptr) <= (*vRight.pptr); }
 	};
 
 } // namespace ct => cTools
