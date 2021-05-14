@@ -25,7 +25,6 @@ SOFTWARE.
 #pragma once
 
 #include <tinyxml2/tinyxml2.h>
-#include <ctools/cTools.h>
 
 #include <fstream> // ifstream
 #include <sstream> // stringstream
@@ -47,11 +46,11 @@ namespace conf
 		{
 			// escape some patterns
 			// https://stackoverflow.com/questions/1091945/what-characters-do-i-need-to-escape-in-xml-documents/46637835#46637835
-			ct::replaceString(vDatas, "&", "&amp;"); // do that in first :) else it will modify the others code who are starting by &
-			ct::replaceString(vDatas, "<", "&lt;");
-			ct::replaceString(vDatas, "\"", "&quot;");
-			ct::replaceString(vDatas, "'", "&apos;");
-			ct::replaceString(vDatas, ">", "&gt;");
+			replaceString(vDatas, "&", "&amp;"); // do that in first :) else it will modify the others code who are starting by &
+			replaceString(vDatas, "<", "&lt;");
+			replaceString(vDatas, "\"", "&quot;");
+			replaceString(vDatas, "'", "&apos;");
+			replaceString(vDatas, ">", "&gt;");
 			return vDatas;
 		}
 
@@ -60,11 +59,11 @@ namespace conf
 		{
 			// unescape some patterns
 			// https://stackoverflow.com/questions/1091945/what-characters-do-i-need-to-escape-in-xml-documents/46637835#46637835
-			ct::replaceString(vDatas, "&lt;", "<");
-			ct::replaceString(vDatas, "&amp;", "&");
-			ct::replaceString(vDatas, "&quot;", "\"");
-			ct::replaceString(vDatas, "&apos;", "'");
-			ct::replaceString(vDatas, "&gt;", ">");
+			replaceString(vDatas, "&lt;", "<");
+			replaceString(vDatas, "&amp;", "&");
+			replaceString(vDatas, "&quot;", "\"");
+			replaceString(vDatas, "&apos;", "'");
+			replaceString(vDatas, "&gt;", ">");
 			return vDatas;
 		}
 
@@ -123,7 +122,7 @@ namespace conf
 
 			try
 			{
-				ct::replaceString(vDatas, "\r\n", "\n");
+				replaceString(vDatas, "\r\n", "\n");
 
 				tinyxml2::XMLDocument doc;
 				res = doc.Parse(vDatas.c_str(), vDatas.size());
@@ -162,6 +161,20 @@ namespace conf
 		{
 			tinyxml2::XMLDocument doc;
 			return std::string(doc.ErrorIDToName(vErrorCode));
+		}
+
+	private:
+		bool replaceString(::std::string& str, const ::std::string& oldStr, const ::std::string& newStr)
+		{
+			bool found = false;
+			size_t pos = 0;
+			while ((pos = str.find(oldStr, pos)) != ::std::string::npos)
+			{
+				found = true;
+				str.replace(pos, oldStr.length(), newStr);
+				pos += newStr.length();
+			}
+			return found;
 		}
 	};
 }
