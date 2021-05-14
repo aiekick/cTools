@@ -25,7 +25,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <cTools.h>
+#include "cTools.h"
 
 #ifdef WIN32
 #include <Windows.h>
