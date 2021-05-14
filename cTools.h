@@ -2257,4 +2257,91 @@ namespace ct // cTools
 		}
 	};
 #endif
+
+	////////////////////////////////////////////////////////////////////////////////////
+	// this class is a smart pointer but more fast than std::shared_ptr               //
+	// if one pointer is destroyed with reset all other pointer are destroyed,        //
+	// but the validity can always been tested                                        //
+	// but fully shared so if one pointer is destroyed by rest all other become same, //
+	// even is they are not the original		                                      //
+	// auto ptr = cPtr<your_class>(your_args1, your_arg2, etc..);                     // 
+	////////////////////////////////////////////////////////////////////////////////////
+
+	template<typename T>
+	class cPtr
+	{
+	private:
+		T** pptr = nullptr;
+		T* ptr = nullptr;
+
+		size_t* pcounter = nullptr;
+		size_t counter = 0;
+
+	public:
+		cPtr()
+		{
+			pcounter = &counter;
+			pptr = &ptr;
+		}
+		template<typename... Values>
+		cPtr(Values... params) : cPtr()
+		{
+			ptr = new T(static_cast<Test>(std::forward<Values>(params))...);
+			pptr = &ptr;
+			++(*pcounter);
+
+		}
+		cPtr(nullptr_t) : cPtr() {} // empty cPtr
+		cPtr(cPtr<T>& vPtr) : cPtr()
+		{
+			pptr = vPtr.pptr;
+			pcounter = vPtr.pcounter;
+			++(*pcounter);
+		}
+		~cPtr()
+		{
+			reset();
+		}
+		void operator=(const cPtr& vPtr)
+		{
+			// we destroy this one before affect another
+			if (*pptr != *vPtr.pptr)
+			{
+				reset();
+				pptr = vPtr.pptr;
+				pcounter = vPtr.pcounter;
+				++(*pcounter);
+			}
+		}
+		void reset()
+		{
+			--(*pcounter);
+			if ((*pcounter) == 0)
+			{
+				delete* pptr;
+				*pptr = nullptr;
+			}
+		}
+		operator bool() const
+		{
+			return (*pptr != nullptr);
+		}
+		T* operator->()
+		{
+			return (*pptr);
+		}
+		T* get()
+		{
+			return (*pptr);
+		}
+		intptr_t getId()
+		{
+			return (intptr_t)(*pptr);
+		}
+		size_t getCount()
+		{
+			return *pcounter;
+		}
+	};
+
 } // namespace ct => cTools
