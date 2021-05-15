@@ -2271,30 +2271,53 @@ namespace ct // cTools
 	template<typename T>
 	class cPtr
 	{
-	private:
-		T** pptr = nullptr;
-		T* ptr = nullptr;
+	public:
+		using element_type = T;
 
-		size_t* pcounter = nullptr;
+	private: // to modify
+		T* ptr = nullptr;
 		size_t counter = 0;
 
+	private: // to not modify
+		T** pptr = &ptr;
+		size_t* pcounter = &counter;
+
 	public:
-		cPtr() { pcounter = &counter; pptr = &ptr; }
-		cPtr(std::nullptr_t) : cPtr() {} // for cPtr<T> v = nullptr;
 		template<typename... Values>
-		explicit cPtr(Values... params) : cPtr()
+		static cPtr<T> create(Values&&... params)
 		{
-			ptr = new T(std::forward<Values>(params)...);
-			pptr = &ptr;
-			++(*pcounter);
+			return new cPtr<T>(std::forward<Values>(params)...);
 		}
-		cPtr(const cPtr<T>& vPtr) : cPtr()
+
+	public:
+		cPtr() {}
+		cPtr(std::nullptr_t) : cPtr() {}
+		cPtr(cPtr* vPtr) : cPtr()
 		{
+			if (vPtr)
+			{
+				*this = *vPtr;
+				vPtr->reset();
+			}
+		}
+		cPtr(const cPtr& vPtr) : cPtr()
+		{
+			// proprietary transfer
 			pptr = vPtr.pptr;
 			pcounter = vPtr.pcounter;
 			++(*pcounter);
 		}
-		~cPtr() { reset(); }
+		template<typename... Values>
+		cPtr(Values&&... params) : cPtr()
+		{
+			ptr = new T(std::forward<Values>(params)...);
+			++(*pcounter);
+		}
+		~cPtr()
+		{
+			reset();
+		}
+
 		void operator=(const cPtr& vPtr)
 		{
 			// we destroy this one before affect another
@@ -2308,28 +2331,63 @@ namespace ct // cTools
 		}
 		void reset()
 		{
-			--(*pcounter);
-			if ((*pcounter) == 0)
+			if ((*pcounter) > 0)
 			{
-				delete *pptr;
-				*pptr = nullptr;
-				ptr = nullptr;
+				--(*pcounter);
+				if (*pptr && *pcounter == 0)
+				{
+					delete* pptr;
+					*pptr = nullptr;
+					ptr = nullptr;
+				}
 			}
 		}
 
-		operator bool() const { return (*pptr != nullptr); }
-		T* operator->() const noexcept { return (*pptr); }
-		T* get() const noexcept { return (*pptr); }
-		intptr_t getId() { return (intptr_t)(*pptr); }
-		size_t getCount() { return *pcounter; }
+		operator bool() const
+		{
+			return (*pptr != nullptr);
+		}
+		T* operator->() const noexcept
+		{
+			return (*pptr);
+		}
+		T* get() const noexcept
+		{
+			return (*pptr);
+		}
+		intptr_t getId()
+		{
+			return (intptr_t)(*pptr);
+		}
+		size_t getCount()
+		{
+			return *pcounter;
+		}
 
-
-		bool operator==(const cPtr& vRight) noexcept { return pptr == vRight.pptr; }
-		bool operator!=(const cPtr& vRight) noexcept { return pptr != vRight.pptr; }
-		bool operator<(const cPtr& vRight) noexcept { return pptr < vRight.pptr; }
-		bool operator>=(const cPtr& vRight) noexcept { return pptr >= vRight.pptr; }
-		bool operator>(const cPtr& vRight) noexcept { return pptr > vRight.pptr; }
-		bool operator<=(const cPtr& vRight) noexcept { return pptr <= vRight.pptr; }
+		bool operator==(const cPtr& vRight) noexcept
+		{
+			return pptr == vRight.pptr;
+		}
+		bool operator!=(const cPtr& vRight) noexcept
+		{
+			return pptr != vRight.pptr;
+		}
+		bool operator<(const cPtr& vRight) noexcept
+		{
+			return pptr < vRight.pptr;
+		}
+		bool operator>=(const cPtr& vRight) noexcept
+		{
+			return pptr >= vRight.pptr;
+		}
+		bool operator>(const cPtr& vRight) noexcept
+		{
+			return pptr > vRight.pptr;
+		}
+		bool operator<=(const cPtr& vRight) noexcept
+		{
+			return pptr <= vRight.pptr;
+		}
 	};
 
 	// for use in map or set (conditional based) container
@@ -2340,7 +2398,6 @@ namespace ct // cTools
 	template <typename T1, typename T2> bool operator>(const cPtr<T1>& vLeft, const cPtr<T2>& vRight) noexcept { return vLeft.get() > vRight.get(); }
 	template <typename T1, typename T2> bool operator>=(const cPtr<T1>& vLeft, const cPtr<T2>& vRight) noexcept { return vLeft.get() >= vRight.get(); }
 } // namespace ct => cTools
-
 
 // for use in unordered's (hash based) container (like unordered_set and unordered_map)
 template <typename T>
