@@ -2284,15 +2284,14 @@ namespace ct // cTools
 
 	public:
 		template<typename... Values>
-		static cPtr<T> create(Values&&... params)
+		static cPtr<T> create(Values&... params)
 		{
 			return new cPtr<T>(std::forward<Values>(params)...);
 		}
 
 	public:
-		cPtr() {}
-		cPtr(std::nullptr_t) : cPtr() {}
-		cPtr(cPtr* vPtr) : cPtr()
+		cPtr(std::nullptr_t) noexcept {} // construct empty shared_ptr
+		cPtr(cPtr* vPtr) noexcept
 		{
 			if (vPtr)
 			{
@@ -2300,7 +2299,7 @@ namespace ct // cTools
 				vPtr->reset();
 			}
 		}
-		cPtr(const cPtr& vPtr) : cPtr()
+		cPtr(const cPtr& vPtr) noexcept
 		{
 			// proprietary transfer
 			pptr = vPtr.pptr;
@@ -2308,12 +2307,12 @@ namespace ct // cTools
 			++(*pcounter);
 		}
 		template<typename... Values>
-		cPtr(Values&&... params) : cPtr()
+		cPtr(Values... params) noexcept
 		{
 			ptr = new T(std::forward<Values>(params)...);
 			++(*pcounter);
 		}
-		~cPtr()
+		~cPtr() noexcept
 		{
 			reset();
 		}
