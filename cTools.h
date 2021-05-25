@@ -594,7 +594,7 @@ namespace ct // cTools
 			if (canal == 'a') a = value / 255.0f;
 		}
 #ifdef SDL2
-		SDL_Color GetSDLColor() { SDL_Color col; col.r = uint8(r * 255.0f); col.g = uint8(g * 255.0f); col.b = uint8(b * 255.0f); col.a = uint8(a * 255.0f); return col; }
+		SDL_Color GetSDLColor() { SDL_Color col; col.r = uint8_t(r * 255.0f); col.g = uint8_t(g * 255.0f); col.b = uint8_t(b * 255.0f); col.a = uint8_t(a * 255.0f); return col; }
 #endif
 #ifdef WXWIDGETS
 		wxColour GetWxColour() { return wxColour(r * 255, g * 255, b * 255); }
