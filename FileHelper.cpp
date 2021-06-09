@@ -459,7 +459,7 @@ std::string FileHelper::GetRelativePathToPath(const std::string & vFilePathName,
 #ifdef _DEBUG
 		else
 		{
-			printf("DEBUG : FileHelper::GetRelativePathToPath : Path %s is relative !?\n", res.c_str());
+			//printf("DEBUG : FileHelper::GetRelativePathToPath : Path %s is relative !?\n", res.c_str());
 		}
 #endif
 	}
