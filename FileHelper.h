@@ -113,11 +113,11 @@ public: // funcs
 	std::string GetTimeStampToString(const std::string& vSeparator = "_") const;
 	size_t GetTimeStampToNumber() const;
 
-	std::vector<std::string> GetAbsolutePathForFileLocation(const std::vector<std::string>& vRelativeFilePathNames, FileLocation vFileType);
-	std::string GetAbsolutePathForFileLocation(const std::string& vRelativeFilePathName, FileLocation vFileType);
+	std::vector<std::string> GetAbsolutePathForFileLocation(const std::vector<std::string>& vRelativeFilePathNames, FileLocation vFileType = (FileLocation)0);
+	std::string GetAbsolutePathForFileLocation(const std::string& vRelativeFilePathName, FileLocation vFileType = (FileLocation)0);
 
-	std::string LoadFile(const std::string& vFilePathName, FileLocation vFileType);
-	void SaveToFile(const std::string& vCode, const std::string& vFilePathName, FileLocation vFileType);
+	std::string LoadFile(const std::string& vFilePathName, FileLocation vFileType = (FileLocation)0);
+	void SaveToFile(const std::string& vCode, const std::string& vFilePathName, FileLocation vFileType = (FileLocation)0);
 
 	// specific function
 	std::string GetRelativePathToParent(const std::string& vFilePath, const std::string& vParentPath, bool vSilentMode = false) const;
