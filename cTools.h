@@ -100,8 +100,8 @@ using namespace cocos2d;
 #endif
 #endif
 
-#ifdef BOX2D
-#include <Box2D\Box2D.h>
+#ifdef USE_BOX2D
+#include USE_BOX2D
 #endif
 
 #ifdef SDL2
@@ -196,8 +196,8 @@ namespace ct // cTools
 
 #define IFEXIST(ptr) if (ptr) ptr
 
-#ifdef BOX2D
-#define SAFE_BOX2D_DESTROY_BODY(world, body) if(world!=0 && body!=0) world->DestroyBody(body); body=0
+#ifdef USE_BOX2D
+#define SAFE_USE_BOX2D_DESTROY_BODY(world, body) if(world!=0 && body!=0) world->DestroyBody(body); body=0
 #endif
 
 	/////////////////////////////////////////////////////////////
@@ -634,6 +634,9 @@ namespace ct // cTools
 #ifdef USE_IMGUI
 		vec2<T>(const ImVec2& vec) { x = (T)vec.x; y = (T)vec.y; }
 #endif
+#ifdef USE_BOX2D
+		vec2<T>(const b2Vec2& vec, const float& vRatio = 1.0f) { x = (T)vec.x * vRatio; y = (T)vec.y * vRatio; }
+#endif
 		T& operator [] (size_t i) { return (&x)[i]; }
 		// https://en.cppreference.com/w/cpp/language/operator_incdec
 		T& operator ++ () { ++x; ++y; } // pre inc
@@ -718,6 +721,11 @@ namespace ct // cTools
 	// convert
 	inline fvec2 convert(const ivec2& v) { return fvec2((float)v.x, (float)v.y); }
 	inline ivec2 convert(const fvec2& v) { return ivec2((int)v.x, (int)v.y); }
+
+#ifdef USE_BOX2D
+	inline b2Vec2 tob2v2(const fvec2& v) { return b2Vec2(v.x, v.y); }
+	inline b2Vec2 tob2v2(const fvec2& v, const float& r) { return b2Vec2(v.x / r, v.y / r); }
+#endif
 
 	// specialization for float32 test to fvec2
 	inline bool valid(const fvec2& a) { return floatIsValid(a.x) && floatIsValid(a.y); }
@@ -1184,7 +1192,7 @@ namespace ct // cTools
 		AABB(cocos2d::Rect rect) : lowerBound(rect.origin), upperBound(lowerBound + rect.size) {}
 #endif
 
-#ifdef BOX2D
+#ifdef USE_BOX2D
 		AABB(const b2AABB& aabb) : lowerBound(aabb.lowerBound), upperBound(aabb.upperBound) {}
 #endif
 
@@ -1298,7 +1306,7 @@ namespace ct // cTools
 			result |= other.upperBound.y <= upperBound.y;
 			return result;
 		}
-#ifdef BOX2D
+#ifdef USE_BOX2D
 		b2AABB Tob2AABB()
 		{
 			b2AABB v;
