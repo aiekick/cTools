@@ -1880,8 +1880,50 @@ namespace ct // cTools
 	///////// DeleteObjectsAndClearPointerList //////////////////
 	/////////////////////////////////////////////////////////////
 
-	template<typename T> void DeleteObjectsAndClearPointerList(::std::list<T*>& lst);
-	template<typename T> void DeleteObjectsAndClearPointerVector(::std::vector<T*>& vec);
+
+/////////////////////////////////////////////////////////////
+///////// DeleteObjectsAndClearPointerList //////////////////
+/////////////////////////////////////////////////////////////
+
+	template<typename T>
+	void DeleteObjectsAndClearPointerList(::std::list<T*>& lst)
+	{
+		if (!lst.empty())
+		{
+			for (typename ::std::list<T*>::iterator it = lst.begin(); it != lst.end(); ++it)
+			{
+				T* type = nullptr;
+				type = *it;
+				if (type != nullptr)
+				{
+					delete type;
+					*it = 0;
+				}
+			}
+			lst.clear();
+		}
+	}
+
+	template<typename T>
+	void DeleteObjectsAndClearPointerVector(::std::vector<T*>& vec)
+	{
+		if (!vec.empty())
+		{
+			for (typename ::std::vector<T*>::iterator it = vec.begin(); it != vec.end(); ++it)
+			{
+				T* type = nullptr;
+				type = *it;
+				if (type != nullptr)
+				{
+					delete type;
+					*it = 0;
+				}
+			}
+
+			vec.clear();
+		}
+	}
+	
 	template<typename T> ::std::string VectorToString(::std::vector<T>& vec, char vCharDelimiter);
 	template<typename T> ::std::string VectorVec2ToString(::std::vector<vec2<T>>& vec, char vCharDelimiter);
 	template<typename T> ::std::string VectorVec3ToString(::std::vector<vec3<T>>& vec, char vCharDelimiter);

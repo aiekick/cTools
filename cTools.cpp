@@ -646,49 +646,6 @@ P* ct::GetNewBufferFromMap(::std::map<T, P>& mp, int offsetBefore, int offsetAft
 	return nullptr;
 }
 
-/////////////////////////////////////////////////////////////
-///////// DeleteObjectsAndClearPointerList //////////////////
-/////////////////////////////////////////////////////////////
-
-template<typename T>
-void ct::DeleteObjectsAndClearPointerList(::std::list<T*>& lst)
-{
-	if (!lst.empty())
-	{
-		for (typename ::std::list<T*>::iterator it = lst.begin(); it != lst.end(); ++it)
-		{
-			T* type = nullptr;
-			type = *it;
-			if (type != nullptr)
-			{
-				delete type;
-				*it = 0;
-			}
-		}
-		lst.clear();
-	}
-}
-
-template<typename T>
-void ct::DeleteObjectsAndClearPointerVector(::std::vector<T*>& vec)
-{
-	if (!vec.empty())
-	{
-		for (typename ::std::vector<T*>::iterator it = vec.begin(); it != vec.end(); ++it)
-		{
-			T* type = nullptr;
-			type = *it;
-			if (type != nullptr)
-			{
-				delete type;
-				*it = 0;
-			}
-		}
-
-		vec.clear();
-	}
-}
-
 template<typename T>
 ::std::string ct::VectorToString(::std::vector<T>& vec, char vCharDelimiter)
 {
