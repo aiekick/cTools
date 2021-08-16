@@ -1148,6 +1148,9 @@ namespace ct // cTools
 
 	template <typename T> inline rect<T> floor(const rect<T>& a) { return rect<T>(floor<T>(a.x), floor<T>(a.y), floor<T>(a.w), floor<T>(a.h)); }
 	template <typename T> inline rect<T> ceil(const rect<T>& a) { return rect<T>(ceil<T>(a.x), ceil<T>(a.y), ceil<T>(a.w), ceil<T>(a.h)); }
+	
+	template <typename T> inline bool operator == (rect<T> v, rect<T> f) { return f.x == v.x && f.y == v.y && f.w == v.w && f.h == v.h; }
+	template <typename T> inline bool operator != (rect<T> v, rect<T> f) { return f.x != v.x || f.y != v.y || f.w != v.w || f.h != v.h; }
 
 	/////////////////////////////////////////////////////////////
 	///////// BUFFERS ///////////////////////////////////////////
