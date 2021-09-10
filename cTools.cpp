@@ -62,6 +62,22 @@ SOFTWARE.
 	return std::string();
 }
 
+::std::string ct::toUpper(const std::string& vStr)
+{
+	std::string str = vStr;
+	for (size_t i = 0U; i < str.size(); i++)
+		str[i] = std::toupper(str[i]);
+	return str;
+}
+
+::std::string ct::toLower(const std::string& vStr)
+{
+	std::string str = vStr;
+	for (size_t i = 0U; i < str.size(); i++)
+		str[i] = std::tolower(str[i]);
+	return str;
+}
+
 #ifdef USE_IMGUI
 ::std::string ct::toStrFromImVec2(ImVec2 v, char delimiter)
 {

@@ -120,6 +120,9 @@ namespace ct // cTools
 {
 	::std::string toStr(const char* fmt, ...);
 
+	::std::string toUpper(const std::string& vStr);
+	::std::string toLower(const std::string& vStr);
+
 	template <typename T> ::std::string toStrFromArray(T* arr, size_t n, char delimiter = ';')
 	{
 		if (arr)
