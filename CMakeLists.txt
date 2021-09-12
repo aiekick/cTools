@@ -5,6 +5,7 @@ enable_language(C CXX)
 option(USE_GL_VERSION_CHECKER "Use Gl Version Checker class" OFF)
 option(USE_CONFIG_SYSTEM "Use Config Load/Save class" ON)
 option(USE_GLFW_CLIPBOARD "Use Clipboard via GLFW3 (need glfW3)" OFF)
+option(USE_SDL_CLIPBOARD "Use Clipboard via SDL2 (need SDL2)" OFF)
 
 file(GLOB CTOOLS_SRC 
 	${CMAKE_CURRENT_SOURCE_DIR}/cTools.cpp 
@@ -27,6 +28,8 @@ endif()
 
 if (USE_GLFW_CLIPBOARD)
 	add_definitions(-DUSE_GLFW3)
+elseif(USE_SDL_CLIPBOARD)
+	add_definitions(-DUSE_SDL2)
 endif()
 if(UNIX)
 	if(APPLE)
