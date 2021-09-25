@@ -1830,24 +1830,53 @@ namespace ct // cTools
 		{
 			if (inputtype == "string") return splitStringToSet(string_value, c);
 			return set_string_value;
-		}		float GetF() const
+		}		
+		float GetF(const char* vLocalToRetablish) const
 		{
-			if (inputtype == "string") return (float)atof(string_value.c_str());
+			if (inputtype == "string")
+			{
+				std::setlocale(LC_NUMERIC, "C");
+				auto res = (float)std::atof(string_value.c_str());
+				if (vLocalToRetablish)
+					std::setlocale(LC_NUMERIC, vLocalToRetablish);
+				return res;
+			}
 			return float_value;
 		}
-		double GetD() const
+		double GetD(const char* vLocalToRetablish) const
 		{
-			if (inputtype == "string") return (double)atof(string_value.c_str());
+			if (inputtype == "string")
+			{
+				std::setlocale(LC_NUMERIC, "C");
+				auto res = (double)std::atof(string_value.c_str());
+				if (vLocalToRetablish)
+					std::setlocale(LC_NUMERIC, vLocalToRetablish);
+				return res;
+			}
 			return double_value;
 		}
-		int GetI() const
+		int GetI(const char* vLocalToRetablish) const
 		{
-			if (inputtype == "string") return atoi(string_value.c_str());
+			if (inputtype == "string")
+			{
+				std::setlocale(LC_NUMERIC, "C");
+				auto res = std::atoi(string_value.c_str());
+				if (vLocalToRetablish)
+					std::setlocale(LC_NUMERIC, vLocalToRetablish);
+				return res;
+			}
 			return int_value;
 		}
-		long GetL() const
+		long GetL(const char* vLocalToRetablish) const
 		{
-			if (inputtype == "string") return atol(string_value.c_str());
+			if (inputtype == "string")
+			{
+				std::setlocale(LC_NUMERIC, "C");
+				auto res = std::atol(string_value.c_str());
+				if (vLocalToRetablish)
+					std::setlocale(LC_NUMERIC, vLocalToRetablish);
+				return res;
+			}
 			return long_value;
 		}
 		bool GetB() const
