@@ -121,8 +121,8 @@ namespace ct // cTools
 {
 	::std::string toStr(const char* fmt, ...);
 
-	::std::string toUpper(const std::string& vStr);
-	::std::string toLower(const std::string& vStr);
+	::std::string toUpper(const std::string& vStr, const std::locale& vLocale = std::locale());
+	::std::string toLower(const std::string& vStr, const std::locale& vLocale = std::locale());
 
 	template <typename T> ::std::string toStrFromArray(T* arr, size_t n, char delimiter = ';')
 	{
