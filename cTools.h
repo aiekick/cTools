@@ -47,7 +47,8 @@ SOFTWARE.
 #include <iomanip> // std::setprecision
 #include <type_traits> // std::is_same
 #include <memory>
-#include <clocale>
+#include <clocale> // std::setlocale
+#include <locale> // toupper, tolower (with locale)
 
 #ifdef COCOS2D
 #ifndef USE_OPENGL
