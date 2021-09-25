@@ -4,7 +4,7 @@
 /*
 MIT License
 
-Copyright (c) 2010-2020 Stephane Cuillerdier (aka Aiekick)
+Copyright (c) 2010-2021 Stephane Cuillerdier (aka Aiekick)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -43,6 +43,7 @@ SOFTWARE.
 #include <functional>
 #include <algorithm> // ::std::reverse
 #include <cstring>
+#include <ctype.h>
 
 #ifdef MSVC
 #include <cwchar>
