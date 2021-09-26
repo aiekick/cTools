@@ -1833,7 +1833,7 @@ namespace ct // cTools
 			if (inputtype == "string") return splitStringToSet(string_value, c);
 			return set_string_value;
 		}		
-		float GetF(const char* vLocalToRetablish) const
+		float GetF(const char* vLocalToRetablish = nullptr) const
 		{
 			if (inputtype == "string")
 			{
@@ -1845,7 +1845,7 @@ namespace ct // cTools
 			}
 			return float_value;
 		}
-		double GetD(const char* vLocalToRetablish) const
+		double GetD(const char* vLocalToRetablish = nullptr) const
 		{
 			if (inputtype == "string")
 			{
@@ -1857,7 +1857,7 @@ namespace ct // cTools
 			}
 			return double_value;
 		}
-		int GetI(const char* vLocalToRetablish) const
+		int GetI(const char* vLocalToRetablish = nullptr) const
 		{
 			if (inputtype == "string")
 			{
@@ -1869,7 +1869,7 @@ namespace ct // cTools
 			}
 			return int_value;
 		}
-		long GetL(const char* vLocalToRetablish) const
+		long GetL(const char* vLocalToRetablish = nullptr) const
 		{
 			if (inputtype == "string")
 			{
