@@ -2202,6 +2202,16 @@ namespace ct // cTools
 			return ::std::shared_ptr<T>();
 		}
 
+		// if not expired, directly return a shared_ptr
+		::std::shared_ptr<T> getValidShared() const noexcept
+		{
+			if (this->valid())
+			{
+				return this->lock();
+			}
+			return ::std::shared_ptr<T>();
+		}
+
 		// weak = weak
 		template<typename T2>
 		uAssignable<const cWeak<T2>&> operator=(const cWeak<T2>& vWeak) noexcept
