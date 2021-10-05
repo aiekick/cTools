@@ -448,6 +448,16 @@ namespace ct // cTools
 			clear();
 		}
 
+		~texture()
+		{
+			if (glTex && glIsTexture(glTex) == GL_TRUE)
+			{
+				// on detruit la texture
+				glDeleteTextures(1, &glTex);
+				glFinish();
+			}
+		}
+
 		void clear()
 		{
 			format.clear();
@@ -456,7 +466,7 @@ namespace ct // cTools
 			w = h = d = x = y = z = 0;
 
 #ifdef SDL2
-			surface = NULL;
+			surface = nullptr;
 #endif
 			glTextureType = GL_TEXTURE_2D;
 			glTex = 0;
@@ -483,35 +493,35 @@ namespace ct // cTools
 		::std::string format;
 		::std::string relativPath;
 
-		bool flipY;
-		bool useMipMap;
-		int maxMipMapLvl;
+		bool flipY = false;
+		bool useMipMap = false;
+		int maxMipMapLvl = 0;
 
-		GLenum glTextureType;
+		GLenum glTextureType = GL_TEXTURE_2D;
 
-		GLenum glformat;
-		GLenum glinternalformat;
-		GLenum gldatatype;
+		GLenum glformat = GL_RGBA;
+		GLenum glinternalformat = GL_RGBA32F;
+		GLenum gldatatype = GL_FLOAT;
 
-		GLenum glWrapS; // x
-		GLenum glWrapT; // y
-		GLenum glWrapR; // z
-		GLenum glMinFilter;
-		GLenum glMagFilter;
+		GLenum glWrapS = GL_CLAMP_TO_EDGE; // x
+		GLenum glWrapT = GL_CLAMP_TO_EDGE; // y
+		GLenum glWrapR = GL_CLAMP_TO_EDGE; // z
+		GLenum glMinFilter = GL_LINEAR;
+		GLenum glMagFilter = GL_LINEAR;
 
-		size_t zOrder;
-		size_t w;
-		size_t h;
-		size_t d; // depth for texture 3d
-		size_t x;
-		size_t y;
-		size_t z; // depth for texture 3d
+		size_t zOrder = 0;
+		size_t w = 0;
+		size_t h = 0;
+		size_t d = 0; // depth for texture 3d
+		size_t x = 0;
+		size_t y = 0;
+		size_t z = 0; // depth for texture 3d
 
 #ifdef SDL2
-		SDL_Surface* surface;
+		SDL_Surface* surface = nullptr;
 #endif
 
-		GLuint glTex;
+		GLuint glTex = 0;
 
 		::std::vector<GLuint> glTexLayered;
 	};
