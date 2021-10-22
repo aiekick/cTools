@@ -326,6 +326,8 @@ std::vector<uint8_t> FileHelper::LoadFileToBytes(const std::string & vFilePathNa
 void FileHelper::RegisterPath(FileLocation vLoc, const std::string & vPath)
 {
 	puRegisteredPaths[vLoc] = vPath;
+
+	CreatePathIfNotExist(vPath);
 }
 
 std::string FileHelper::GetExistingFilePathForFile(const std::string & vFileName, bool vSilentMode)
