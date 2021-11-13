@@ -483,29 +483,29 @@ void GLVersionChecker::DisplaySupport()
 	auto glStruct = GetOpenglVersionStruct(puOpenglVersion);
 	if (glStruct)
 	{
-		LogVar("OpenGl version : %i.%i", glStruct->major, glStruct->minor);
+		LogVarLightInfo("OpenGl version : %i.%i", glStruct->major, glStruct->minor);
 		if (puAttribLayoutSupportedCore)
-			LogVar("- Attrib Location Available in Core");
+			LogVarLightInfo("- Attrib Location Available in Core");
 		else if (puAttribLayoutSupportedExtention)
-			LogVar("- Attrib Location Available in Extension");
+			LogVarLightInfo("- Attrib Location Available in Extension");
 		else
-			LogVar("- Attrib Location Not Available");
+			LogVarLightInfo("- Attrib Location Not Available");
 		if (puGeometryShaderSupported)
-			LogVar("- Geometry Stage Available");
+			LogVarLightInfo("- Geometry Stage Available");
 		else
-			LogVar("- Geometry Stage Not Available");
+			LogVarLightInfo("- Geometry Stage Not Available");
 		if (puTesselationShaderSupported)
-			LogVar("- Tesselation Stage Available");
+			LogVarLightInfo("- Tesselation Stage Available");
 		else
-			LogVar("- Tesselation Stage Not Available");
+			LogVarLightInfo("- Tesselation Stage Not Available");
 		if (puComputeShaderSupported)
-			LogVar("- Compute Stage Available");
+			LogVarLightInfo("- Compute Stage Available");
 		else
-			LogVar("- Compute Stage Not Available");
+			LogVarLightInfo("- Compute Stage Not Available");
 	}
 	else
 	{
-		LogVar("OpenGl version : Not Found !");
+		LogVarLightError("OpenGl version : Not Found !");
 	}
 }
 

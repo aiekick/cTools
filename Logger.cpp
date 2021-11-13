@@ -35,7 +35,14 @@ SOFTWARE.
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
+//// STATIC ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
+
+std::function<void(const int& vType, const std::string& vMessage)> Logger::sStandardLogFunction = nullptr;
+std::function<void(const int& vType, const std::string& vMessage)> Logger::sOpenGLLogFunction = nullptr;
+
+////////////////////////////////////////////////////////////////////////////////
+//// CONSTRUCTORS //////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
 // singleton
@@ -63,7 +70,7 @@ Logger::~Logger(void)
 	Close();
 }
 
-void Logger::LogString(const std::string* vFunction, const int* vLine, const char* vStr)
+void Logger::LogString(const LogMessageTypeEnum* vType, const std::string* vFunction, const int* vLine, const char* vStr)
 {
 	const int64 ticks = ct::GetTicks();
 	const double time = (ticks - lastTick) / 100.0;
@@ -77,27 +84,54 @@ void Logger::LogString(const std::string* vFunction, const int* vLine, const cha
 	if (w)
 	{
 		const std::string msg = std::string(TempBufferBis, w);
+
 		puMessages.push_back(msg);
+
 #if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
 		TracyMessageL(puMessages[puMessages.size() - 1U].c_str());
 #endif
+
 		printf("%s\n", msg.c_str());
+
+		if (vStr && sStandardLogFunction)
+		{
+			int type = 0;
+
+			if (vType)
+			{
+				type = (int)(*vType);
+			}
+
+			auto arr = ct::splitStringToVector(msg, '\n');
+			if (arr.size() == 1U)
+			{
+				sStandardLogFunction(type, msg);
+			}
+			else
+			{
+				for (auto m : arr)
+				{
+					sStandardLogFunction(type, m);
+				}
+			}
+		}
+
 		if (!debugLogFile->bad())
 			*debugLogFile << msg << std::endl;
 	}
 }
 
-void Logger::LogString(const std::string* vFunction, const int* vLine, const char* fmt, va_list vArgs)
+void Logger::LogString(const LogMessageTypeEnum* vType, const std::string* vFunction, const int* vLine, const char* fmt, va_list vArgs)
 {
 	static char TempBuffer[3072 + 1];//3072 = 1024 * 3
 	int w = vsnprintf(TempBuffer, 3072, fmt, vArgs);
 	if (w)
 	{
-		LogString(vFunction, vLine, TempBuffer);
+		LogString(vType, vFunction, vLine, TempBuffer);
 	}
 }
 
-void Logger::LogString(const char* fmt, ...)
+void Logger::LogSimpleString(const char* fmt, ...)
 {
 #if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
 	ZoneScoped;
@@ -106,7 +140,21 @@ void Logger::LogString(const char* fmt, ...)
 	lck.lock();
 	va_list args;
 	va_start(args, fmt);
-	LogString(nullptr, nullptr, fmt, args);
+	LogString(nullptr, nullptr, nullptr, fmt, args);
+	va_end(args);
+	lck.unlock();
+}
+
+void Logger::LogSimpleStringByType(const LogMessageTypeEnum& vType, const char* fmt, ...)
+{
+#if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
+	ZoneScoped;
+#endif
+	std::unique_lock<std::mutex> lck(Logger::Logger_Mutex, std::defer_lock);
+	lck.lock();
+	va_list args;
+	va_start(args, fmt);
+	LogString(&vType, nullptr, nullptr, fmt, args);
 	va_end(args);
 	lck.unlock();
 }
@@ -120,7 +168,21 @@ void Logger::LogStringWithFunction(const std::string& vFunction, const int& vLin
 	lck.lock();
 	va_list args;
 	va_start(args, fmt);
-	LogString(&vFunction, &vLine, fmt, args);
+	LogString(nullptr, &vFunction, &vLine, fmt, args);
+	va_end(args);
+	lck.unlock();
+}
+
+void Logger::LogStringByTypeWithFunction(const LogMessageTypeEnum& vType, const std::string& vFunction, const int& vLine, const char* fmt, ...)
+{
+#if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
+	ZoneScoped;
+#endif
+	std::unique_lock<std::mutex> lck(Logger::Logger_Mutex, std::defer_lock);
+	lck.lock();
+	va_list args;
+	va_start(args, fmt);
+	LogString(&vType, &vFunction, &vLine, fmt, args);
 	va_end(args);
 	lck.unlock();
 }
@@ -135,7 +197,7 @@ void Logger::LogStringWithFunction_Debug(const std::string& vFunction, const int
 	lck.lock();
 	va_list args;
 	va_start(args, fmt);
-	LogString(&vFunction, &vLine, fmt, args);
+	LogString(nullptr, &vFunction, &vLine, fmt, args);
 	va_end(args);
 	lck.unlock();
 #else
@@ -144,36 +206,6 @@ void Logger::LogStringWithFunction_Debug(const std::string& vFunction, const int
 	UNUSED(fmt);
 #endif
 }
-
-/*
- * void Logger::LogStringWithFunction(const std::string& vFunction, const int& vLine, const std::string& vStr)
-{
-#if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
-	ZoneScoped;
-#endif
-	std::unique_lock<std::mutex> lck(Logger::Logger_Mutex, std::defer_lock);
-	lck.lock();
-	LogString(&vFunction, &vLine, vStr.c_str());
-	lck.unlock();
-}
-
-void Logger::LogStringWithFunction_Debug(const std::string& vFunction, const int& vLine, const std::string& vStr)
-{
-#ifdef _DEBUG
-#if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
-	ZoneScoped;
-#endif
-	std::unique_lock<std::mutex> lck(Logger::Logger_Mutex, std::defer_lock);
-	lck.lock();
-	LogString(&vFunction, &vLine, vStr.c_str());
-	lck.unlock();
-#else
-	UNUSED(vFunction);
-	UNUSED(vLine);
-	UNUSED(fmt);
-#endif
-}
-*/
 
 #ifdef USE_OPENGL
 void Logger::LogGLError(const std::string& vFile, const std::string& vFunc, int vLine, const std::string& vGLFunc) const
@@ -209,9 +241,28 @@ void Logger::LogGLError(const std::string& vFile, const std::string& vFunc, int 
 			error += "OpenGL error : " + error + " in " + vFile + " " + vFunc + " " + ct::toStr(vLine) + " " + vGLFunc;
 			const int64 ticks = ct::GetTicks();
 			const float time = (ticks - lastTick) / 1000.0f;
-			std::cout << "t:" << time << "s : " << error << std::endl;
+
+			auto msg = ct::toStr("[%.3fs] => %s\n", time, error.c_str());
+			printf("%s", msg.c_str());
+
+			if (sOpenGLLogFunction)
+			{
+				auto arr = ct::splitStringToVector(msg, '\n');
+				if (arr.size() == 1U)
+				{
+					sOpenGLLogFunction(2, msg);
+				}
+				else
+				{
+					for (auto m : arr)
+					{
+						sOpenGLLogFunction(2, m);
+					}
+				}
+			}
+
 			if (!debugLogFile->bad())
-				*debugLogFile << "t:" << time << "s : " << error << std::endl;
+				*debugLogFile << msg << std::endl;
 
 			CTOOL_DEBUG_BREAK;
 		}
