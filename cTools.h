@@ -305,6 +305,10 @@ namespace ct // cTools
 	template <typename T> inline T mini(const T& a, const T& b) { return a < b ? a : b; }
 	template <typename T> inline T maxi(const T& a, const T& b) { return a > b ? a : b; }
 
+	// for use in itnernla types, like vec2, vec3, vec4
+	template <typename T> inline T internal_mini(const T& a, const T& b) { return a < b ? a : b; }
+	template <typename T> inline T internal_maxi(const T& a, const T& b) { return a > b ? a : b; }
+
 	// template <typename T> inline T clamp(const T& a, const T& b, const T& c) { return mini<const T&>(maxi<const T&>(a, b), c); }
 
 	template <typename T> inline T clamp(const T& n) { return n >= T(0) && n <= T(1) ? n : T(n > T(0)); } // clamp n => 0 to 1
@@ -677,6 +681,8 @@ namespace ct // cTools
 		std::string string(char c = ';') { return toStr(x) + c + toStr(y); }
 		T ratioXY() { if (y > (T)0) return x / y; return (T)0; }
 		T ratioYX() { if (x > (T)0) return y / x; return (T)0; }
+		T mini() { return internal_mini<T>(x, y); }
+		T maxi() { return internal_maxi<T>(x, y); }
 	};
 	// https://en.cppreference.com/w/cpp/language/operator_incdec
 	template <typename T> inline vec2<T>& operator ++ (vec2<T>& v) { ++v; return v; } // pre inc
@@ -871,6 +877,8 @@ namespace ct // cTools
 		bool emptyAND() { return x == (T)0 && y == (T)0 && z == (T)0; }
 		bool emptyOR() { return x == (T)0 || y == (T)0 || z == (T)0; }
 		std::string string(char c = ';') { return toStr(x) + c + toStr(y) + c + toStr(z); }
+		T mini() { return internal_mini<T>(x, internal_mini<T>(y, z)); }
+		T maxi() { return internal_maxi<T>(x, internal_maxi<T>(y, z)); }
 	};
 	// https://en.cppreference.com/w/cpp/language/operator_incdec
 	template <typename T> inline vec3<T>& operator ++ (vec3<T>& v) { ++v; return v; } // pre inc
@@ -1031,6 +1039,8 @@ namespace ct // cTools
 		T sum() { return x + y + z + w; }
 		T sumAbs() { return abs<T>(x) + abs<T>(y) + abs<T>(z) + abs<T>(w); }
 		std::string string(char c = ';') { return toStr(x) + c + toStr(y) + c + toStr(z) + c + toStr(w); }
+		T mini() { return ::internal_mini<T>(x, ::internal_mini<T>(y, ::internal_mini<T>(z, w))); }
+		T maxi() { return ::internal_maxi<T>(x, ::internal_maxi<T>(y, ::internal_maxi<T>(z, w))); }
 	};
 	// https://en.cppreference.com/w/cpp/language/operator_incdec
 	template <typename T> inline vec4<T>& operator ++ (vec4<T>& v) { ++v; return v; } // pre inc
