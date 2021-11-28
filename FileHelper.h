@@ -72,7 +72,7 @@ public: // funcs
 	PathStruct ParsePathFileName(const std::string& vPathFileName) const;
 
 	void RegisterPath(FileLocation vLoc, const std::string& vPath);
-	std::string FileHelper::GetRegisteredPath(FileLocation vLoc) const;
+	std::string GetRegisteredPath(FileLocation vLoc) const;
 
 	std::string GetExistingFilePathForFile(const std::string& vFileName, bool vSilentMode = false);
 	std::string CorrectSlashTypeForFilePathName(const std::string& vFilePathName) const;
