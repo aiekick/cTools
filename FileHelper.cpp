@@ -900,16 +900,12 @@ size_t FileHelper::GetTimeStampToNumber() const
 // Need GLFW
 void FileHelper::SaveInClipBoard(GLFWwindow * vWin, const std::string & vString)
 {
-	if (!vString.empty())
-	{
-		glfwSetClipboardString(vWin, vString.c_str());
-	}
+	glfwSetClipboardString(vWin, vString.c_str());
 }
 
 std::string FileHelper::GetFromClipBoard(GLFWwindow * vWin)
 {
-	std::string res = glfwGetClipboardString(vWin);
-	return res;
+	return glfwGetClipboardString(vWin);
 }
 #endif
 
