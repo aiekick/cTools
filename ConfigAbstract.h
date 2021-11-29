@@ -37,7 +37,7 @@ namespace conf
 	{
 	public:
 		virtual std::string getXml(const std::string& vOffset, const std::string& vUserDatas = "") = 0;
-		// return true for continue xml parsing of childs in this node or false for interupt the child exploration
+		// return true for continue xml parsing of childs in this node or false for interrupt the child exploration (if we want explore child ourselves)
 		virtual bool setFromXml(tinyxml2::XMLElement* vElem, tinyxml2::XMLElement* vParent, const std::string& vUserDatas = "") = 0;
 
 	public:

@@ -60,8 +60,10 @@ class FileHelper
 public: // static
 	static std::string AppPath;
 
-public: // var
+private:
 	std::map<FileLocation, std::string> puRegisteredPaths;
+
+public: // var
 	std::string puSlashType;
 	std::string puAppFileName;
 	std::vector<std::string> puSearchPaths;
@@ -70,6 +72,7 @@ public: // funcs
 	PathStruct ParsePathFileName(const std::string& vPathFileName) const;
 
 	void RegisterPath(FileLocation vLoc, const std::string& vPath);
+	std::string GetRegisteredPath(FileLocation vLoc) const;
 
 	std::string GetExistingFilePathForFile(const std::string& vFileName, bool vSilentMode = false);
 	std::string CorrectSlashTypeForFilePathName(const std::string& vFilePathName) const;
