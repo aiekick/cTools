@@ -1039,8 +1039,8 @@ namespace ct // cTools
 		T sum() { return x + y + z + w; }
 		T sumAbs() { return abs<T>(x) + abs<T>(y) + abs<T>(z) + abs<T>(w); }
 		std::string string(char c = ';') { return toStr(x) + c + toStr(y) + c + toStr(z) + c + toStr(w); }
-		T mini() { return ::internal_mini<T>(x, ::internal_mini<T>(y, ::internal_mini<T>(z, w))); }
-		T maxi() { return ::internal_maxi<T>(x, ::internal_maxi<T>(y, ::internal_maxi<T>(z, w))); }
+		T mini() { return internal_mini<T>(x, internal_mini<T>(y, internal_mini<T>(z, w))); }
+		T maxi() { return internal_maxi<T>(x, internal_maxi<T>(y, internal_maxi<T>(z, w))); }
 	};
 	// https://en.cppreference.com/w/cpp/language/operator_incdec
 	template <typename T> inline vec4<T>& operator ++ (vec4<T>& v) { ++v; return v; } // pre inc
