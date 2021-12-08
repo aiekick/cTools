@@ -2219,7 +2219,7 @@ namespace ct // cTools
 			{
 				return this->lock();
 			}
-			return ::std::shared_ptr<T>();
+			return nullptr;
 		}
 
 		// if not expired, directly return a shared_ptr
@@ -2229,7 +2229,7 @@ namespace ct // cTools
 			{
 				return this->lock();
 			}
-			return ::std::shared_ptr<T>();
+			return nullptr;
 		}
 
 		// weak = weak
