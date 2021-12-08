@@ -264,7 +264,7 @@ void Logger::LogGLError(const std::string& vFile, const std::string& vFunc, int 
 			if (!debugLogFile->bad())
 				*debugLogFile << msg << std::endl;
 
-			CTOOL_DEBUG_BREAK;
+			//CTOOL_DEBUG_BREAK;
 		}
 	}
 }
