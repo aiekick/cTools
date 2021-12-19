@@ -688,6 +688,26 @@ namespace ct // cTools
 		T mini() { return internal_mini<T>(x, y); }
 		T maxi() { return internal_maxi<T>(x, y); }
 	};
+
+	// specialisation
+	template <>
+	bool vec2<float>::operator == (const float& a) { return (IS_FLOAT_EQUAL(x, a) && IS_FLOAT_EQUAL(y, a)); }
+	template <>
+	bool vec2<float>::operator == (const vec2<float>& v) { return (IS_FLOAT_EQUAL(x, v.x) && IS_FLOAT_EQUAL(y, v.y)); }
+	template <>
+	bool vec2<float>::operator != (const float& a) { return (IS_FLOAT_DIFFERENT(x, a) || IS_FLOAT_DIFFERENT(y, a)); }
+	template <>
+	bool vec2<float>::operator != (const vec2<float>& v) { return (IS_FLOAT_DIFFERENT(x, v.x) || IS_FLOAT_DIFFERENT(y, v.y)); }
+
+	template <>
+	bool vec2<double>::operator == (const double& a) { return (IS_DOUBLE_EQUAL(x, a) && IS_DOUBLE_EQUAL(y, a)); }
+	template <>
+	bool vec2<double>::operator == (const vec2<double>& v) { return (IS_DOUBLE_EQUAL(x, v.x) && IS_DOUBLE_EQUAL(y, v.y)); }
+	template <>
+	bool vec2<double>::operator != (const double& a) { return (IS_DOUBLE_DIFFERENT(x, a) || IS_DOUBLE_DIFFERENT(y, a)); }
+	template <>
+	bool vec2<double>::operator != (const vec2<double>& v) { return (IS_DOUBLE_DIFFERENT(x, v.x) || IS_DOUBLE_DIFFERENT(y, v.y)); }
+
 	// https://en.cppreference.com/w/cpp/language/operator_incdec
 	template <typename T> inline vec2<T>& operator ++ (vec2<T>& v) { ++v; return v; } // pre inc
 	template <typename T> inline vec2<T>& operator -- (vec2<T>& v) { --v; return v; } // pre dec
