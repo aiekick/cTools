@@ -305,7 +305,7 @@ namespace ct // cTools
 	template <typename T> inline T mini(const T& a, const T& b) { return a < b ? a : b; }
 	template <typename T> inline T maxi(const T& a, const T& b) { return a > b ? a : b; }
 
-	// for use in itnernla types, like vec2, vec3, vec4
+	// for use in internals types, like vec2, vec3, vec4
 	template <typename T> inline T internal_mini(const T& a, const T& b) { return a < b ? a : b; }
 	template <typename T> inline T internal_maxi(const T& a, const T& b) { return a > b ? a : b; }
 
@@ -635,10 +635,10 @@ namespace ct // cTools
 	{
 		T x, y;
 		vec2<T>() { x = (T)0; y = (T)0; }
-		template <typename U> vec2<T>(vec2<U> a) { x = (T)a.x; y = (T)a.y; }
-		vec2<T>(T a) { x = a; y = a; }
-		vec2<T>(T a, T b) { x = a; y = b; }
-		vec2<T>(::std::string vec, char c = ';', vec2<T>* def = nullptr)//may be in format "0.2f,0.3f,0.4f"
+		template <typename U> vec2<T>(const vec2<U>& a) { x = (T)a.x; y = (T)a.y; }
+		vec2<T>(const T& a) { x = a; y = a; }
+		vec2<T>(const T& a, const T& b) { x = a; y = b; }
+		vec2<T>(const ::std::string& vec, const char& c = ';', vec2<T>* def = nullptr)//may be in format "0.2f,0.3f,0.4f"
 		{
 			if (def)
 			{
@@ -656,22 +656,26 @@ namespace ct // cTools
 #ifdef USE_BOX2D
 		vec2<T>(const b2Vec2& vec, const float& vRatio = 1.0f) { x = (T)vec.x * vRatio; y = (T)vec.y * vRatio; }
 #endif
-		T& operator [] (size_t i) { return (&x)[i]; }
+		T& operator [] (const size_t& i) { return (&x)[i]; }
 		// https://en.cppreference.com/w/cpp/language/operator_incdec
-		T& operator ++ () { ++x; ++y; } // pre inc
-		T& operator -- () { --x; --y; } // pre dec
-		T operator ++ (int) { vec2<T> tmp; ++tmp; return tmp; } // post inc
-		T operator -- (int) { vec2<T> tmp; --tmp; return tmp; } // post inc
+		vec2<T>& operator ++ () { ++x; ++y; return *this; } // pre inc
+		vec2<T>& operator -- () { --x; --y; return *this; } // pre dec
+		vec2<T> operator ++ (int) { vec2<T> tmp = *this; ++*this; return tmp; } // post inc
+		vec2<T> operator -- (int) { vec2<T> tmp = *this; --*this; return tmp; } // post dec
+		void operator += (const T& a) { x += a; y += a; }
 		void operator += (const vec2<T>& v) { x += v.x; y += v.y; }
+		void operator -= (const T& a) { x -= a; y -= a; }
 		void operator -= (const vec2<T>& v) { x -= v.x; y -= v.y; }
+		bool operator == (const T& a) { return (x == a) && (y == a); }
 		bool operator == (const vec2<T>& v) { return (x == v.x) && (y == v.y); }
+		bool operator != (const T& a) { return (x != a) || (y != a); }
 		bool operator != (const vec2<T>& v) { return (x != v.x) || (y != v.y); }
-		void operator *= (T a) { x *= a; y *= a; }
-		void operator *= (vec2<T> v) { x *= v.x; y *= v.y; }
-		void operator /= (T a) { x /= a; y /= a; }
-		void operator /= (vec2<T> v) { x /= v.x; y /= v.y; }
-		T length() { return sqrt(lengthSquared()); }
+		void operator *= (const T& a) { x *= a; y *= a; }
+		void operator *= (const vec2<T>& v) { x *= v.x; y *= v.y; }
+		void operator /= (const T& a) { x /= a; y /= a; }
+		void operator /= (const vec2<T>& v) { x /= v.x; y /= v.y; }
 		T lengthSquared() { return x * x + y * y; }
+		T length() { return sqrt(lengthSquared()); }
 		T normalize() { T _length = length(); if (_length < (T)1e-5) return (T)0.0; T _invLength = (T)1.0 / _length; x *= _invLength; y *= _invLength; return _length; } // return length
 		vec2<T> GetNormalized() { vec2<T> n = vec2<T>(x, y); n.normalize(); return n; }
 		T sum() { return x + y; }
@@ -679,8 +683,8 @@ namespace ct // cTools
 		bool emptyAND() const { return x == (T)0 && y == (T)0; }
 		bool emptyOR() const { return x == (T)0 || y == (T)0; }
 		std::string string(char c = ';') { return toStr(x) + c + toStr(y); }
-		T ratioXY() { if (y > (T)0) return x / y; return (T)0; }
-		T ratioYX() { if (x > (T)0) return y / x; return (T)0; }
+		T ratioXY() { if (y != (T)0) return x / y; return (T)0; }
+		T ratioYX() { if (x != (T)0) return y / x; return (T)0; }
 		T mini() { return internal_mini<T>(x, y); }
 		T maxi() { return internal_maxi<T>(x, y); }
 	};

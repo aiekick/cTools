@@ -1,0 +1,53 @@
+cmake_minimum_required(VERSION 3.1)
+cmake_policy(SET CMP0110 OLD) ## for use [] in test names like "cTools.Vec2.[]"
+
+set(PROJECT cTools_Test)
+enable_language(C CXX)
+project(${PROJECT} CXX)
+
+message("cTools testing enabled")
+
+file(GLOB_RECURSE PROJECT_TEST_SRC_RECURSE 
+	${CMAKE_CURRENT_SOURCE_DIR}/*.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/*.h 
+)
+
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${PROJECT_TEST_SRC_RECURSE})
+include_directories(${CTOOLS_INCLUDE_DIR})
+add_executable(${PROJECT} ${PROJECT_TEST_SRC_RECURSE})
+target_link_libraries(${PROJECT} PRIVATE ${CTOOLS_LIBRARIES})
+set_target_properties(${PROJECT} PROPERTIES FOLDER Tests)
+
+add_test("FileHelper.1" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "FileHelper.1")
+add_test("Logger.1" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "Logger.1")
+
+add_test("cTools.Vec2.[]" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.[]")
+add_test("cTools.Vec2.post++" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.post++")
+add_test("cTools.Vec2.post--" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.post--")
+add_test("cTools.Vec2.pre++" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.pre++")
+add_test("cTools.Vec2.pre--" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.pre--")
+add_test("cTools.Vec2.+=a" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.+=a")
+add_test("cTools.Vec2.+=Vec2" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.+=Vec2")
+add_test("cTools.Vec2.-=a" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.-=a")
+add_test("cTools.Vec2.-=Vec2" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.-=Vec2")
+add_test("cTools.Vec2.==a" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.==a")
+add_test("cTools.Vec2.==Vec2" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.==Vec2")
+add_test("cTools.Vec2.!=a" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.!=a")
+add_test("cTools.Vec2.!=Vec2" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.!=Vec2")
+add_test("cTools.Vec2.*=a" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.*=a")
+add_test("cTools.Vec2.*=Vec2" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.*=Vec2")
+add_test("cTools.Vec2./=a" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2./=a")
+add_test("cTools.Vec2./=Vec2" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2./=Vec2")
+add_test("cTools.Vec2.lengthSquared" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.lengthSquared")
+add_test("cTools.Vec2.length" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.length")
+add_test("cTools.Vec2.normalize" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.normalize")
+add_test("cTools.Vec2.GetNormalized" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.GetNormalized")
+add_test("cTools.Vec2.sum" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.sum")
+add_test("cTools.Vec2.sumAbs" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.sumAbs")
+add_test("cTools.Vec2.emptyAND" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.emptyAND")
+add_test("cTools.Vec2.emptyOR" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.emptyOR")
+add_test("cTools.Vec2.string" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.string")
+add_test("cTools.Vec2.ratioXY" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.ratioXY")
+add_test("cTools.Vec2.ratioYX" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.ratioYX")
+add_test("cTools.Vec2.mini" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.mini")
+add_test("cTools.Vec2.maxi" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}" "cTools.Vec2.maxi")
