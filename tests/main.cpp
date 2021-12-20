@@ -12,10 +12,7 @@ int main(int argc, char** argv)
 	
 	// this code will be executed if not called by the tester
 
-	run_test("cTools.double.Vec2.!=Vec2");
-	run_test("cTools.float.Vec2.!=Vec2");
-	run_test("cTools.bool.Vec2.!=a");
-	run_test("cTools.bool.Vec2.!=Vec2");
-
+	run_test("cTools.double.Vec3.Offset");
+	
 	return 0;
 }
