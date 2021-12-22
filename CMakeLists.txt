@@ -1,11 +1,15 @@
 cmake_minimum_required(VERSION 3.1)
 
+set(PROJECT ctools)
 enable_language(C CXX)
+project(${PROJECT} CXX)
+
 
 option(USE_GL_VERSION_CHECKER "Use Gl Version Checker class" OFF)
 option(USE_CONFIG_SYSTEM "Use Config Load/Save class" ON)
 option(USE_GLFW_CLIPBOARD "Use Clipboard via GLFW3 (need glfW3)" OFF)
 option(USE_SDL_CLIPBOARD "Use Clipboard via SDL2 (need SDL2)" OFF)
+option(USE_TEST "Enable Tests" OFF)
 
 file(GLOB CTOOLS_SRC 
 	${CMAKE_CURRENT_SOURCE_DIR}/cTools.cpp 
@@ -58,12 +62,29 @@ else ()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -std=c++11")
 endif ()
 
-add_library(ctools STATIC ${CTOOLS_SRC} ${CONFIG_SYSTEM_SRC} ${GLVERSIONCHECKER_SRC})
+add_library(${PROJECT} STATIC ${CTOOLS_SRC} ${CONFIG_SYSTEM_SRC} ${GLVERSIONCHECKER_SRC})
 
 include_directories(.)
 
-set_target_properties(ctools PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(${PROJECT} PROPERTIES LINKER_LANGUAGE CXX)
 
 set(CTOOLS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR} PARENT_SCOPE)
-set(CTOOLS_LIBRARIES ctools PARENT_SCOPE)
+set(CTOOLS_LIBRARIES ${PROJECT} PARENT_SCOPE)
 set(CTOOLS_LIB_DIR ${CMAKE_CURRENT_BINARY_DIR} PARENT_SCOPE)
+
+#############################################################
+### TESTS ###################################################
+#############################################################
+
+if(USE_TEST)
+enable_testing()
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests)
+set(LLVM_USE_CRT_DEBUG MTd CACHE STRING "" FORCE)
+set(LLVM_USE_CRT_MINSIZEREL MT CACHE STRING "" FORCE)
+set(LLVM_USE_CRT_RELEASE MT CACHE STRING "" FORCE)
+set(LLVM_USE_CRT_RELWITHDEBINFO MT CACHE STRING "" FORCE)
+set(USE_MSVC_RUNTIME_LIBRARY_DLL OFF CACHE BOOL "")
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "cmakeTargets")
+
+endif()

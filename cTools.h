@@ -305,7 +305,7 @@ namespace ct // cTools
 	template <typename T> inline T mini(const T& a, const T& b) { return a < b ? a : b; }
 	template <typename T> inline T maxi(const T& a, const T& b) { return a > b ? a : b; }
 
-	// for use in itnernla types, like vec2, vec3, vec4
+	// for use in internals types, like vec2, vec3, vec4
 	template <typename T> inline T internal_mini(const T& a, const T& b) { return a < b ? a : b; }
 	template <typename T> inline T internal_maxi(const T& a, const T& b) { return a > b ? a : b; }
 
@@ -635,10 +635,10 @@ namespace ct // cTools
 	{
 		T x, y;
 		vec2<T>() { x = (T)0; y = (T)0; }
-		template <typename U> vec2<T>(vec2<U> a) { x = (T)a.x; y = (T)a.y; }
-		vec2<T>(T a) { x = a; y = a; }
-		vec2<T>(T a, T b) { x = a; y = b; }
-		vec2<T>(::std::string vec, char c = ';', vec2<T>* def = nullptr)//may be in format "0.2f,0.3f,0.4f"
+		template <typename U> vec2<T>(const vec2<U>& a) { x = (T)a.x; y = (T)a.y; }
+		vec2<T>(const T& a) { x = a; y = a; }
+		vec2<T>(const T& a, const T& b) { x = a; y = b; }
+		vec2<T>(const ::std::string& vec, const char& c = ';', vec2<T>* def = nullptr)//may be in format "0.2f,0.3f,0.4f"
 		{
 			if (def)
 			{
@@ -656,34 +656,58 @@ namespace ct // cTools
 #ifdef USE_BOX2D
 		vec2<T>(const b2Vec2& vec, const float& vRatio = 1.0f) { x = (T)vec.x * vRatio; y = (T)vec.y * vRatio; }
 #endif
-		T& operator [] (size_t i) { return (&x)[i]; }
+		T& operator [] (const size_t& i) { return (&x)[i]; }
 		// https://en.cppreference.com/w/cpp/language/operator_incdec
-		T& operator ++ () { ++x; ++y; } // pre inc
-		T& operator -- () { --x; --y; } // pre dec
-		T operator ++ (int) { vec2<T> tmp; ++tmp; return tmp; } // post inc
-		T operator -- (int) { vec2<T> tmp; --tmp; return tmp; } // post inc
+		vec2<T>& operator ++ () { ++x; ++y; return *this; } // pre inc
+		vec2<T>& operator -- () { --x; --y; return *this; } // pre dec
+		vec2<T> operator ++ (int) { vec2<T> tmp = *this; ++*this; return tmp; } // post inc
+		vec2<T> operator -- (int) { vec2<T> tmp = *this; --*this; return tmp; } // post dec
+		void operator += (const T& a) { x += a; y += a; }
 		void operator += (const vec2<T>& v) { x += v.x; y += v.y; }
+		void operator -= (const T& a) { x -= a; y -= a; }
 		void operator -= (const vec2<T>& v) { x -= v.x; y -= v.y; }
+		bool operator == (const T& a) { return (x == a) && (y == a); }
 		bool operator == (const vec2<T>& v) { return (x == v.x) && (y == v.y); }
+		bool operator != (const T& a) { return (x != a) || (y != a); }
 		bool operator != (const vec2<T>& v) { return (x != v.x) || (y != v.y); }
-		void operator *= (T a) { x *= a; y *= a; }
-		void operator *= (vec2<T> v) { x *= v.x; y *= v.y; }
-		void operator /= (T a) { x /= a; y /= a; }
-		void operator /= (vec2<T> v) { x /= v.x; y /= v.y; }
-		T length() { return sqrt(lengthSquared()); }
+		void operator *= (const T& a) { x *= a; y *= a; }
+		void operator *= (const vec2<T>& v) { x *= v.x; y *= v.y; }
+		void operator /= (const T& a) { x /= a; y /= a; }
+		void operator /= (const vec2<T>& v) { x /= v.x; y /= v.y; }
 		T lengthSquared() { return x * x + y * y; }
+		T length() { return (T)sqrt(lengthSquared()); }
 		T normalize() { T _length = length(); if (_length < (T)1e-5) return (T)0.0; T _invLength = (T)1.0 / _length; x *= _invLength; y *= _invLength; return _length; } // return length
 		vec2<T> GetNormalized() { vec2<T> n = vec2<T>(x, y); n.normalize(); return n; }
 		T sum() { return x + y; }
 		T sumAbs() { return abs<T>(x) + abs<T>(y); }
 		bool emptyAND() const { return x == (T)0 && y == (T)0; }
 		bool emptyOR() const { return x == (T)0 || y == (T)0; }
-		std::string string(char c = ';') { return toStr(x) + c + toStr(y); }
-		T ratioXY() { if (y > (T)0) return x / y; return (T)0; }
-		T ratioYX() { if (x > (T)0) return y / x; return (T)0; }
+		std::string string(const char& c = ';') { return toStr(x) + c + toStr(y); }
+		T ratioXY() { if (y != (T)0) return x / y; return (T)0; }
+		T ratioYX() { if (x != (T)0) return y / x; return (T)0; }
 		T mini() { return internal_mini<T>(x, y); }
 		T maxi() { return internal_maxi<T>(x, y); }
 	};
+
+	// specialisation
+	template <>
+	bool vec2<float>::operator == (const float& a) { return (IS_FLOAT_EQUAL(x, a) && IS_FLOAT_EQUAL(y, a)); }
+	template <>
+	bool vec2<float>::operator == (const vec2<float>& v) { return (IS_FLOAT_EQUAL(x, v.x) && IS_FLOAT_EQUAL(y, v.y)); }
+	template <>
+	bool vec2<float>::operator != (const float& a) { return (IS_FLOAT_DIFFERENT(x, a) || IS_FLOAT_DIFFERENT(y, a)); }
+	template <>
+	bool vec2<float>::operator != (const vec2<float>& v) { return (IS_FLOAT_DIFFERENT(x, v.x) || IS_FLOAT_DIFFERENT(y, v.y)); }
+
+	template <>
+	bool vec2<double>::operator == (const double& a) { return (IS_DOUBLE_EQUAL(x, a) && IS_DOUBLE_EQUAL(y, a)); }
+	template <>
+	bool vec2<double>::operator == (const vec2<double>& v) { return (IS_DOUBLE_EQUAL(x, v.x) && IS_DOUBLE_EQUAL(y, v.y)); }
+	template <>
+	bool vec2<double>::operator != (const double& a) { return (IS_DOUBLE_DIFFERENT(x, a) || IS_DOUBLE_DIFFERENT(y, a)); }
+	template <>
+	bool vec2<double>::operator != (const vec2<double>& v) { return (IS_DOUBLE_DIFFERENT(x, v.x) || IS_DOUBLE_DIFFERENT(y, v.y)); }
+
 	// https://en.cppreference.com/w/cpp/language/operator_incdec
 	template <typename T> inline vec2<T>& operator ++ (vec2<T>& v) { ++v; return v; } // pre inc
 	template <typename T> inline vec2<T>& operator -- (vec2<T>& v) { --v; return v; } // pre dec
@@ -837,10 +861,10 @@ namespace ct // cTools
 		T x, y, z;
 		vec3() : x((T)0), y((T)0), z((T)0) {}
 		template <typename U> vec3<T>(vec3<U> a) { x = (T)a.x; y = (T)a.y; z = (T)a.z; }
-		vec3(T xyz) : x(xyz), y(xyz), z(xyz) {}
-		vec3(T x, T y, T z) : x(x), y(y), z(z) {}
-		vec3(vec2<T> xy, T z) : x(xy.x), y(xy.y), z(z) {}
-		vec3(::std::string vec, char c = ';', vec3<T>* def = nullptr)//may be in format "0.2f,0.3f,0.4f"
+		vec3(const T& xyz) : x(xyz), y(xyz), z(xyz) {}
+		vec3(const T& x, const T& y, const T& z) : x(x), y(y), z(z) {}
+		vec3(const vec2<T>& xy, const T& z) : x(xy.x), y(xy.y), z(z) {}
+		vec3(const ::std::string& vec, const char& c = ';', vec3<T>* def = nullptr)//may be in format "0.2f,0.3f,0.4f"
 		{
 			if (def) { x = def->x; y = def->y; z = def->z; }
 			::std::vector<T> result = StringToNumberVector<T>(vec, c);
@@ -849,26 +873,34 @@ namespace ct // cTools
 			if (s > 1) y = result[1];
 			if (s > 2) z = result[2];
 		}
-		T& operator [] (size_t i) { return (&x)[i]; }
-		vec3 Offset(T vX, T vY, T vZ) { return vec3(x + vX, y + vY, z + vZ); }
-		void Set(T vX, T vY, T vZ) { x = vX; y = vY; z = vZ; }
+		T& operator [] (const size_t& i) { return (&x)[i]; }
+		//void Offset(const T& vX, const T& vY, const T& vZ) { x += vX; y += vY; z += vZ; }
+		vec3 Offset(const T& vX, const T& vY, const T& vZ) { return vec3(x + vX, y + vY, z + vZ); }
+		void Set(const T& vX, const T& vY, const T& vZ) { x = vX; y = vY; z = vZ; }
 		vec3 operator -() const { return vec3(-x, -y, -z); }
 		vec2<T> xy() { return vec2<T>(x, y); }
 		vec2<T> xz() { return vec2<T>(x, z); }
 		vec2<T> yz() { return vec2<T>(y, z); }
 		vec3 yzx() { return vec3(y, z, x); }
 		// https://en.cppreference.com/w/cpp/language/operator_incdec
-		T& operator ++ () { ++x; ++y; } // pre inc
-		T& operator -- () { --x; --y; } // pre dec
-		T operator ++ (int) { vec3<T> tmp; ++tmp; return tmp; } // post inc
-		T operator -- (int) { vec3<T> tmp; --tmp; return tmp; } // post inc
+		// https://en.cppreference.com/w/cpp/language/operator_incdec
+		vec3<T>& operator ++ () { ++x; ++y; ++z; return *this; } // pre inc
+		vec3<T>& operator -- () { --x; --y; --z; return *this; } // pre dec
+		vec3<T> operator ++ (int) { vec3<T> tmp = *this; ++* this; return tmp; } // post inc
+		vec3<T> operator -- (int) { vec3<T> tmp = *this; --* this; return tmp; } // post dec
+		void operator += (const T& a) { x += a; y += a; z += a; }
 		void operator += (const vec3<T>& v) { x += v.x; y += v.y; z += v.z; }
-		bool operator == (const vec3<T>& v) { return (x == v.x && y == v.y && z == v.z); }
-		bool operator != (const vec3<T>& v) { return (x != v.x || y != v.y || z != v.z); }
+		void operator -= (const T& a) { x -= a; y -= a; z -= a; }
 		void operator -= (const vec3<T>& v) { x -= v.x; y -= v.y; z -= v.z; }
-		void operator *= (T a) { x *= a; y *= a; z *= a; }
-		void operator /= (T a) { x /= a; y /= a; z /= a; }
-		T length() { return (T)sqrtf((float)lengthSquared()); }
+		bool operator == (const T& a) { return (x == a) && (y == a) && (z == a); }
+		bool operator == (const vec3<T>& v) { return (x == v.x) && (y == v.y) && (z == v.z); }
+		bool operator != (const T& a) { return (x != a) || (y != a) || (z != a); }
+		bool operator != (const vec3<T>& v) { return (x != v.x) || (y != v.y) || (z != v.z); }
+		void operator *= (const T& a) { x *= a; y *= a; z *= a; }
+		void operator *= (const vec3<T>& v) { x *= v.x; y *= v.y; z *= v.z; }
+		void operator /= (const T& a) { x /= a; y /= a; z /= a; }
+		void operator /= (const vec3<T>& v) { x /= v.x; y /= v.y; z /= v.z; }
+		T length() { return (T)sqrt(lengthSquared()); }
 		T lengthSquared() { return x * x + y * y + z * z; }
 		T normalize() { T _length = length(); if (_length < (T)1e-5) return (T)0; T _invLength = (T)1 / _length; x *= _invLength; y *= _invLength; z *= _invLength; return _length; }
 		vec3<T> GetNormalized() { vec3<T> n = vec3<T>(x, y, z); n.normalize(); return n; }
@@ -876,10 +908,30 @@ namespace ct // cTools
 		T sumAbs() { return abs<T>(x) + abs<T>(y) + abs<T>(z); }
 		bool emptyAND() { return x == (T)0 && y == (T)0 && z == (T)0; }
 		bool emptyOR() { return x == (T)0 || y == (T)0 || z == (T)0; }
-		std::string string(char c = ';') { return toStr(x) + c + toStr(y) + c + toStr(z); }
+		std::string string(const char& c = ';') { return toStr(x) + c + toStr(y) + c + toStr(z); }
 		T mini() { return internal_mini<T>(x, internal_mini<T>(y, z)); }
 		T maxi() { return internal_maxi<T>(x, internal_maxi<T>(y, z)); }
 	};
+
+	// specialisation
+	template <>
+	bool vec3<float>::operator == (const float& a) { return (IS_FLOAT_EQUAL(x, a) && IS_FLOAT_EQUAL(y, a) && IS_FLOAT_EQUAL(z, a)); }
+	template <>
+	bool vec3<float>::operator == (const vec3<float>& v) { return (IS_FLOAT_EQUAL(x, v.x) && IS_FLOAT_EQUAL(y, v.y) && IS_FLOAT_EQUAL(z, v.z)); }
+	template <>
+	bool vec3<float>::operator != (const float& a) { return (IS_FLOAT_DIFFERENT(x, a) || IS_FLOAT_DIFFERENT(y, a) || IS_FLOAT_DIFFERENT(z, a)); }
+	template <>
+	bool vec3<float>::operator != (const vec3<float>& v) { return (IS_FLOAT_DIFFERENT(x, v.x) || IS_FLOAT_DIFFERENT(y, v.y) || IS_FLOAT_DIFFERENT(z, v.z)); }
+
+	template <>
+	bool vec3<double>::operator == (const double& a) { return (IS_DOUBLE_EQUAL(x, a) && IS_DOUBLE_EQUAL(y, a) && IS_DOUBLE_EQUAL(z, a)); }
+	template <>
+	bool vec3<double>::operator == (const vec3<double>& v) { return (IS_DOUBLE_EQUAL(x, v.x) && IS_DOUBLE_EQUAL(y, v.y) && IS_DOUBLE_EQUAL(z, v.z)); }
+	template <>
+	bool vec3<double>::operator != (const double& a) { return (IS_DOUBLE_DIFFERENT(x, a) || IS_DOUBLE_DIFFERENT(y, a) || IS_DOUBLE_DIFFERENT(z, a)); }
+	template <>
+	bool vec3<double>::operator != (const vec3<double>& v) { return (IS_DOUBLE_DIFFERENT(x, v.x) || IS_DOUBLE_DIFFERENT(y, v.y) || IS_DOUBLE_DIFFERENT(z, v.z)); }
+
 	// https://en.cppreference.com/w/cpp/language/operator_incdec
 	template <typename T> inline vec3<T>& operator ++ (vec3<T>& v) { ++v; return v; } // pre inc
 	template <typename T> inline vec3<T>& operator -- (vec3<T>& v) { --v; return v; } // pre dec
