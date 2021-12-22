@@ -12,7 +12,10 @@ int main(int argc, char** argv)
 	
 	// this code will be executed if not called by the tester
 
-	run_test("cTools.double.Vec3.Offset");
-	
+	run_test("cTools.double.Vec4.length");
+	run_test("cTools.uint.Vec3.*=a");
+	run_test("cTools.uint.Vec3.*=Vec3");
+	run_test("cTools.uint.Vec3.string");
+
 	return 0;
 }

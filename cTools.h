@@ -874,15 +874,13 @@ namespace ct // cTools
 			if (s > 2) z = result[2];
 		}
 		T& operator [] (const size_t& i) { return (&x)[i]; }
-		//void Offset(const T& vX, const T& vY, const T& vZ) { x += vX; y += vY; z += vZ; }
-		vec3 Offset(const T& vX, const T& vY, const T& vZ) { return vec3(x + vX, y + vY, z + vZ); }
+		vec3<T> Offset(const T& vX, const T& vY, const T& vZ) { return vec3<T>(x + vX, y + vY, z + vZ); }
 		void Set(const T& vX, const T& vY, const T& vZ) { x = vX; y = vY; z = vZ; }
-		vec3 operator -() const { return vec3(-x, -y, -z); }
+		vec3<T> operator -() const { return vec3<T>(-x, -y, -z); }
 		vec2<T> xy() { return vec2<T>(x, y); }
 		vec2<T> xz() { return vec2<T>(x, z); }
 		vec2<T> yz() { return vec2<T>(y, z); }
-		vec3 yzx() { return vec3(y, z, x); }
-		// https://en.cppreference.com/w/cpp/language/operator_incdec
+		vec3 yzx() { return vec3<T>(y, z, x); }
 		// https://en.cppreference.com/w/cpp/language/operator_incdec
 		vec3<T>& operator ++ () { ++x; ++y; ++z; return *this; } // pre inc
 		vec3<T>& operator -- () { --x; --y; --z; return *this; } // pre dec
@@ -1063,26 +1061,35 @@ namespace ct // cTools
 				if (s > 3) w = result[3];
 			}
 		}
-		void Set(T vX, T vY, T vZ, T vW) { x = vX; y = vY; z = vZ; w = vW; }
-		T& operator ++ () { ++x; ++y; } // pre inc
-		T& operator -- () { --x; --y; } // pre dec
-		T operator ++ (int) { vec4<T> tmp; ++tmp; return tmp; } // post inc
-		T operator -- (int) { vec4<T> tmp; --tmp; return tmp; } // post inc
-		vec4<T> operator -() { return vec4(-x, -y, -z, -w); }
-		vec2<T> SizeLBRT() { return vec2<T>(z - x, w - y); }// Considere vec4 as a rect with LBRT for have size LBRT Mean => x = Left, y = Bottom, z = Right, w = Top
-		vec3<T> xyz() { return vec3<T>(x, y, z); }
+		T& operator [] (const size_t& i) { return (&x)[i]; }
+		vec4<T> Offset(const T& vX, const T& vY, const T& vZ, const T& vW) { return vec4<T>(x + vX, y + vY, z + vZ, w + vW); }
+		void Set(const T& vX, const T& vY, const T& vZ, const T& vW) { x = vX; y = vY; z = vZ; w = vW; }
+		vec4<T> operator -() const { return vec4<T>(-x, -y, -z, -w); }
 		vec2<T> xy() { return vec2<T>(x, y); }
-		vec2<T> zw() { return vec2<T>(z, w); }
+		vec2<T> xz() { return vec2<T>(x, z); }
+		vec2<T> yz() { return vec2<T>(y, z); }
+		vec3<T> yzx() { return vec3<T>(y, z, x); }
+		// https://en.cppreference.com/w/cpp/language/operator_incdec
+		vec4<T>& operator ++ () { ++x; ++y; ++z; ++w; return *this; } // pre inc
+		vec4<T>& operator -- () { --x; --y; --z; --w; return *this; } // pre dec
+		vec4<T> operator ++ (int) { vec4<T> tmp = *this; ++* this; return tmp; } // post inc
+		vec4<T> operator -- (int) { vec4<T> tmp = *this; --* this; return tmp; } // post dec
+		void operator += (const T& a) { x += a; y += a; z += a; w += a; }
+		void operator += (const vec4<T>& v) { x += v.x; y += v.y; z += v.z; w += v.w; }
+		void operator -= (const T& a) { x -= a; y -= a; z -= a; w -= a; }
+		void operator -= (const vec4<T>& v) { x -= v.x; y -= v.y; z -= v.z; w -= v.w; }
+		bool operator == (const T& a) { return (x == a) && (y == a) && (z == a) && (w == a); }
+		bool operator == (const vec4<T>& v) { return (x == v.x) && (y == v.y) && (z == v.z) && (w == v.w); }
+		bool operator != (const T& a) { return (x != a) || (y != a) || (z != a) || (w != a); }
+		bool operator != (const vec4<T>& v) { return (x != v.x) || (y != v.y) || (z != v.z) || (w != v.w); }
+		void operator *= (const T& a) { x *= a; y *= a; z *= a; w *= a; }
+		void operator *= (const vec4<T>& v) { x *= v.x; y *= v.y; z *= v.z; w *= v.w; }
+		void operator /= (const T& a) { x /= a; y /= a; z /= a; w /= a; }
+		void operator /= (const vec4<T>& v) { x /= v.x; y /= v.y; z /= v.z; w /= v.w; }
+		vec2<T> SizeLBRT() { return vec2<T>(z - x, w - y); }// Considere vec4 as a rect with LBRT for have size LBRT Mean => x = Left, y = Bottom, z = Right, w = Top
 		vec2<T> pos() { return xy(); }
 		vec2<T> size() { return zw(); }
-		T& operator [] (size_t i) { return (&x)[i]; }
-		void operator += (const vec4& v) { x += v.x; y += v.y; z += v.z; w += v.w; }
-		bool operator == (const vec4& v) { return (x == v.x && y == v.y && z == v.z && w == v.w); }
-		bool operator != (const vec4& v) { return (x != v.x || y != v.y || z != v.z || w != v.w); }
-		void operator -= (const vec4& v) { x -= v.x; y -= v.y; z -= v.z; w -= v.w; }
-		void operator *= (T a) { x *= a; y *= a; z *= a; w *= a; }
-		void operator /= (T a) { x /= a; y /= a; z /= a; w /= a; }
-		T length() { return sqrtf(lengthSquared()); }
+		T length() { return (T)sqrt(lengthSquared()); }
 		T lengthSquared() { return x * x + y * y + z * z + w * w; }
 		T normalize() { T _length = length(); if (_length < (T)1e-5)return (T)0; T _invLength = (T)1 / _length; x *= _invLength; y *= _invLength; z *= _invLength; w *= _invLength; return _length; }
 		vec4<T> GetNormalized() { vec4<T> n = vec4<T>(x, y, z, w); n.normalize(); return n; }
@@ -1094,6 +1101,26 @@ namespace ct // cTools
 		T mini() { return internal_mini<T>(x, internal_mini<T>(y, internal_mini<T>(z, w))); }
 		T maxi() { return internal_maxi<T>(x, internal_maxi<T>(y, internal_maxi<T>(z, w))); }
 	};
+
+	// specialisation
+	template <>
+	bool vec4<float>::operator == (const float& a) { return (IS_FLOAT_EQUAL(x, a) && IS_FLOAT_EQUAL(y, a) && IS_FLOAT_EQUAL(z, a) && IS_FLOAT_EQUAL(w, a)); }
+	template <>
+	bool vec4<float>::operator == (const vec4<float>& v) { return (IS_FLOAT_EQUAL(x, v.x) && IS_FLOAT_EQUAL(y, v.y) && IS_FLOAT_EQUAL(z, v.z) && IS_FLOAT_EQUAL(w, v.w)); }
+	template <>
+	bool vec4<float>::operator != (const float& a) { return (IS_FLOAT_DIFFERENT(x, a) || IS_FLOAT_DIFFERENT(y, a) || IS_FLOAT_DIFFERENT(z, a) || IS_FLOAT_DIFFERENT(w, a)); }
+	template <>
+	bool vec4<float>::operator != (const vec4<float>& v) { return (IS_FLOAT_DIFFERENT(x, v.x) || IS_FLOAT_DIFFERENT(y, v.y) || IS_FLOAT_DIFFERENT(z, v.z) || IS_FLOAT_DIFFERENT(w, v.w)); }
+
+	template <>
+	bool vec4<double>::operator == (const double& a) { return (IS_DOUBLE_EQUAL(x, a) && IS_DOUBLE_EQUAL(y, a) && IS_DOUBLE_EQUAL(z, a) && IS_DOUBLE_EQUAL(w, a)); }
+	template <>
+	bool vec4<double>::operator == (const vec4<double>& v) { return (IS_DOUBLE_EQUAL(x, v.x) && IS_DOUBLE_EQUAL(y, v.y) && IS_DOUBLE_EQUAL(z, v.z) && IS_DOUBLE_EQUAL(w, v.w)); }
+	template <>
+	bool vec4<double>::operator != (const double& a) { return (IS_DOUBLE_DIFFERENT(x, a) || IS_DOUBLE_DIFFERENT(y, a) || IS_DOUBLE_DIFFERENT(z, a) || IS_DOUBLE_DIFFERENT(w, a)); }
+	template <>
+	bool vec4<double>::operator != (const vec4<double>& v) { return (IS_DOUBLE_DIFFERENT(x, v.x) || IS_DOUBLE_DIFFERENT(y, v.y) || IS_DOUBLE_DIFFERENT(z, v.z) || IS_DOUBLE_DIFFERENT(w, v.w)); }
+
 	// https://en.cppreference.com/w/cpp/language/operator_incdec
 	template <typename T> inline vec4<T>& operator ++ (vec4<T>& v) { ++v; return v; } // pre inc
 	template <typename T> inline vec4<T>& operator -- (vec4<T>& v) { --v; return v; } // pre dec

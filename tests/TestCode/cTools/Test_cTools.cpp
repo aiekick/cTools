@@ -1099,69 +1099,107 @@ int Test_cTools_Vec3_run_test(const std::string vTestCode)
 template <>
 int Test_cTools_Vec3_run_test<bool>(const std::string vTestCode)
 {
-	ct::bvec2 v(true, false);
+	ct::bvec3 v(true, false, true);
 
 	if (vTestCode.find(".Vec3.[]") != std::string::npos)
 	{
 		if (v[0] == true &&
-			v[1] == false)
-			return 1;
+			v[1] == false &&
+			v[2] == true)
+			return 0;
+	}
+	else if (vTestCode.find(".Vec3.Set") != std::string::npos)
+	{
+		v.Set(true, true, false);
+		if (v.x == true &&
+			v.y == true &&
+			v.z == false)
+			return 0;
+	}
+	else if (vTestCode.find(".Vec3.xy") != std::string::npos)
+	{
+		auto v2 = v.xy();
+		if (v2.x == true &&
+			v2.y == false)
+			return 0;
+	}
+	else if (vTestCode.find(".Vec3.xz") != std::string::npos)
+	{
+		auto v2 = v.xz();
+		if (v2.x == true &&
+			v2.y == true)
+			return 0;
+	}
+	else if (vTestCode.find(".Vec3.yz") != std::string::npos)
+	{
+		auto v2 = v.yz();
+		if (v2.x == false &&
+			v2.y == true)
+			return 0;
+	}
+	else if (vTestCode.find(".Vec3.yzx") != std::string::npos)
+	{
+		auto v2 = v.yzx();
+		if (v.x == true &&
+			v.y == false &&
+			v.z == true)
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.==a") != std::string::npos)
 	{
 		bool vb = (v == true);
 		if (vb == false)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.==Vec3") != std::string::npos)
 	{
-		bool vb = (v == ct::bvec2(true, false));
+		bool vb = (v == ct::bvec3(true, false, true));
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.!=a") != std::string::npos)
 	{
 		if (v != true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.!=Vec3") != std::string::npos)
 	{
-		if ((v != ct::bvec2(false, true)) &&
-			(v != ct::bvec2(true, true)) &&
-			(v != ct::bvec2(false, false)))
-			return 1;
+		if ((v != ct::bvec3(false, true, true)) &&
+			(v != ct::bvec3(true, true, true)) &&
+			(v != ct::bvec3(false, false, true)))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.emptyAND") != std::string::npos)
 	{
 		bool vb = v.emptyAND();
 		if (vb == false)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.emptyOR") != std::string::npos)
 	{
 		bool vb = v.emptyOR();
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.string") != std::string::npos)
 	{
 		auto str = v.string();
 		auto str_coma = v.string(',');
-		if (str == "1;0" &&
-			str_coma == "1,0")
-			return 1;
+		if (str == "1;0;1" &&
+			str_coma == "1,0,1")
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.mini") != std::string::npos)
 	{
 		bool mini = v.mini();
 		if (mini == false)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.maxi") != std::string::npos)
 	{
 		bool maxi = v.maxi();
 		if (maxi == true)
-			return 1;
+			return 0;
 	}
 
 	return 1; // error
@@ -1171,148 +1209,218 @@ int Test_cTools_Vec3_run_test<bool>(const std::string vTestCode)
 template <typename T>
 int Test_cTools_signed_integer_Vec3_run_test(const std::string vTestCode)
 {
-	ct::vec2<T> v((T)5.0, (T)2.0);
+	ct::vec3<T> v((T)5.0, (T)2.0, (T)6.0);
 
 	if (vTestCode.find(".Vec3.[]") != std::string::npos)
 	{
 		if (is_equal(v[0], (T)5.0) &&
-			is_equal(v[1], (T)2.0))
-			return 1;
+			is_equal(v[1], (T)2.0) &&
+			is_equal(v[2], (T)6.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec3.Offset") != std::string::npos)
+	{
+		v = v.Offset((T)1.0, (T)2.0, (T)3.0);
+		if (is_equal(v.x, (T)6.0) &&
+			is_equal(v.y, (T)4.0) &&
+			is_equal(v.z, (T)9.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec3.Set") != std::string::npos)
+	{
+		v.Set((T)1.0, (T)2.0, (T)3.0);
+		if (is_equal(v.x, (T)1.0) &&
+			is_equal(v.y, (T)2.0) &&
+			is_equal(v.z, (T)3.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec3.-") != std::string::npos)
+	{
+		v = -v;
+		if (is_equal(v.x, (T)-5.0) &&
+			is_equal(v.y, (T)-2.0) &&
+			is_equal(v.z, (T)-6.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec3.xy") != std::string::npos)
+	{
+		auto v2 = v.xy();
+		if (is_equal(v2.x, (T)5.0) &&
+			is_equal(v2.y, (T)2.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec3.xz") != std::string::npos)
+	{
+		auto v2 = v.xz();
+		if (is_equal(v2.x, (T)5.0) &&
+			is_equal(v2.y, (T)6.5))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec3.yz") != std::string::npos)
+	{
+		auto v2 = v.yz();
+		if (is_equal(v2.x, (T)2.0) &&
+			is_equal(v2.y, (T)6.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec3.yzx") != std::string::npos)
+	{
+		auto v2 = v.yzx();
+		if (is_equal(v.x, (T)2.0) &&
+			is_equal(v.y, (T)6.0) &&
+			is_equal(v.z, (T)5.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.post++") != std::string::npos)
 	{
 		auto vc = v++;
 		if (is_equal(vc.x, (T)5.0) &&
 			is_equal(vc.y, (T)2.0) &&
+			is_equal(vc.z, (T)6.0) &&
 			is_equal(v.x, (T)6.0) &&
-			is_equal(v.y, (T)3.0))
-			return 1;
+			is_equal(v.y, (T)3.0) &&
+			is_equal(v.z, (T)7.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.post--") != std::string::npos)
 	{
 		auto vc = v--;
 		if (is_equal(vc.x, (T)5.0) &&
 			is_equal(vc.y, (T)2.0) &&
+			is_equal(vc.z, (T)6.0) &&
 			is_equal(v.x, (T)4.0) &&
-			is_equal(v.y, (T)1.0))
-			return 1;
+			is_equal(v.y, (T)1.0) &&
+			is_equal(v.z, (T)5.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.pre++") != std::string::npos)
 	{
 		auto vc = ++v;
 		if (is_equal(vc.x, (T)6.0) &&
 			is_equal(vc.y, (T)3.0) &&
+			is_equal(vc.z, (T)7.0) &&
 			is_equal(v.x, (T)6.0) &&
-			is_equal(v.y, (T)3.0))
-			return 1;
+			is_equal(v.y, (T)3.0) &&
+			is_equal(v.z, (T)7.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.pre--") != std::string::npos)
 	{
 		auto vc = --v;
 		if (is_equal(vc.x, (T)4.0) &&
 			is_equal(vc.y, (T)1.0) &&
+			is_equal(vc.z, (T)5.0) &&
 			is_equal(v.x, (T)4.0) &&
-			is_equal(v.y, (T)1.0))
-			return 1;
+			is_equal(v.y, (T)1.0) &&
+			is_equal(v.z, (T)5.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.+=a") != std::string::npos)
 	{
-		v += (T)2.5f;
-		if (is_equal(v.x, (T)7.5) &&
-			is_equal(v.y, (T)4.5))
-			return 1;
+		v += (T)2.0f;
+		if (is_equal(v.x, (T)7.0) &&
+			is_equal(v.y, (T)4.0) &&
+			is_equal(v.z, (T)8.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.+=Vec3") != std::string::npos)
 	{
-		v += ct::vec2<T>((T)2.0, (T)4.0);
+		v += ct::vec3<T>((T)2.0, (T)4.0, (T)2.0);
 		if (is_equal(v.x, (T)7.0) &&
-			is_equal(v.y, (T)6.0))
-			return 1;
+			is_equal(v.y, (T)6.0) &&
+			is_equal(v.z, (T)8.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.-=a") != std::string::npos)
 	{
-		v -= (T)1.0;
-		if (is_equal(v.x, (T)4.0) &&
-			is_equal(v.y, (T)1.0))
-			return 1;
+		v -= (T)2.0;
+		if (is_equal(v.x, (T)2.0) &&
+			is_equal(v.y, (T)0.0) &&
+			is_equal(v.z, (T)4.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.-=Vec3") != std::string::npos)
 	{
-		v -= ct::vec2<T>((T)2.0, (T)4.0);
+		v -= ct::vec3<T>((T)2.0, (T)4.0, (T)1.0);
 		if (is_equal(v.x, (T)3.0) &&
-			is_equal(v.y, (T)-2.0))
-			return 1;
+			is_equal(v.y, (T)-2.0) &&
+			is_equal(v.z, (T)5.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.==a") != std::string::npos)
 	{
-		v = (T)2.5;
-		bool vb = (v == (T)2.5);
+		v = (T)2.0;
+		bool vb = (v == (T)2.0);
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.==Vec3") != std::string::npos)
 	{
-		bool vb = (v == ct::vec2<T>((T)5.0, (T)2.0));
+		bool vb = (v == ct::vec3<T>((T)5.0, (T)2.0, (T)6.0));
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.!=a") != std::string::npos)
 	{
 		v = (T)2.5;
 		bool vb = (v != (T)5.0);
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.!=Vec3") != std::string::npos)
 	{
 		bool vb =
-			(v != ct::vec2<T>((T)6.0, (T)2.0)) &&
-			(v != ct::vec2<T>((T)5.0, (T)3.0)) &&
-			(v != ct::vec2<T>((T)6.0, (T)3.0));
+			(v != ct::vec3<T>((T)6.0, (T)2.0, (T)6.0)) &&
+			(v != ct::vec3<T>((T)5.0, (T)3.0, (T)6.0)) &&
+			(v != ct::vec3<T>((T)6.0, (T)3.0, (T)6.0)) &&
+			(v != ct::vec3<T>((T)2.0, (T)1.0, (T)6.0));
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.*=a") != std::string::npos)
 	{
 		v *= (T)2.0;
 		if (is_equal(v.x, (T)10.0) &&
-			is_equal(v.y, (T)4.0))
-			return 1;
+			is_equal(v.y, (T)4.0) &&
+			is_equal(v.z, (T)12.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.*=Vec3") != std::string::npos)
 	{
-		v *= ct::vec2<T>((T)2.0, (T)4.0);
+		v *= ct::vec3<T>((T)2.0, (T)4.0, (T)2.0);
 		if (is_equal(v.x, (T)10.0) &&
-			is_equal(v.y, (T)8.0))
-			return 1;
+			is_equal(v.y, (T)8.0) &&
+			is_equal(v.z, (T)12.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3./=a") != std::string::npos)
 	{
 		v /= (T)2.0;
-		if (is_equal(v.x, (T)2.5) &&
-			is_equal(v.y, (T)1.0))
-			return 1;
+		if (is_equal(v.x, (T)2.0) &&
+			is_equal(v.y, (T)1.0) &&
+			is_equal(v.z, (T)3.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3./=Vec3") != std::string::npos)
 	{
-		v /= ct::vec2<T>((T)2.0, (T)4.0);
-		if (is_equal(v.x, (T)2.5) &&
-			is_equal(v.y, (T)0.5))
-			return 1;
+		v /= ct::vec3<T>((T)2.0, (T)4.0, (T)2.0);
+		if (is_equal(v.x, (T)2.0) &&
+			is_equal(v.y, (T)0.0) &&
+			is_equal(v.z, (T)3.0))
+			return 0;
 	}
 	/*
 	else if (vTestCode.find(".Vec3.lengthSquared") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)5.0, (T)2.0);
 		T len = v.lengthSquared();
-		if (is_equal(len, (T)29.0))
-			return 1;
+		if (is_equal(len, (T)71.25))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.length") != std::string::npos)
 	{
 		T len = v.length();
-		if (is_equal(len, (T)5.3851648071345040312507104915403))
-			return 1;
+		if (is_equal(len, (T)8.4409715080670660915584447047611))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.normalize") != std::string::npos)
 	{
@@ -1321,84 +1429,64 @@ int Test_cTools_signed_integer_Vec3_run_test(const std::string vTestCode)
 		T post_len = v.length();
 		if ((!is_equal(pre_len, (T)1.0)) &&
 			is_equal(post_len, (T)1.0))
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.GetNormalized") != std::string::npos)
 	{
 		auto vn = v.GetNormalized();
 		T len = vn.length();
 		if (is_equal(len, (T)1.0))
-			return 1;
+			return 0;
 	}
 	*/
 	else if (vTestCode.find(".Vec3.sum") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)5.0, (T)-2.0);
+		v = ct::vec3<T>((T)5.0, (T)-2.0, (T)3.0);
 		T len = v.sum();
-		if (is_equal(len, (T)3.0))
-			return 1;
+		if (is_equal(len, (T)6.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.sumAbs") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)5.0, (T)-2.0);
+		v = ct::vec3<T>((T)5.0, (T)-2.0, (T)3.0);
 		T len = v.sumAbs();
-		if (is_equal(len, (T)7.0))
-			return 1;
+		if (is_equal(len, (T)10.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.emptyAND") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)0.0, (T)-2.0);
+		v = ct::vec3<T>((T)0.0, (T)-2.0, (T)3.0);
 		bool vb = v.emptyAND();
 		if (vb == false)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.emptyOR") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)0.0, (T)-2.0);
+		v = ct::vec3<T>((T)3.0, (T)-2.0, (T)0.0);
 		bool vb = v.emptyOR();
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.string") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)5.0, (T)-2.0);
+		v = ct::vec3<T>((T)5.0, (T)-2.0, (T)3.0);
 		auto str = v.string();
 		auto str_coma = v.string(',');
-		if (str == "5;-2" &&
-			str_coma == "5,-2")
-			return 1;
+		if (str == "5;-2;3" &&
+			str_coma == "5,-2,3")
+			return 0;
 	}
-	/*
-	else if (vTestCode.find(".Vec3.ratioXY") != std::string::npos)
-	{
-		T pre_r = v.ratioXY();
-		v.y = (T)0.0;
-		T post_r = v.ratioXY(); // return 1
-		if (is_equal(pre_r, (T)2.5) &&
-			is_equal(post_r, (T)0.0))
-			return 1;
-	}
-	else if (vTestCode.find(".Vec3.ratioYX") != std::string::npos)
-	{
-		T pre_r = v.ratioYX();
-		v.x = (T)0.0;
-		T post_r = v.ratioYX(); // return 1
-		if (is_equal(pre_r, (T)0.4) &&
-			is_equal(post_r, (T)0.0))
-			return 1;
-	}
-	*/
 	else if (vTestCode.find(".Vec3.mini") != std::string::npos)
 	{
 		T mini = v.mini();
 		if (is_equal(mini, (T)2.0))
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.maxi") != std::string::npos)
 	{
 		T maxi = v.maxi();
-		if (is_equal(maxi, (T)5.0))
-			return 1;
+		if (is_equal(maxi, (T)6.0))
+			return 0;
 	}
 
 	return 1; // error
@@ -1408,148 +1496,210 @@ int Test_cTools_signed_integer_Vec3_run_test(const std::string vTestCode)
 template <typename T>
 int Test_cTools_unsigned_integer_Vec3_run_test(const std::string vTestCode)
 {
-	ct::vec2<T> v((T)5.0, (T)2.0);
+	ct::vec3<T> v((T)5.0, (T)2.0, (T)6.0);
 
 	if (vTestCode.find(".Vec3.[]") != std::string::npos)
 	{
 		if (is_equal(v[0], (T)5.0) &&
-			is_equal(v[1], (T)2.0))
-			return 1;
+			is_equal(v[1], (T)2.0) &&
+			is_equal(v[2], (T)6.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec3.Offset") != std::string::npos)
+	{
+		v = v.Offset((T)1.0, (T)2.0, (T)3.0);
+		if (is_equal(v.x, (T)6.0) &&
+			is_equal(v.y, (T)4.0) &&
+			is_equal(v.z, (T)9.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec3.Set") != std::string::npos)
+	{
+		v.Set((T)1.0, (T)2.0, (T)3.0);
+		if (is_equal(v.x, (T)1.0) &&
+			is_equal(v.y, (T)2.0) &&
+			is_equal(v.z, (T)3.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec3.xy") != std::string::npos)
+	{
+		auto v2 = v.xy();
+		if (is_equal(v2.x, (T)5.0) &&
+			is_equal(v2.y, (T)2.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec3.xz") != std::string::npos)
+	{
+		auto v2 = v.xz();
+		if (is_equal(v2.x, (T)5.0) &&
+			is_equal(v2.y, (T)6.5))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec3.yz") != std::string::npos)
+	{
+		auto v2 = v.yz();
+		if (is_equal(v2.x, (T)2.0) &&
+			is_equal(v2.y, (T)6.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec3.yzx") != std::string::npos)
+	{
+		auto v2 = v.yzx();
+		if (is_equal(v.x, (T)2.0) &&
+			is_equal(v.y, (T)6.0) &&
+			is_equal(v.z, (T)5.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.post++") != std::string::npos)
 	{
 		auto vc = v++;
 		if (is_equal(vc.x, (T)5.0) &&
 			is_equal(vc.y, (T)2.0) &&
+			is_equal(vc.z, (T)6.0) &&
 			is_equal(v.x, (T)6.0) &&
-			is_equal(v.y, (T)3.0))
-			return 1;
+			is_equal(v.y, (T)3.0) &&
+			is_equal(v.z, (T)7.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.post--") != std::string::npos)
 	{
 		auto vc = v--;
 		if (is_equal(vc.x, (T)5.0) &&
 			is_equal(vc.y, (T)2.0) &&
+			is_equal(vc.z, (T)6.0) &&
 			is_equal(v.x, (T)4.0) &&
-			is_equal(v.y, (T)1.0))
-			return 1;
+			is_equal(v.y, (T)1.0) &&
+			is_equal(v.z, (T)5.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.pre++") != std::string::npos)
 	{
 		auto vc = ++v;
 		if (is_equal(vc.x, (T)6.0) &&
 			is_equal(vc.y, (T)3.0) &&
+			is_equal(vc.z, (T)7.0) &&
 			is_equal(v.x, (T)6.0) &&
-			is_equal(v.y, (T)3.0))
-			return 1;
+			is_equal(v.y, (T)3.0) &&
+			is_equal(v.z, (T)7.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.pre--") != std::string::npos)
 	{
 		auto vc = --v;
 		if (is_equal(vc.x, (T)4.0) &&
 			is_equal(vc.y, (T)1.0) &&
+			is_equal(vc.z, (T)5.0) &&
 			is_equal(v.x, (T)4.0) &&
-			is_equal(v.y, (T)1.0))
-			return 1;
+			is_equal(v.y, (T)1.0) &&
+			is_equal(v.z, (T)5.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.+=a") != std::string::npos)
 	{
-		v += (T)2.5f;
-		if (is_equal(v.x, (T)7.5) &&
-			is_equal(v.y, (T)4.5))
-			return 1;
+		v += (T)2.0f;
+		if (is_equal(v.x, (T)7.0) &&
+			is_equal(v.y, (T)4.0) &&
+			is_equal(v.z, (T)8.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.+=Vec3") != std::string::npos)
 	{
-		v += ct::vec2<T>((T)2.0, (T)4.0);
+		v += ct::vec3<T>((T)2.0, (T)4.0, (T)2.0);
 		if (is_equal(v.x, (T)7.0) &&
-			is_equal(v.y, (T)6.0))
-			return 1;
+			is_equal(v.y, (T)6.0) &&
+			is_equal(v.z, (T)8.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.-=a") != std::string::npos)
 	{
-		v -= (T)1.0;
-		if (is_equal(v.x, (T)4.0) &&
-			is_equal(v.y, (T)1.0))
-			return 1;
+		v -= (T)2.0;
+		if (is_equal(v.x, (T)2.0) &&
+			is_equal(v.y, (T)0.0) &&
+			is_equal(v.z, (T)4.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.-=Vec3") != std::string::npos)
 	{
-		v -= ct::vec2<T>((T)2.0, (T)4.0);
+		v -= ct::vec3<T>((T)2.0, (T)4.0, (T)1.0);
 		if (is_equal(v.x, (T)3.0) &&
-			is_equal(v.y, (T)-2.0))
-			return 1;
+			is_equal(v.y, (T)-2.0) &&
+			is_equal(v.z, (T)5.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.==a") != std::string::npos)
 	{
-		v = (T)2.5;
-		bool vb = (v == (T)2.5);
+		v = (T)2.0;
+		bool vb = (v == (T)2.0);
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.==Vec3") != std::string::npos)
 	{
-		bool vb = (v == ct::vec2<T>((T)5.0, (T)2.0));
+		bool vb = (v == ct::vec3<T>((T)5.0, (T)2.0, (T)6.0));
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.!=a") != std::string::npos)
 	{
 		v = (T)2.5;
 		bool vb = (v != (T)5.0);
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.!=Vec3") != std::string::npos)
 	{
 		bool vb =
-			(v != ct::vec2<T>((T)6.0, (T)2.0)) &&
-			(v != ct::vec2<T>((T)5.0, (T)3.0)) &&
-			(v != ct::vec2<T>((T)6.0, (T)3.0));
+			(v != ct::vec3<T>((T)6.0, (T)2.0, (T)6.0)) &&
+			(v != ct::vec3<T>((T)5.0, (T)3.0, (T)6.0)) &&
+			(v != ct::vec3<T>((T)6.0, (T)3.0, (T)6.0)) &&
+			(v != ct::vec3<T>((T)2.0, (T)1.0, (T)6.0));
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.*=a") != std::string::npos)
 	{
 		v *= (T)2.0;
 		if (is_equal(v.x, (T)10.0) &&
-			is_equal(v.y, (T)4.0))
-			return 1;
+			is_equal(v.y, (T)4.0) &&
+			is_equal(v.z, (T)12.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.*=Vec3") != std::string::npos)
 	{
-		v *= ct::vec2<T>((T)2.0, (T)4.0);
+		v *= ct::vec3<T>((T)2.0, (T)4.0, (T)2.0);
 		if (is_equal(v.x, (T)10.0) &&
-			is_equal(v.y, (T)8.0))
-			return 1;
+			is_equal(v.y, (T)8.0) &&
+			is_equal(v.z, (T)12.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3./=a") != std::string::npos)
 	{
 		v /= (T)2.0;
-		if (is_equal(v.x, (T)2.5) &&
-			is_equal(v.y, (T)1.0))
-			return 1;
+		if (is_equal(v.x, (T)2.0) &&
+			is_equal(v.y, (T)1.0) &&
+			is_equal(v.z, (T)3.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3./=Vec3") != std::string::npos)
 	{
-		v /= ct::vec2<T>((T)2.0, (T)4.0);
-		if (is_equal(v.x, (T)2.5) &&
-			is_equal(v.y, (T)0.5))
-			return 1;
+		v /= ct::vec3<T>((T)2.0, (T)4.0, (T)2.0);
+		if (is_equal(v.x, (T)2.0) &&
+			is_equal(v.y, (T)0.0) &&
+			is_equal(v.z, (T)3.0))
+			return 0;
 	}
 	/*
 	else if (vTestCode.find(".Vec3.lengthSquared") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)5.0, (T)2.0);
 		T len = v.lengthSquared();
-		if (is_equal(len, (T)29.0))
-			return 1;
+		if (is_equal(len, (T)71.25))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.length") != std::string::npos)
 	{
 		T len = v.length();
-		if (is_equal(len, (T)5.3851648071345040312507104915403))
-			return 1;
+		if (is_equal(len, (T)8.4409715080670660915584447047611))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.normalize") != std::string::npos)
 	{
@@ -1558,88 +1708,66 @@ int Test_cTools_unsigned_integer_Vec3_run_test(const std::string vTestCode)
 		T post_len = v.length();
 		if ((!is_equal(pre_len, (T)1.0)) &&
 			is_equal(post_len, (T)1.0))
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.GetNormalized") != std::string::npos)
 	{
 		auto vn = v.GetNormalized();
 		T len = vn.length();
 		if (is_equal(len, (T)1.0))
-			return 1;
+			return 0;
 	}
 	*/
 	else if (vTestCode.find(".Vec3.sum") != std::string::npos)
 	{
-		// ca c'est marrant -2 en unsigned renvoi limit -2
-		// et la somme est bonne car limit - 2 + 5 en usingned vaut 3 comme en signed :)
-		v = ct::vec2<T>((T)5.0, (T)-2.0);
+		v = ct::vec3<T>((T)5.0, (T)-2.0, (T)3.0);
 		T len = v.sum();
-		if (is_equal(len, (T)3.0))
-			return 1;
+		if (is_equal(len, (T)6.0))
+			return 0;
 	}
 	/*
 	else if (vTestCode.find(".Vec3.sumAbs") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)5.0, (T)-2.0);
+		v = ct::vec3<T>((T)5.0, (T)-2.0, (T)3.0);
 		T len = v.sumAbs();
-		if (is_equal(len, (T)7.0))
-			return 1;
+		if (is_equal(len, (T)10.0))
+			return 0;
 	}
 	*/
 	else if (vTestCode.find(".Vec3.emptyAND") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)0.0, (T)2.0);
+		v = ct::vec3<T>((T)0.0, (T)-2.0, (T)3.0);
 		bool vb = v.emptyAND();
 		if (vb == false)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.emptyOR") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)0.0, (T)2.0);
+		v = ct::vec3<T>((T)3.0, (T)-2.0, (T)0.0);
 		bool vb = v.emptyOR();
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.string") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)5.0, (T)2.0);
+		v = ct::vec3<T>((T)5.0, (T)2.0, (T)3.0);
 		auto str = v.string();
 		auto str_coma = v.string(',');
-		if (str == "5;2" &&
-			str_coma == "5,2")
-			return 1;
+		if (str == "5;2;3" &&
+			str_coma == "5,2,3")
+			return 0;
 	}
-	/*
-	else if (vTestCode.find(".Vec3.ratioXY") != std::string::npos)
-	{
-		T pre_r = v.ratioXY();
-		v.y = (T)0.0;
-		T post_r = v.ratioXY(); // return 1
-		if (is_equal(pre_r, (T)2.5) &&
-			is_equal(post_r, (T)0.0))
-			return 1;
-	}
-	else if (vTestCode.find(".Vec3.ratioYX") != std::string::npos)
-	{
-		T pre_r = v.ratioYX();
-		v.x = (T)0.0;
-		T post_r = v.ratioYX(); // return 1
-		if (is_equal(pre_r, (T)0.4) &&
-			is_equal(post_r, (T)0.0))
-			return 1;
-	}
-	*/
 	else if (vTestCode.find(".Vec3.mini") != std::string::npos)
 	{
 		T mini = v.mini();
 		if (is_equal(mini, (T)2.0))
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec3.maxi") != std::string::npos)
 	{
 		T maxi = v.maxi();
-		if (is_equal(maxi, (T)5.0))
-			return 1;
+		if (is_equal(maxi, (T)6.0))
+			return 0;
 	}
 
 	return 1; // error
@@ -1653,147 +1781,238 @@ int Test_cTools_unsigned_integer_Vec3_run_test(const std::string vTestCode)
 template <typename T>
 int Test_cTools_Vec4_run_test(const std::string vTestCode)
 {
-	ct::vec2<T> v((T)5.0, (T)2.0);
+	ct::vec4<T> v((T)5.0, (T)2.0, (T)4.5, (T)6.5);
 
 	if (vTestCode.find(".Vec4.[]") != std::string::npos)
 	{
 		if (is_equal(v[0], (T)5.0) &&
-			is_equal(v[1], (T)2.0))
-			return 1;
+			is_equal(v[1], (T)2.0) &&
+			is_equal(v[2], (T)4.5) &&
+			is_equal(v[3], (T)6.5))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.Offset") != std::string::npos)
+	{
+		v = v.Offset((T)1.0, (T)2.0, (T)3.0, (T)2.0);
+		if (is_equal(v.x, (T)6.0) &&
+			is_equal(v.y, (T)4.0) &&
+			is_equal(v.z, (T)7.5) &&
+			is_equal(v.w, (T)8.5))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.Set") != std::string::npos)
+	{
+		v.Set((T)1.0, (T)2.0, (T)3.0, (T)2.0);
+		if (is_equal(v.x, (T)1.0) &&
+			is_equal(v.y, (T)2.0) &&
+			is_equal(v.z, (T)3.0) &&
+			is_equal(v.w, (T)2.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.-") != std::string::npos)
+	{
+		v = -v;
+		if (is_equal(v.x, (T)-5.0) &&
+			is_equal(v.y, (T)-2.0) &&
+			is_equal(v.z, (T)-4.5) &&
+			is_equal(v.w, (T)-6.5))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.xy") != std::string::npos)
+	{
+		auto v2 = v.xy();
+		if (is_equal(v2.x, (T)5.0) &&
+			is_equal(v2.y, (T)2.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.xz") != std::string::npos)
+	{
+		auto v2 = v.xz();
+		if (is_equal(v2.x, (T)5.0) &&
+			is_equal(v2.y, (T)6.5))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.yz") != std::string::npos)
+	{
+		auto v2 = v.yz();
+		if (is_equal(v2.x, (T)2.0) &&
+			is_equal(v2.y, (T)6.5))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.yzx") != std::string::npos)
+	{
+		auto v2 = v.yzx();
+		if (is_equal(v.x, (T)2.0) &&
+			is_equal(v.y, (T)6.5) &&
+			is_equal(v.z, (T)5.0) &&
+			is_equal(v.w, (T)5.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.post++") != std::string::npos)
 	{
 		auto vc = v++;
 		if (is_equal(vc.x, (T)5.0) &&
 			is_equal(vc.y, (T)2.0) &&
+			is_equal(vc.z, (T)4.5) &&
+			is_equal(vc.w, (T)6.5) &&
 			is_equal(v.x, (T)6.0) &&
-			is_equal(v.y, (T)3.0))
-			return 1;
+			is_equal(v.y, (T)3.0) &&
+			is_equal(v.z, (T)5.5) &&
+			is_equal(v.w, (T)7.5))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.post--") != std::string::npos)
 	{
 		auto vc = v--;
 		if (is_equal(vc.x, (T)5.0) &&
 			is_equal(vc.y, (T)2.0) &&
+			is_equal(vc.z, (T)4.5) &&
+			is_equal(vc.w, (T)6.5) &&
 			is_equal(v.x, (T)4.0) &&
-			is_equal(v.y, (T)1.0))
-			return 1;
+			is_equal(v.y, (T)1.0) &&
+			is_equal(v.z, (T)3.5) &&
+			is_equal(v.w, (T)5.5))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.pre++") != std::string::npos)
 	{
 		auto vc = ++v;
 		if (is_equal(vc.x, (T)6.0) &&
 			is_equal(vc.y, (T)3.0) &&
+			is_equal(vc.z, (T)5.5) &&
+			is_equal(vc.w, (T)7.5) &&
 			is_equal(v.x, (T)6.0) &&
-			is_equal(v.y, (T)3.0))
-			return 1;
+			is_equal(v.y, (T)3.0) &&
+			is_equal(v.z, (T)5.5) &&
+			is_equal(v.w, (T)7.5))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.pre--") != std::string::npos)
 	{
 		auto vc = --v;
 		if (is_equal(vc.x, (T)4.0) &&
 			is_equal(vc.y, (T)1.0) &&
+			is_equal(vc.z, (T)3.5) &&
+			is_equal(vc.w, (T)5.5) &&
 			is_equal(v.x, (T)4.0) &&
-			is_equal(v.y, (T)1.0))
-			return 1;
+			is_equal(v.y, (T)1.0) &&
+			is_equal(v.z, (T)3.5) &&
+			is_equal(v.w, (T)5.5))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.+=a") != std::string::npos)
 	{
 		v += (T)2.5f;
 		if (is_equal(v.x, (T)7.5) &&
-			is_equal(v.y, (T)4.5))
-			return 1;
+			is_equal(v.y, (T)4.5) &&
+			is_equal(v.z, (T)7.0) &&
+			is_equal(v.w, (T)9.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.+=Vec4") != std::string::npos)
 	{
-		v += ct::vec2<T>((T)2.0, (T)4.0);
+		v += ct::vec4<T>((T)2.0, (T)4.0, (T)2.0, (T)4.0);
 		if (is_equal(v.x, (T)7.0) &&
-			is_equal(v.y, (T)6.0))
-			return 1;
+			is_equal(v.y, (T)6.0) &&
+			is_equal(v.z, (T)6.5) &&
+			is_equal(v.w, (T)10.5))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.-=a") != std::string::npos)
 	{
 		v -= (T)2.5;
 		if (is_equal(v.x, (T)2.5) &&
-			is_equal(v.y, (T)-0.5))
-			return 1;
+			is_equal(v.y, (T)-0.5) &&
+			is_equal(v.z, (T)4.0) &&
+			is_equal(v.w, (T)4.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.-=Vec4") != std::string::npos)
 	{
-		v -= ct::vec2<T>((T)2.0, (T)4.0);
+		v -= ct::vec4<T>((T)2.0, (T)4.0, (T)1.0, (T)2.0);
 		if (is_equal(v.x, (T)3.0) &&
-			is_equal(v.y, (T)-2.0))
-			return 1;
+			is_equal(v.y, (T)-2.0) &&
+			is_equal(v.z, (T)5.5) &&
+			is_equal(v.w, (T)5.5))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.==a") != std::string::npos)
 	{
 		v = (T)2.5;
 		bool vb = (v == (T)2.5);
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.==Vec4") != std::string::npos)
 	{
-		bool vb = (v == ct::vec2<T>((T)5.0, (T)2.0));
+		bool vb = (v == ct::vec4<T>((T)5.0, (T)2.0, (T)4.5, (T)6.5));
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.!=a") != std::string::npos)
 	{
 		v = (T)2.5;
 		bool vb = (v != (T)5.0);
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.!=Vec4") != std::string::npos)
 	{
 		bool vb =
-			(v != ct::vec2<T>((T)6.0, (T)2.0)) &&
-			(v != ct::vec2<T>((T)5.0, (T)3.0)) &&
-			(v != ct::vec2<T>((T)6.0, (T)3.0));
+			(v != ct::vec4<T>((T)6.0, (T)2.0, (T)6.5, (T)2.5)) &&
+			(v != ct::vec4<T>((T)5.0, (T)3.0, (T)6.5, (T)2.5)) &&
+			(v != ct::vec4<T>((T)6.0, (T)3.0, (T)6.5, (T)2.5)) &&
+			(v != ct::vec4<T>((T)2.0, (T)1.0, (T)6.5, (T)2.5));
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.*=a") != std::string::npos)
 	{
 		v *= (T)2.0;
 		if (is_equal(v.x, (T)10.0) &&
-			is_equal(v.y, (T)4.0))
-			return 1;
+			is_equal(v.y, (T)4.0) &&
+			is_equal(v.z, (T)9.0) &&
+			is_equal(v.w, (T)13.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.*=Vec4") != std::string::npos)
 	{
-		v *= ct::vec2<T>((T)2.0, (T)4.0);
+		v *= ct::vec4<T>((T)2.0, (T)4.0, (T)2.0, (T)3.0);
 		if (is_equal(v.x, (T)10.0) &&
-			is_equal(v.y, (T)8.0))
-			return 1;
+			is_equal(v.y, (T)8.0) &&
+			is_equal(v.z, (T)9.0) &&
+			is_equal(v.w, (T)19.5))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4./=a") != std::string::npos)
 	{
 		v /= (T)2.0;
 		if (is_equal(v.x, (T)2.5) &&
-			is_equal(v.y, (T)1.0))
-			return 1;
+			is_equal(v.y, (T)1.0) &&
+			is_equal(v.z, (T)2.25) &&
+			is_equal(v.w, (T)3.25))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4./=Vec4") != std::string::npos)
 	{
-		v /= ct::vec2<T>((T)2.0, (T)4.0);
+		v /= ct::vec4<T>((T)2.0, (T)4.0, (T)2.0, (T)2.0);
 		if (is_equal(v.x, (T)2.5) &&
-			is_equal(v.y, (T)0.5))
-			return 1;
+			is_equal(v.y, (T)0.5) &&
+			is_equal(v.z, (T)2.25) &&
+			is_equal(v.w, (T)3.25))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.lengthSquared") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)5.0, (T)2.0);
 		T len = v.lengthSquared();
-		if (is_equal(len, (T)29.0))
-			return 1;
+		if (is_equal(len, (T)91.5))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.length") != std::string::npos)
 	{
 		T len = v.length();
-		if (is_equal(len, (T)5.3851648071345040312507104915403))
-			return 1;
+		if (is_equal(len, (T)9.5655632348544954877912543765086))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.normalize") != std::string::npos)
 	{
@@ -1802,81 +2021,63 @@ int Test_cTools_Vec4_run_test(const std::string vTestCode)
 		T post_len = v.length();
 		if ((!is_equal(pre_len, (T)1.0)) &&
 			is_equal(post_len, (T)1.0))
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.GetNormalized") != std::string::npos)
 	{
 		auto vn = v.GetNormalized();
 		T len = vn.length();
 		if (is_equal(len, (T)1.0))
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.sum") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)5.0, (T)-2.0);
+		v = ct::vec4<T>((T)5.0, (T)-2.0, (T)3.0, (T)5.0);
 		T len = v.sum();
-		if (is_equal(len, (T)3.0))
-			return 1;
+		if (is_equal(len, (T)11.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.sumAbs") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)5.0, (T)-2.0);
+		v = ct::vec4<T>((T)5.0, (T)-2.0, (T)3.0, (T)5.0);
 		T len = v.sumAbs();
-		if (is_equal(len, (T)7.0))
-			return 1;
+		if (is_equal(len, (T)15.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.emptyAND") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)0.0, (T)-2.0);
+		v = ct::vec4<T>((T)5.0, (T)-2.0, (T)3.0, (T)0.0);
 		bool vb = v.emptyAND();
 		if (vb == false)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.emptyOR") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)0.0, (T)-2.0);
+		v = ct::vec4<T>((T)3.0, (T)-2.0, (T)5.0, (T)0.0);
 		bool vb = v.emptyOR();
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.string") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)5.35, (T)-2.8);
+		v = ct::vec4<T>((T)5.35, (T)-2.8, (T)3.8, (T)2.9);
 		auto str = v.string();
 		auto str_coma = v.string(',');
-		if (str == "5.35;-2.8" &&
-			str_coma == "5.35,-2.8")
-			return 1;
-	}
-	else if (vTestCode.find(".Vec4.ratioXY") != std::string::npos)
-	{
-		T pre_r = v.ratioXY();
-		v.y = (T)0.0;
-		T post_r = v.ratioXY(); // return 1
-		if (is_equal(pre_r, (T)2.5) &&
-			is_equal(post_r, (T)0.0))
-			return 1;
-	}
-	else if (vTestCode.find(".Vec4.ratioYX") != std::string::npos)
-	{
-		T pre_r = v.ratioYX();
-		v.x = (T)0.0;
-		T post_r = v.ratioYX(); // return 1
-		if (is_equal(pre_r, (T)0.4) &&
-			is_equal(post_r, (T)0.0))
-			return 1;
+		if (str == "5.35;-2.8;3.8;2.9" &&
+			str_coma == "5.35,-2.8,3.8,2.9")
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.mini") != std::string::npos)
 	{
 		T mini = v.mini();
 		if (is_equal(mini, (T)2.0))
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.maxi") != std::string::npos)
 	{
 		T maxi = v.maxi();
-		if (is_equal(maxi, (T)5.0))
-			return 1;
+		if (is_equal(maxi, (T)6.5))
+			return 0;
 	}
 
 	return 1; // error
@@ -1886,69 +2087,109 @@ int Test_cTools_Vec4_run_test(const std::string vTestCode)
 template <>
 int Test_cTools_Vec4_run_test<bool>(const std::string vTestCode)
 {
-	ct::bvec2 v(true, false);
+	ct::bvec4 v(true, false, true, false);
 
 	if (vTestCode.find(".Vec4.[]") != std::string::npos)
 	{
 		if (v[0] == true &&
-			v[1] == false)
-			return 1;
+			v[1] == false &&
+			v[2] == true &&
+			v[3] == false)
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.Set") != std::string::npos)
+	{
+		v.Set(true, true, false, true);
+		if (v.x == true &&
+			v.y == true &&
+			v.z == false &&
+			v.w == true)
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.xy") != std::string::npos)
+	{
+		auto v2 = v.xy();
+		if (v2.x == true &&
+			v2.y == false)
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.xz") != std::string::npos)
+	{
+		auto v2 = v.xz();
+		if (v2.x == true &&
+			v2.y == true)
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.yz") != std::string::npos)
+	{
+		auto v2 = v.yz();
+		if (v2.x == false &&
+			v2.y == true)
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.yzx") != std::string::npos)
+	{
+		auto v2 = v.yzx();
+		if (v.x == true &&
+			v.y == false &&
+			v.z == true)
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.==a") != std::string::npos)
 	{
 		bool vb = (v == true);
 		if (vb == false)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.==Vec4") != std::string::npos)
 	{
-		bool vb = (v == ct::bvec2(true, false));
+		bool vb = (v == ct::bvec4(true, false, true, false));
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.!=a") != std::string::npos)
 	{
 		if (v != true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.!=Vec4") != std::string::npos)
 	{
-		if ((v != ct::bvec2(false, true)) &&
-			(v != ct::bvec2(true, true)) &&
-			(v != ct::bvec2(false, false)))
-			return 1;
+		if ((v != ct::bvec4(false, true, true, false)) &&
+			(v != ct::bvec4(true, true, true, false)) &&
+			(v != ct::bvec4(false, false, true, false)))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.emptyAND") != std::string::npos)
 	{
 		bool vb = v.emptyAND();
 		if (vb == false)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.emptyOR") != std::string::npos)
 	{
 		bool vb = v.emptyOR();
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.string") != std::string::npos)
 	{
 		auto str = v.string();
 		auto str_coma = v.string(',');
-		if (str == "1;0" &&
-			str_coma == "1,0")
-			return 1;
+		if (str == "1;0;1;0" &&
+			str_coma == "1,0,1,0")
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.mini") != std::string::npos)
 	{
 		bool mini = v.mini();
 		if (mini == false)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.maxi") != std::string::npos)
 	{
 		bool maxi = v.maxi();
 		if (maxi == true)
-			return 1;
+			return 0;
 	}
 
 	return 1; // error
@@ -1958,234 +2199,275 @@ int Test_cTools_Vec4_run_test<bool>(const std::string vTestCode)
 template <typename T>
 int Test_cTools_signed_integer_Vec4_run_test(const std::string vTestCode)
 {
-	ct::vec2<T> v((T)5.0, (T)2.0);
+	ct::vec4<T> v((T)5.0, (T)2.0, (T)4.0, (T)6.0);
 
 	if (vTestCode.find(".Vec4.[]") != std::string::npos)
 	{
 		if (is_equal(v[0], (T)5.0) &&
-			is_equal(v[1], (T)2.0))
-			return 1;
+			is_equal(v[1], (T)2.0) &&
+			is_equal(v[2], (T)4.0) &&
+			is_equal(v[3], (T)6.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.Offset") != std::string::npos)
+	{
+		v = v.Offset((T)1.0, (T)2.0, (T)3.0, (T)2.0);
+		if (is_equal(v.x, (T)6.0) &&
+			is_equal(v.y, (T)4.0) &&
+			is_equal(v.z, (T)7.0) &&
+			is_equal(v.w, (T)8.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.Set") != std::string::npos)
+	{
+		v.Set((T)1.0, (T)2.0, (T)3.0, (T)2.0);
+		if (is_equal(v.x, (T)1.0) &&
+			is_equal(v.y, (T)2.0) &&
+			is_equal(v.z, (T)3.0) &&
+			is_equal(v.w, (T)2.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.-") != std::string::npos)
+	{
+		v = -v;
+		if (is_equal(v.x, (T)-5.0) &&
+			is_equal(v.y, (T)-2.0) &&
+			is_equal(v.z, (T)-4.0) &&
+			is_equal(v.w, (T)-6.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.xy") != std::string::npos)
+	{
+		auto v2 = v.xy();
+		if (is_equal(v2.x, (T)5.0) &&
+			is_equal(v2.y, (T)2.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.xz") != std::string::npos)
+	{
+		auto v2 = v.xz();
+		if (is_equal(v2.x, (T)5.0) &&
+			is_equal(v2.y, (T)6.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.yz") != std::string::npos)
+	{
+		auto v2 = v.yz();
+		if (is_equal(v2.x, (T)2.0) &&
+			is_equal(v2.y, (T)6.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.yzx") != std::string::npos)
+	{
+		auto v2 = v.yzx();
+		if (is_equal(v.x, (T)2.0) &&
+			is_equal(v.y, (T)6.0) &&
+			is_equal(v.z, (T)5.0) &&
+			is_equal(v.w, (T)5.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.post++") != std::string::npos)
 	{
 		auto vc = v++;
 		if (is_equal(vc.x, (T)5.0) &&
 			is_equal(vc.y, (T)2.0) &&
+			is_equal(vc.z, (T)4.0) &&
+			is_equal(vc.w, (T)6.0) &&
 			is_equal(v.x, (T)6.0) &&
-			is_equal(v.y, (T)3.0))
-			return 1;
+			is_equal(v.y, (T)3.0) &&
+			is_equal(v.z, (T)5.0) &&
+			is_equal(v.w, (T)7.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.post--") != std::string::npos)
 	{
 		auto vc = v--;
 		if (is_equal(vc.x, (T)5.0) &&
 			is_equal(vc.y, (T)2.0) &&
+			is_equal(vc.z, (T)4.0) &&
+			is_equal(vc.w, (T)6.0) &&
 			is_equal(v.x, (T)4.0) &&
-			is_equal(v.y, (T)1.0))
-			return 1;
+			is_equal(v.y, (T)1.0) &&
+			is_equal(v.z, (T)3.0) &&
+			is_equal(v.w, (T)5.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.pre++") != std::string::npos)
 	{
 		auto vc = ++v;
 		if (is_equal(vc.x, (T)6.0) &&
 			is_equal(vc.y, (T)3.0) &&
+			is_equal(vc.z, (T)5.0) &&
+			is_equal(vc.w, (T)7.0) &&
 			is_equal(v.x, (T)6.0) &&
-			is_equal(v.y, (T)3.0))
-			return 1;
+			is_equal(v.y, (T)3.0) &&
+			is_equal(v.z, (T)5.0) &&
+			is_equal(v.w, (T)7.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.pre--") != std::string::npos)
 	{
 		auto vc = --v;
 		if (is_equal(vc.x, (T)4.0) &&
 			is_equal(vc.y, (T)1.0) &&
+			is_equal(vc.z, (T)3.0) &&
+			is_equal(vc.w, (T)5.0) &&
 			is_equal(v.x, (T)4.0) &&
-			is_equal(v.y, (T)1.0))
-			return 1;
+			is_equal(v.y, (T)1.0) &&
+			is_equal(v.z, (T)3.0) &&
+			is_equal(v.w, (T)5.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.+=a") != std::string::npos)
 	{
-		v += (T)2.5f;
-		if (is_equal(v.x, (T)7.5) &&
-			is_equal(v.y, (T)4.5))
-			return 1;
+		v += (T)2.0;
+		if (is_equal(v.x, (T)7.0) &&
+			is_equal(v.y, (T)4.0) &&
+			is_equal(v.z, (T)6.0) &&
+			is_equal(v.w, (T)8.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.+=Vec4") != std::string::npos)
 	{
-		v += ct::vec2<T>((T)2.0, (T)4.0);
+		v += ct::vec4<T>((T)2.0, (T)4.0, (T)2.0, (T)4.0);
 		if (is_equal(v.x, (T)7.0) &&
-			is_equal(v.y, (T)6.0))
-			return 1;
+			is_equal(v.y, (T)6.0) &&
+			is_equal(v.z, (T)6.0) &&
+			is_equal(v.w, (T)10.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.-=a") != std::string::npos)
 	{
-		v -= (T)1.0;
-		if (is_equal(v.x, (T)4.0) &&
-			is_equal(v.y, (T)1.0))
-			return 1;
+		v -= (T)2.0;
+		if (is_equal(v.x, (T)2.0) &&
+			is_equal(v.y, (T)-0.0) &&
+			is_equal(v.z, (T)4.0) &&
+			is_equal(v.w, (T)4.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.-=Vec4") != std::string::npos)
 	{
-		v -= ct::vec2<T>((T)2.0, (T)4.0);
+		v -= ct::vec4<T>((T)2.0, (T)4.0, (T)1.0, (T)2.0);
 		if (is_equal(v.x, (T)3.0) &&
-			is_equal(v.y, (T)-2.0))
-			return 1;
+			is_equal(v.y, (T)-2.0) &&
+			is_equal(v.z, (T)5.0) &&
+			is_equal(v.w, (T)5.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.==a") != std::string::npos)
 	{
-		v = (T)2.5;
-		bool vb = (v == (T)2.5);
+		v = (T)2.0;
+		bool vb = (v == (T)2.0);
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.==Vec4") != std::string::npos)
 	{
-		bool vb = (v == ct::vec2<T>((T)5.0, (T)2.0));
+		bool vb = (v == ct::vec4<T>((T)5.0, (T)2.0, (T)4.0, (T)6.0));
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.!=a") != std::string::npos)
 	{
-		v = (T)2.5;
+		v = (T)2.0;
 		bool vb = (v != (T)5.0);
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.!=Vec4") != std::string::npos)
 	{
 		bool vb =
-			(v != ct::vec2<T>((T)6.0, (T)2.0)) &&
-			(v != ct::vec2<T>((T)5.0, (T)3.0)) &&
-			(v != ct::vec2<T>((T)6.0, (T)3.0));
+			(v != ct::vec4<T>((T)6.0, (T)2.0, (T)6.0, (T)2.0)) &&
+			(v != ct::vec4<T>((T)5.0, (T)3.0, (T)6.0, (T)2.0)) &&
+			(v != ct::vec4<T>((T)6.0, (T)3.0, (T)6.0, (T)2.0)) &&
+			(v != ct::vec4<T>((T)2.0, (T)1.0, (T)6.0, (T)2.0));
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.*=a") != std::string::npos)
 	{
 		v *= (T)2.0;
 		if (is_equal(v.x, (T)10.0) &&
-			is_equal(v.y, (T)4.0))
-			return 1;
+			is_equal(v.y, (T)4.0) &&
+			is_equal(v.z, (T)8.0) &&
+			is_equal(v.w, (T)12.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.*=Vec4") != std::string::npos)
 	{
-		v *= ct::vec2<T>((T)2.0, (T)4.0);
+		v *= ct::vec4<T>((T)2.0, (T)4.0, (T)2.0, (T)3.0);
 		if (is_equal(v.x, (T)10.0) &&
-			is_equal(v.y, (T)8.0))
-			return 1;
+			is_equal(v.y, (T)8.0) &&
+			is_equal(v.z, (T)8.0) &&
+			is_equal(v.w, (T)18.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4./=a") != std::string::npos)
 	{
 		v /= (T)2.0;
-		if (is_equal(v.x, (T)2.5) &&
-			is_equal(v.y, (T)1.0))
-			return 1;
+		if (is_equal(v.x, (T)2.0) &&
+			is_equal(v.y, (T)1.0) &&
+			is_equal(v.z, (T)2.0) &&
+			is_equal(v.w, (T)3.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4./=Vec4") != std::string::npos)
 	{
-		v /= ct::vec2<T>((T)2.0, (T)4.0);
-		if (is_equal(v.x, (T)2.5) &&
-			is_equal(v.y, (T)0.5))
-			return 1;
+		v /= ct::vec4<T>((T)2.0, (T)4.0, (T)2.0, (T)2.0);
+		if (is_equal(v.x, (T)2.0) &&
+			is_equal(v.y, (T)0.0) &&
+			is_equal(v.z, (T)2.0) &&
+			is_equal(v.w, (T)3.0))
+			return 0;
 	}
-	/*
-	else if (vTestCode.find(".Vec4.lengthSquared") != std::string::npos)
-	{
-		v = ct::vec2<T>((T)5.0, (T)2.0);
-		T len = v.lengthSquared();
-		if (is_equal(len, (T)29.0))
-			return 1;
-	}
-	else if (vTestCode.find(".Vec4.length") != std::string::npos)
-	{
-		T len = v.length();
-		if (is_equal(len, (T)5.3851648071345040312507104915403))
-			return 1;
-	}
-	else if (vTestCode.find(".Vec4.normalize") != std::string::npos)
-	{
-		T pre_len = v.length();
-		v.normalize();
-		T post_len = v.length();
-		if ((!is_equal(pre_len, (T)1.0)) &&
-			is_equal(post_len, (T)1.0))
-			return 1;
-	}
-	else if (vTestCode.find(".Vec4.GetNormalized") != std::string::npos)
-	{
-		auto vn = v.GetNormalized();
-		T len = vn.length();
-		if (is_equal(len, (T)1.0))
-			return 1;
-	}
-	*/
 	else if (vTestCode.find(".Vec4.sum") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)5.0, (T)-2.0);
+		v = ct::vec4<T>((T)5.0, (T)-2.0, (T)3.0, (T)5.0);
 		T len = v.sum();
-		if (is_equal(len, (T)3.0))
-			return 1;
+		if (is_equal(len, (T)11.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.sumAbs") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)5.0, (T)-2.0);
+		v = ct::vec4<T>((T)5.0, (T)-2.0, (T)3.0, (T)5.0);
 		T len = v.sumAbs();
-		if (is_equal(len, (T)7.0))
-			return 1;
+		if (is_equal(len, (T)15.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.emptyAND") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)0.0, (T)-2.0);
+		v = ct::vec4<T>((T)5.0, (T)-2.0, (T)3.0, (T)0.0);
 		bool vb = v.emptyAND();
 		if (vb == false)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.emptyOR") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)0.0, (T)-2.0);
+		v = ct::vec4<T>((T)3.0, (T)-2.0, (T)5.0, (T)0.0);
 		bool vb = v.emptyOR();
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.string") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)5.0, (T)-2.0);
+		v = ct::vec4<T>((T)5.0, (T)-2.0, (T)3.0, (T)2.0);
 		auto str = v.string();
 		auto str_coma = v.string(',');
-		if (str == "5;-2" &&
-			str_coma == "5,-2")
-			return 1;
+		if (str == "5;-2;3;2" &&
+			str_coma == "5,-2,3,2")
+			return 0;
 	}
-	/*
-	else if (vTestCode.find(".Vec4.ratioXY") != std::string::npos)
-	{
-		T pre_r = v.ratioXY();
-		v.y = (T)0.0;
-		T post_r = v.ratioXY(); // return 1
-		if (is_equal(pre_r, (T)2.5) &&
-			is_equal(post_r, (T)0.0))
-			return 1;
-	}
-	else if (vTestCode.find(".Vec4.ratioYX") != std::string::npos)
-	{
-		T pre_r = v.ratioYX();
-		v.x = (T)0.0;
-		T post_r = v.ratioYX(); // return 1
-		if (is_equal(pre_r, (T)0.4) &&
-			is_equal(post_r, (T)0.0))
-			return 1;
-	}
-	*/
 	else if (vTestCode.find(".Vec4.mini") != std::string::npos)
 	{
 		T mini = v.mini();
 		if (is_equal(mini, (T)2.0))
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.maxi") != std::string::npos)
 	{
 		T maxi = v.maxi();
-		if (is_equal(maxi, (T)5.0))
-			return 1;
+		if (is_equal(maxi, (T)6.0))
+			return 0;
 	}
 
 	return 1; // error
@@ -2195,238 +2477,259 @@ int Test_cTools_signed_integer_Vec4_run_test(const std::string vTestCode)
 template <typename T>
 int Test_cTools_unsigned_integer_Vec4_run_test(const std::string vTestCode)
 {
-	ct::vec2<T> v((T)5.0, (T)2.0);
+	ct::vec4<T> v((T)5.0, (T)2.0, (T)4.0, (T)6.0);
 
 	if (vTestCode.find(".Vec4.[]") != std::string::npos)
 	{
 		if (is_equal(v[0], (T)5.0) &&
-			is_equal(v[1], (T)2.0))
-			return 1;
+			is_equal(v[1], (T)2.0) &&
+			is_equal(v[2], (T)4.0) &&
+			is_equal(v[3], (T)6.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.Offset") != std::string::npos)
+	{
+		v = v.Offset((T)1.0, (T)2.0, (T)3.0, (T)2.0);
+		if (is_equal(v.x, (T)6.0) &&
+			is_equal(v.y, (T)4.0) &&
+			is_equal(v.z, (T)7.0) &&
+			is_equal(v.w, (T)8.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.Set") != std::string::npos)
+	{
+		v.Set((T)1.0, (T)2.0, (T)3.0, (T)2.0);
+		if (is_equal(v.x, (T)1.0) &&
+			is_equal(v.y, (T)2.0) &&
+			is_equal(v.z, (T)3.0) &&
+			is_equal(v.w, (T)2.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.xy") != std::string::npos)
+	{
+		auto v2 = v.xy();
+		if (is_equal(v2.x, (T)5.0) &&
+			is_equal(v2.y, (T)2.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.xz") != std::string::npos)
+	{
+		auto v2 = v.xz();
+		if (is_equal(v2.x, (T)5.0) &&
+			is_equal(v2.y, (T)6.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.yz") != std::string::npos)
+	{
+		auto v2 = v.yz();
+		if (is_equal(v2.x, (T)2.0) &&
+			is_equal(v2.y, (T)6.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.yzx") != std::string::npos)
+	{
+		auto v2 = v.yzx();
+		if (is_equal(v.x, (T)2.0) &&
+			is_equal(v.y, (T)6.0) &&
+			is_equal(v.z, (T)5.0) &&
+			is_equal(v.w, (T)5.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.post++") != std::string::npos)
 	{
 		auto vc = v++;
 		if (is_equal(vc.x, (T)5.0) &&
 			is_equal(vc.y, (T)2.0) &&
+			is_equal(vc.z, (T)4.0) &&
+			is_equal(vc.w, (T)6.0) &&
 			is_equal(v.x, (T)6.0) &&
-			is_equal(v.y, (T)3.0))
-			return 1;
+			is_equal(v.y, (T)3.0) &&
+			is_equal(v.z, (T)5.0) &&
+			is_equal(v.w, (T)7.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.post--") != std::string::npos)
 	{
 		auto vc = v--;
 		if (is_equal(vc.x, (T)5.0) &&
 			is_equal(vc.y, (T)2.0) &&
+			is_equal(vc.z, (T)4.0) &&
+			is_equal(vc.w, (T)6.0) &&
 			is_equal(v.x, (T)4.0) &&
-			is_equal(v.y, (T)1.0))
-			return 1;
+			is_equal(v.y, (T)1.0) &&
+			is_equal(v.z, (T)3.0) &&
+			is_equal(v.w, (T)5.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.pre++") != std::string::npos)
 	{
 		auto vc = ++v;
 		if (is_equal(vc.x, (T)6.0) &&
 			is_equal(vc.y, (T)3.0) &&
+			is_equal(vc.z, (T)5.0) &&
+			is_equal(vc.w, (T)7.0) &&
 			is_equal(v.x, (T)6.0) &&
-			is_equal(v.y, (T)3.0))
-			return 1;
+			is_equal(v.y, (T)3.0) &&
+			is_equal(v.z, (T)5.0) &&
+			is_equal(v.w, (T)7.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.pre--") != std::string::npos)
 	{
 		auto vc = --v;
 		if (is_equal(vc.x, (T)4.0) &&
 			is_equal(vc.y, (T)1.0) &&
+			is_equal(vc.z, (T)3.0) &&
+			is_equal(vc.w, (T)5.0) &&
 			is_equal(v.x, (T)4.0) &&
-			is_equal(v.y, (T)1.0))
-			return 1;
+			is_equal(v.y, (T)1.0) &&
+			is_equal(v.z, (T)3.0) &&
+			is_equal(v.w, (T)5.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.+=a") != std::string::npos)
 	{
-		v += (T)2.5f;
-		if (is_equal(v.x, (T)7.5) &&
-			is_equal(v.y, (T)4.5))
-			return 1;
+		v += (T)2.0;
+		if (is_equal(v.x, (T)7.0) &&
+			is_equal(v.y, (T)4.0) &&
+			is_equal(v.z, (T)6.0) &&
+			is_equal(v.w, (T)8.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.+=Vec4") != std::string::npos)
 	{
-		v += ct::vec2<T>((T)2.0, (T)4.0);
+		v += ct::vec4<T>((T)2.0, (T)4.0, (T)2.0, (T)4.0);
 		if (is_equal(v.x, (T)7.0) &&
-			is_equal(v.y, (T)6.0))
-			return 1;
+			is_equal(v.y, (T)6.0) &&
+			is_equal(v.z, (T)6.0) &&
+			is_equal(v.w, (T)10.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.-=a") != std::string::npos)
 	{
-		v -= (T)1.0;
-		if (is_equal(v.x, (T)4.0) &&
-			is_equal(v.y, (T)1.0))
-			return 1;
+		v -= (T)2.0;
+		if (is_equal(v.x, (T)2.0) &&
+			is_equal(v.y, (T)-0.0) &&
+			is_equal(v.z, (T)4.0) &&
+			is_equal(v.w, (T)4.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.-=Vec4") != std::string::npos)
 	{
-		v -= ct::vec2<T>((T)2.0, (T)4.0);
+		v -= ct::vec4<T>((T)2.0, (T)4.0, (T)1.0, (T)2.0);
 		if (is_equal(v.x, (T)3.0) &&
-			is_equal(v.y, (T)-2.0))
-			return 1;
+			is_equal(v.y, (T)-2.0) &&
+			is_equal(v.z, (T)5.0) &&
+			is_equal(v.w, (T)5.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.==a") != std::string::npos)
 	{
-		v = (T)2.5;
-		bool vb = (v == (T)2.5);
+		v = (T)2.0;
+		bool vb = (v == (T)2.0);
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.==Vec4") != std::string::npos)
 	{
-		bool vb = (v == ct::vec2<T>((T)5.0, (T)2.0));
+		bool vb = (v == ct::vec4<T>((T)5.0, (T)2.0, (T)4.0, (T)6.0));
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.!=a") != std::string::npos)
 	{
-		v = (T)2.5;
+		v = (T)2.0;
 		bool vb = (v != (T)5.0);
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.!=Vec4") != std::string::npos)
 	{
 		bool vb =
-			(v != ct::vec2<T>((T)6.0, (T)2.0)) &&
-			(v != ct::vec2<T>((T)5.0, (T)3.0)) &&
-			(v != ct::vec2<T>((T)6.0, (T)3.0));
+			(v != ct::vec4<T>((T)6.0, (T)2.0, (T)6.0, (T)2.0)) &&
+			(v != ct::vec4<T>((T)5.0, (T)3.0, (T)6.0, (T)2.0)) &&
+			(v != ct::vec4<T>((T)6.0, (T)3.0, (T)6.0, (T)2.0)) &&
+			(v != ct::vec4<T>((T)2.0, (T)1.0, (T)6.0, (T)2.0));
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.*=a") != std::string::npos)
 	{
 		v *= (T)2.0;
 		if (is_equal(v.x, (T)10.0) &&
-			is_equal(v.y, (T)4.0))
-			return 1;
+			is_equal(v.y, (T)4.0) &&
+			is_equal(v.z, (T)8.0) &&
+			is_equal(v.w, (T)12.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.*=Vec4") != std::string::npos)
 	{
-		v *= ct::vec2<T>((T)2.0, (T)4.0);
+		v *= ct::vec4<T>((T)2.0, (T)4.0, (T)2.0, (T)3.0);
 		if (is_equal(v.x, (T)10.0) &&
-			is_equal(v.y, (T)8.0))
-			return 1;
+			is_equal(v.y, (T)8.0) &&
+			is_equal(v.z, (T)8.0) &&
+			is_equal(v.w, (T)18.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4./=a") != std::string::npos)
 	{
 		v /= (T)2.0;
-		if (is_equal(v.x, (T)2.5) &&
-			is_equal(v.y, (T)1.0))
-			return 1;
+		if (is_equal(v.x, (T)2.0) &&
+			is_equal(v.y, (T)1.0) &&
+			is_equal(v.z, (T)2.0) &&
+			is_equal(v.w, (T)3.0))
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4./=Vec4") != std::string::npos)
 	{
-		v /= ct::vec2<T>((T)2.0, (T)4.0);
-		if (is_equal(v.x, (T)2.5) &&
-			is_equal(v.y, (T)0.5))
-			return 1;
+		v /= ct::vec4<T>((T)2.0, (T)4.0, (T)2.0, (T)2.0);
+		if (is_equal(v.x, (T)2.0) &&
+			is_equal(v.y, (T)0.0) &&
+			is_equal(v.z, (T)2.0) &&
+			is_equal(v.w, (T)3.0))
+			return 0;
 	}
-	/*
-	else if (vTestCode.find(".Vec4.lengthSquared") != std::string::npos)
-	{
-		v = ct::vec2<T>((T)5.0, (T)2.0);
-		T len = v.lengthSquared();
-		if (is_equal(len, (T)29.0))
-			return 1;
-	}
-	else if (vTestCode.find(".Vec4.length") != std::string::npos)
-	{
-		T len = v.length();
-		if (is_equal(len, (T)5.3851648071345040312507104915403))
-			return 1;
-	}
-	else if (vTestCode.find(".Vec4.normalize") != std::string::npos)
-	{
-		T pre_len = v.length();
-		v.normalize();
-		T post_len = v.length();
-		if ((!is_equal(pre_len, (T)1.0)) &&
-			is_equal(post_len, (T)1.0))
-			return 1;
-	}
-	else if (vTestCode.find(".Vec4.GetNormalized") != std::string::npos)
-	{
-		auto vn = v.GetNormalized();
-		T len = vn.length();
-		if (is_equal(len, (T)1.0))
-			return 1;
-	}
-	*/
 	else if (vTestCode.find(".Vec4.sum") != std::string::npos)
 	{
-		// ca c'est marrant -2 en unsigned renvoi limit -2
-		// et la somme est bonne car limit - 2 + 5 en usingned vaut 3 comme en signed :)
-		v = ct::vec2<T>((T)5.0, (T)-2.0);
+		v = ct::vec4<T>((T)5.0, (T)-2.0, (T)3.0, (T)5.0);
 		T len = v.sum();
-		if (is_equal(len, (T)3.0))
-			return 1;
+		if (is_equal(len, (T)11.0))
+			return 0;
 	}
-	/*
-	else if (vTestCode.find(".Vec4.sumAbs") != std::string::npos)
-	{
-		v = ct::vec2<T>((T)5.0, (T)-2.0);
-		T len = v.sumAbs();
-		if (is_equal(len, (T)7.0))
-			return 1;
-	}
-	*/
 	else if (vTestCode.find(".Vec4.emptyAND") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)0.0, (T)2.0);
+		v = ct::vec4<T>((T)5.0, (T)-2.0, (T)3.0, (T)0.0);
 		bool vb = v.emptyAND();
 		if (vb == false)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.emptyOR") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)0.0, (T)2.0);
+		v = ct::vec4<T>((T)3.0, (T)-2.0, (T)5.0, (T)0.0);
 		bool vb = v.emptyOR();
 		if (vb == true)
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.string") != std::string::npos)
 	{
-		v = ct::vec2<T>((T)5.0, (T)2.0);
+		v = ct::vec4<T>((T)5.0, (T)2.0, (T)3.0, (T)2.0);
 		auto str = v.string();
 		auto str_coma = v.string(',');
-		if (str == "5;2" &&
-			str_coma == "5,2")
-			return 1;
+		if (str == "5;2;3;2" &&
+			str_coma == "5,2,3,2")
+			return 0;
 	}
-	/*
-	else if (vTestCode.find(".Vec4.ratioXY") != std::string::npos)
-	{
-		T pre_r = v.ratioXY();
-		v.y = (T)0.0;
-		T post_r = v.ratioXY(); // return 1
-		if (is_equal(pre_r, (T)2.5) &&
-			is_equal(post_r, (T)0.0))
-			return 1;
-	}
-	else if (vTestCode.find(".Vec4.ratioYX") != std::string::npos)
-	{
-		T pre_r = v.ratioYX();
-		v.x = (T)0.0;
-		T post_r = v.ratioYX(); // return 1
-		if (is_equal(pre_r, (T)0.4) &&
-			is_equal(post_r, (T)0.0))
-			return 1;
-	}
-	*/
 	else if (vTestCode.find(".Vec4.mini") != std::string::npos)
 	{
 		T mini = v.mini();
 		if (is_equal(mini, (T)2.0))
-			return 1;
+			return 0;
 	}
 	else if (vTestCode.find(".Vec4.maxi") != std::string::npos)
 	{
 		T maxi = v.maxi();
-		if (is_equal(maxi, (T)5.0))
-			return 1;
+		if (is_equal(maxi, (T)6.0))
+			return 0;
 	}
 
 	return 1; // error
@@ -2473,38 +2776,38 @@ int Test_cTools_run_test(const std::string vTestCode)
 	}
 	else if (vTestCode.find("cTools.bool.Vec3.") != std::string::npos)
 	{
-		return 1;// Test_cTools_Vec3_run_test<bool>(vTestCode);
+		return Test_cTools_Vec3_run_test<bool>(vTestCode);
 	}
 	else if (vTestCode.find("cTools.int.Vec3.") != std::string::npos)
 	{
-		return 1;// Test_cTools_signed_integer_Vec3_run_test<int32_t>(vTestCode);
+		return Test_cTools_signed_integer_Vec3_run_test<int32_t>(vTestCode);
 	}
 	else if (vTestCode.find("cTools.uint.Vec3.") != std::string::npos)
 	{
-		return 1;// Test_cTools_unsigned_integer_Vec3_run_test<uint32_t>(vTestCode);
+		return Test_cTools_unsigned_integer_Vec3_run_test<uint32_t>(vTestCode);
 	}
 
 	// Vec4
 
 	else if (vTestCode.find("cTools.double.Vec4.") != std::string::npos)
 	{
-		return 1;// Test_cTools_Vec4_run_test<double>(vTestCode);
+		return Test_cTools_Vec4_run_test<double>(vTestCode);
 	}
 	else if (vTestCode.find("cTools.float.Vec4.") != std::string::npos)
 	{
-		return 1;// Test_cTools_Vec4_run_test<float>(vTestCode);
+		return Test_cTools_Vec4_run_test<float>(vTestCode);
 	}
 	else if (vTestCode.find("cTools.bool.Vec4.") != std::string::npos)
 	{
-		return 1;// Test_cTools_Vec4_run_test<bool>(vTestCode);
+		return Test_cTools_Vec4_run_test<bool>(vTestCode);
 	}
 	else if (vTestCode.find("cTools.int.Vec4.") != std::string::npos)
 	{
-		return 1;// Test_cTools_signed_integer_Vec4_run_test<int32_t>(vTestCode);
+		return Test_cTools_signed_integer_Vec4_run_test<int32_t>(vTestCode);
 	}
 	else if (vTestCode.find("cTools.uint.Vec4.") != std::string::npos)
 	{
-		return 1;// Test_cTools_unsigned_integer_Vec4_run_test<uint32_t>(vTestCode);
+		return Test_cTools_unsigned_integer_Vec4_run_test<uint32_t>(vTestCode);
 	}
 
 	return 1; // error
