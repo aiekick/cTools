@@ -78,9 +78,9 @@ void Logger::LogString(const LogMessageTypeEnum* vType, const std::string* vFunc
 	static char TempBufferBis[3072 + 1];
 	int w = 0;
 	if (vFunction && vLine)
-		w = snprintf(TempBufferBis, 1024 * 3, "[%.3fs][%s:%i] => %s", time, vFunction->c_str(), *vLine, vStr);
+		w = snprintf(TempBufferBis, 1024 * 3, "[%010.3fs][%s:%i] => %s", time, vFunction->c_str(), *vLine, vStr);
 	else
-		w = snprintf(TempBufferBis, 3072, "[%.3fs]%s", time, vStr);
+		w = snprintf(TempBufferBis, 3072, "[%010.3fs]%s", time, vStr);
 	if (w)
 	{
 		const std::string msg = std::string(TempBufferBis, w);
@@ -208,13 +208,13 @@ void Logger::LogStringWithFunction_Debug(const std::string& vFunction, const int
 }
 
 #ifdef USE_OPENGL
-void Logger::LogGLError(const std::string& vFile, const std::string& vFunc, int vLine, const std::string& vGLFunc) const
+bool Logger::LogGLError(const std::string& vFile, const std::string& vFunc, int vLine, const std::string& vGLFunc) const
 {
 #if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
 	ZoneScoped;
 #endif
 	if (!Logger::Instance()->ConsoleVerbose)
-		return;
+		return false;
 
 	const GLenum err(glGetError());
 	if (err != GL_NO_ERROR)
@@ -234,15 +234,28 @@ void Logger::LogGLError(const std::string& vFile, const std::string& vFunc, int 
 
 		if (!error.empty())
 		{
-#ifdef USE_GLFW3
-			GLFWwindow* currentWindow = glfwGetCurrentContext();
-			error = "thread(" + ct::toStr(currentWindow) + ") ";
-#endif
-			error += "OpenGL error : " + error + " in " + vFile + " " + vFunc + " " + ct::toStr(vLine) + " " + vGLFunc;
 			const int64 ticks = ct::GetTicks();
 			const float time = (ticks - lastTick) / 1000.0f;
 
-			auto msg = ct::toStr("[%.3fs] => %s\n", time, error.c_str());
+			std::string msg;
+
+			if (!vGLFunc.empty())
+			{
+#ifdef USE_GLFW3
+				msg = ct::toStr("[%010.3fs][GLFW3 0x%X][%s:%i] => %s in %s\n", time, (uintptr_t)glfwGetCurrentContext(), vFunc.c_str(), vLine, error.c_str(), vGLFunc.c_str());
+#else
+				msg = ct::toStr("[%010.3fs][SDL2][%s:%i] => %s in %s\n", time, thread, vFunc.c_str(), vLine, error.c_str(), vGLFunc.c_str());
+#endif
+			}
+			else
+			{
+#ifdef USE_GLFW3
+				msg = ct::toStr("[%010.3fs][GLFW3 0x%X][%s:%i] => %s\n", time, (uintptr_t)glfwGetCurrentContext(), vFunc.c_str(), vLine, error.c_str());
+#else
+				msg = ct::toStr("[%010.3fs][SDL2][%s:%i] => %s\n", time, thread, vFunc.c_str(), vLine, error.c_str());
+#endif
+			}
+			
 			printf("%s", msg.c_str());
 
 			if (sOpenGLLogFunction)
@@ -264,9 +277,11 @@ void Logger::LogGLError(const std::string& vFile, const std::string& vFunc, int 
 			if (!debugLogFile->bad())
 				*debugLogFile << msg << std::endl;
 
-			//CTOOL_DEBUG_BREAK;
+			return true;
 		}
 	}
+
+	return false;
 }
 #endif
 

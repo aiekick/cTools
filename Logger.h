@@ -107,7 +107,7 @@ public:
 	void LogStringByTypeWithFunction(const LogMessageTypeEnum& vType, const std::string& vFunction, const int& vLine, const char* fmt, ...);
 	void LogStringWithFunction_Debug(const std::string& vFunction, const int& vLine, const char* fmt, ...);
 #ifdef USE_OPENGL
-	void LogGLError(const std::string& vFile, const std::string& vFunc, int vLine, const std::string& vGLFunc = "") const;
+	bool LogGLError(const std::string& vFile, const std::string& vFunc, int vLine, const std::string& vGLFunc = "") const;
 #endif
 	void Close();
 
