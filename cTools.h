@@ -657,7 +657,10 @@ namespace ct // cTools
 		vec2<T>(const b2Vec2& vec, const float& vRatio = 1.0f) { x = (T)vec.x * vRatio; y = (T)vec.y * vRatio; }
 #endif
 		T& operator [] (const size_t& i) { return (&x)[i]; }
-		// https://en.cppreference.com/w/cpp/language/operator_incdec
+		vec2<T> Offset(const T& vX, const T& vY) const { return vec2<T>(x + vX, y + vY); }
+		void Set(const T& vX, const T& vY) { x = vX; y = vY; }
+		vec2<T> operator -() const { return vec2<T>(-x, -y); }
+		vec2<T> operator !() const { return vec2<T>(!x, !y); }
 		vec2<T>& operator ++ () { ++x; ++y; return *this; } // pre inc
 		vec2<T>& operator -- () { --x; --y; return *this; } // pre dec
 		vec2<T> operator ++ (int) { vec2<T> tmp = *this; ++*this; return tmp; } // post inc
@@ -674,19 +677,19 @@ namespace ct // cTools
 		void operator *= (const vec2<T>& v) { x *= v.x; y *= v.y; }
 		void operator /= (const T& a) { x /= a; y /= a; }
 		void operator /= (const vec2<T>& v) { x /= v.x; y /= v.y; }
-		T lengthSquared() { return x * x + y * y; }
-		T length() { return (T)sqrt(lengthSquared()); }
+		T lengthSquared() const { return x * x + y * y; }
+		T length() const { return (T)sqrt(lengthSquared()); }
 		T normalize() { T _length = length(); if (_length < (T)1e-5) return (T)0.0; T _invLength = (T)1.0 / _length; x *= _invLength; y *= _invLength; return _length; } // return length
-		vec2<T> GetNormalized() { vec2<T> n = vec2<T>(x, y); n.normalize(); return n; }
-		T sum() { return x + y; }
-		T sumAbs() { return abs<T>(x) + abs<T>(y); }
+		vec2<T> GetNormalized() const { vec2<T> n = vec2<T>(x, y); n.normalize(); return n; }
+		T sum() const { return x + y; }
+		T sumAbs() const { return abs<T>(x) + abs<T>(y); }
 		bool emptyAND() const { return x == (T)0 && y == (T)0; }
 		bool emptyOR() const { return x == (T)0 || y == (T)0; }
-		std::string string(const char& c = ';') { return toStr(x) + c + toStr(y); }
-		T ratioXY() { if (y != (T)0) return x / y; return (T)0; }
-		T ratioYX() { if (x != (T)0) return y / x; return (T)0; }
-		T mini() { return internal_mini<T>(x, y); }
-		T maxi() { return internal_maxi<T>(x, y); }
+		std::string string(const char& c = ';') const { return toStr(x) + c + toStr(y); }
+		T ratioXY() const { if (y != (T)0) return x / y; return (T)0; }
+		T ratioYX() const { if (x != (T)0) return y / x; return (T)0; }
+		T mini() const { return internal_mini<T>(x, y); }
+		T maxi() const { return internal_maxi<T>(x, y); }
 	};
 
 	// specialisation
@@ -852,6 +855,7 @@ namespace ct // cTools
 				);
 	}
 	typedef mat2<float> mat2f;
+	typedef mat2<double> mat2d;
 
 	/////////////////////////////////////////////////////////////////////////
 
@@ -874,13 +878,14 @@ namespace ct // cTools
 			if (s > 2) z = result[2];
 		}
 		T& operator [] (const size_t& i) { return (&x)[i]; }
-		vec3<T> Offset(const T& vX, const T& vY, const T& vZ) { return vec3<T>(x + vX, y + vY, z + vZ); }
+		vec3<T> Offset(const T& vX, const T& vY, const T& vZ) const { return vec3<T>(x + vX, y + vY, z + vZ); }
 		void Set(const T& vX, const T& vY, const T& vZ) { x = vX; y = vY; z = vZ; }
 		vec3<T> operator -() const { return vec3<T>(-x, -y, -z); }
-		vec2<T> xy() { return vec2<T>(x, y); }
-		vec2<T> xz() { return vec2<T>(x, z); }
-		vec2<T> yz() { return vec2<T>(y, z); }
-		vec3 yzx() { return vec3<T>(y, z, x); }
+		vec3<T> operator !() const { return vec3<T>(!x, !y, !z); }
+		vec2<T> xy() const { return vec2<T>(x, y); }
+		vec2<T> xz() const { return vec2<T>(x, z); }
+		vec2<T> yz() const { return vec2<T>(y, z); }
+		vec3 yzx() const { return vec3<T>(y, z, x); }
 		// https://en.cppreference.com/w/cpp/language/operator_incdec
 		vec3<T>& operator ++ () { ++x; ++y; ++z; return *this; } // pre inc
 		vec3<T>& operator -- () { --x; --y; --z; return *this; } // pre dec
@@ -898,17 +903,17 @@ namespace ct // cTools
 		void operator *= (const vec3<T>& v) { x *= v.x; y *= v.y; z *= v.z; }
 		void operator /= (const T& a) { x /= a; y /= a; z /= a; }
 		void operator /= (const vec3<T>& v) { x /= v.x; y /= v.y; z /= v.z; }
-		T length() { return (T)sqrt(lengthSquared()); }
-		T lengthSquared() { return x * x + y * y + z * z; }
+		T length() const { return (T)sqrt(lengthSquared()); }
+		T lengthSquared() const { return x * x + y * y + z * z; }
 		T normalize() { T _length = length(); if (_length < (T)1e-5) return (T)0; T _invLength = (T)1 / _length; x *= _invLength; y *= _invLength; z *= _invLength; return _length; }
-		vec3<T> GetNormalized() { vec3<T> n = vec3<T>(x, y, z); n.normalize(); return n; }
-		T sum() { return x + y + z; }
-		T sumAbs() { return abs<T>(x) + abs<T>(y) + abs<T>(z); }
-		bool emptyAND() { return x == (T)0 && y == (T)0 && z == (T)0; }
-		bool emptyOR() { return x == (T)0 || y == (T)0 || z == (T)0; }
-		std::string string(const char& c = ';') { return toStr(x) + c + toStr(y) + c + toStr(z); }
-		T mini() { return internal_mini<T>(x, internal_mini<T>(y, z)); }
-		T maxi() { return internal_maxi<T>(x, internal_maxi<T>(y, z)); }
+		vec3<T> GetNormalized() const { vec3<T> n = vec3<T>(x, y, z); n.normalize(); return n; }
+		T sum() const { return x + y + z; }
+		T sumAbs() const { return abs<T>(x) + abs<T>(y) + abs<T>(z); }
+		bool emptyAND() const { return x == (T)0 && y == (T)0 && z == (T)0; }
+		bool emptyOR() const { return x == (T)0 || y == (T)0 || z == (T)0; }
+		std::string string(const char& c = ';') const { return toStr(x) + c + toStr(y) + c + toStr(z); }
+		T mini() const { return internal_mini<T>(x, internal_mini<T>(y, z)); }
+		T maxi() const { return internal_maxi<T>(x, internal_maxi<T>(y, z)); }
 	};
 
 	// specialisation
@@ -1062,13 +1067,12 @@ namespace ct // cTools
 			}
 		}
 		T& operator [] (const size_t& i) { return (&x)[i]; }
-		vec4<T> Offset(const T& vX, const T& vY, const T& vZ, const T& vW) { return vec4<T>(x + vX, y + vY, z + vZ, w + vW); }
+		vec4<T> Offset(const T& vX, const T& vY, const T& vZ, const T& vW) const { return vec4<T>(x + vX, y + vY, z + vZ, w + vW); }
 		void Set(const T& vX, const T& vY, const T& vZ, const T& vW) { x = vX; y = vY; z = vZ; w = vW; }
 		vec4<T> operator -() const { return vec4<T>(-x, -y, -z, -w); }
-		vec2<T> xy() { return vec2<T>(x, y); }
-		vec2<T> xz() { return vec2<T>(x, z); }
-		vec2<T> yz() { return vec2<T>(y, z); }
-		vec3<T> yzx() { return vec3<T>(y, z, x); }
+		vec4<T> operator !() const { return vec4<T>(!x, !y, !z, !w); }
+		vec2<T> xy() const { return vec2<T>(x, y); }
+		vec2<T> zw() const { return vec2<T>(z, w); }
 		// https://en.cppreference.com/w/cpp/language/operator_incdec
 		vec4<T>& operator ++ () { ++x; ++y; ++z; ++w; return *this; } // pre inc
 		vec4<T>& operator -- () { --x; --y; --z; --w; return *this; } // pre dec
@@ -1086,20 +1090,20 @@ namespace ct // cTools
 		void operator *= (const vec4<T>& v) { x *= v.x; y *= v.y; z *= v.z; w *= v.w; }
 		void operator /= (const T& a) { x /= a; y /= a; z /= a; w /= a; }
 		void operator /= (const vec4<T>& v) { x /= v.x; y /= v.y; z /= v.z; w /= v.w; }
-		vec2<T> SizeLBRT() { return vec2<T>(z - x, w - y); }// Considere vec4 as a rect with LBRT for have size LBRT Mean => x = Left, y = Bottom, z = Right, w = Top
-		vec2<T> pos() { return xy(); }
-		vec2<T> size() { return zw(); }
-		T length() { return (T)sqrt(lengthSquared()); }
-		T lengthSquared() { return x * x + y * y + z * z + w * w; }
+		vec2<T> SizeLBRT() const { return vec2<T>(z - x, w - y); }// Considere vec4 as a rect with LBRT for have size LBRT Mean => x = Left, y = Bottom, z = Right, w = Top
+		vec2<T> pos() const { return xy(); }
+		vec2<T> size() const { return zw(); }
+		T length() const { return (T)sqrt(lengthSquared()); }
+		T lengthSquared() const { return x * x + y * y + z * z + w * w; }
 		T normalize() { T _length = length(); if (_length < (T)1e-5)return (T)0; T _invLength = (T)1 / _length; x *= _invLength; y *= _invLength; z *= _invLength; w *= _invLength; return _length; }
-		vec4<T> GetNormalized() { vec4<T> n = vec4<T>(x, y, z, w); n.normalize(); return n; }
-		bool emptyAND() { return x == (T)0 && y == (T)0 && z == (T)0 && w == (T)0; }
-		bool emptyOR() { return x == (T)0 || y == (T)0 || z == (T)0 || w == (T)0; }
-		T sum() { return x + y + z + w; }
-		T sumAbs() { return abs<T>(x) + abs<T>(y) + abs<T>(z) + abs<T>(w); }
-		std::string string(char c = ';') { return toStr(x) + c + toStr(y) + c + toStr(z) + c + toStr(w); }
-		T mini() { return internal_mini<T>(x, internal_mini<T>(y, internal_mini<T>(z, w))); }
-		T maxi() { return internal_maxi<T>(x, internal_maxi<T>(y, internal_maxi<T>(z, w))); }
+		vec4<T> GetNormalized() const { vec4<T> n = vec4<T>(x, y, z, w); n.normalize(); return n; }
+		bool emptyAND() const { return x == (T)0 && y == (T)0 && z == (T)0 && w == (T)0; }
+		bool emptyOR() const { return x == (T)0 || y == (T)0 || z == (T)0 || w == (T)0; }
+		T sum() const { return x + y + z + w; }
+		T sumAbs() const { return abs<T>(x) + abs<T>(y) + abs<T>(z) + abs<T>(w); }
+		std::string string(char c = ';') const { return toStr(x) + c + toStr(y) + c + toStr(z) + c + toStr(w); }
+		T mini() const { return internal_mini<T>(x, internal_mini<T>(y, internal_mini<T>(z, w))); }
+		T maxi() const { return internal_maxi<T>(x, internal_maxi<T>(y, internal_maxi<T>(z, w))); }
 	};
 
 	// specialisation
