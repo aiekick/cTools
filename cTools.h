@@ -1724,6 +1724,7 @@ namespace ct // cTools
 		vec4<T> rect_value;
 		AABB<T> aabb_value;
 		::std::vector<float> vector_float_value;
+		::std::vector<double> vector_double_value;
 		::std::vector<::std::string> vector_string_value;
 		::std::set<::std::string> set_string_value;
 
@@ -1755,6 +1756,7 @@ namespace ct // cTools
 		variant(const vec3<T>& c) { v3_value = c; inputtype = "vec3"; datatype = inputtype; }
 		variant(const vec4<T>& c) { rect_value = c; inputtype = "vec4"; datatype = inputtype; }
 		variant(const AABB<T>& c) { aabb_value = c; inputtype = "AABB"; datatype = inputtype; }
+		variant(const ::std::vector<double>& c) { vector_double_value = c; inputtype = "vectorDouble"; datatype = inputtype; }
 		variant(const ::std::vector<float>& c) { vector_float_value = c; inputtype = "vectorFloat"; datatype = inputtype; }
 		variant(const ::std::vector<::std::string>& c) { vector_string_value = c; inputtype = "vectorString"; datatype = inputtype; }
 		variant(const ::std::set<::std::string>& c) { set_string_value = c; inputtype = "setString"; datatype = inputtype; }
@@ -1868,6 +1870,17 @@ namespace ct // cTools
 			{
 				std::string str;
 				for (auto f : vector_float_value)
+				{
+					if (!str.empty())
+						str += c;
+					str += toStr(f);
+				}
+				return str;
+			}
+			if (inputtype == "vectorDouble")
+			{
+				std::string str;
+				for (auto f : vector_double_value)
 				{
 					if (!str.empty())
 						str += c;
@@ -1995,6 +2008,7 @@ namespace ct // cTools
 		}
 	};
 	typedef variant<float> fvariant; // utile pour le type de renvoi des vec2,3,4 et AABB
+	typedef variant<double> dvariant; // utile pour le type de renvoi des vec2,3,4 et AABB
 	typedef variant<size_t> uvariant;
 	typedef variant<int> ivariant;
 
