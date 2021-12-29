@@ -78,9 +78,9 @@ void Logger::LogString(const LogMessageTypeEnum* vType, const std::string* vFunc
 	static char TempBufferBis[3072 + 1];
 	int w = 0;
 	if (vFunction && vLine)
-		w = snprintf(TempBufferBis, 1024 * 3, "[%010.3fs][%s:%i] => %s", time, vFunction->c_str(), *vLine, vStr);
+		w = snprintf(TempBufferBis, 1024 * 3, "[%010.3fs][%s:%i] %s", time, vFunction->c_str(), *vLine, vStr);
 	else
-		w = snprintf(TempBufferBis, 3072, "[%010.3fs]%s", time, vStr);
+		w = snprintf(TempBufferBis, 3072, "[%010.3fs] %s", time, vStr);
 	if (w)
 	{
 		const std::string msg = std::string(TempBufferBis, w);
@@ -242,17 +242,17 @@ bool Logger::LogGLError(const std::string& vFile, const std::string& vFunc, int 
 			if (!vGLFunc.empty())
 			{
 #ifdef USE_GLFW3
-				msg = ct::toStr("[%010.3fs][GLFW3 0x%X][%s:%i] => %s in %s\n", time, (uintptr_t)glfwGetCurrentContext(), vFunc.c_str(), vLine, error.c_str(), vGLFunc.c_str());
+				msg = ct::toStr("[%010.3fs][GLFW3 0x%X][%s:%i] %s in %s\n", time, (uintptr_t)glfwGetCurrentContext(), vFunc.c_str(), vLine, error.c_str(), vGLFunc.c_str());
 #else
-				msg = ct::toStr("[%010.3fs][SDL2][%s:%i] => %s in %s\n", time, thread, vFunc.c_str(), vLine, error.c_str(), vGLFunc.c_str());
+				msg = ct::toStr("[%010.3fs][SDL2][%s:%i] %s in %s\n", time, thread, vFunc.c_str(), vLine, error.c_str(), vGLFunc.c_str());
 #endif
 			}
 			else
 			{
 #ifdef USE_GLFW3
-				msg = ct::toStr("[%010.3fs][GLFW3 0x%X][%s:%i] => %s\n", time, (uintptr_t)glfwGetCurrentContext(), vFunc.c_str(), vLine, error.c_str());
+				msg = ct::toStr("[%010.3fs][GLFW3 0x%X][%s:%i] %s\n", time, (uintptr_t)glfwGetCurrentContext(), vFunc.c_str(), vLine, error.c_str());
 #else
-				msg = ct::toStr("[%010.3fs][SDL2][%s:%i] => %s\n", time, thread, vFunc.c_str(), vLine, error.c_str());
+				msg = ct::toStr("[%010.3fs][SDL2][%s:%i] %s\n", time, thread, vFunc.c_str(), vLine, error.c_str());
 #endif
 			}
 			
