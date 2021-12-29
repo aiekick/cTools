@@ -2160,7 +2160,7 @@ namespace ct // cTools
 	/////////////////////////////////////////////////////////////
 
 	template<typename T>
-	ct::rect<T> GetScreenRectWithSize(ct::ivec2 vItemSize, ct::ivec2 vMaxSize, bool vLogError = true)
+	ct::rect<T> GetScreenRectWithSize(ct::vec2<T> vItemSize, ct::vec2<T> vMaxSize, bool vLogError = true)
 	{
 		ct::rect<T> rc;
 
@@ -2210,7 +2210,7 @@ namespace ct // cTools
 	}
 
 	template<typename T>
-	ct::rect<T> GetScreenRectWithRatio(float vRatio, ct::ivec2 vMaxSize, bool vLogError = true)
+	ct::rect<T> GetScreenRectWithRatio(float vRatio, ct::vec2<T> vMaxSize, bool vLogError = true)
 	{
 		ct::rect<T> rc;
 

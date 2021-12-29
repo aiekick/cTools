@@ -565,7 +565,7 @@ void ct::AppendToBuffer(char* vBuffer, size_t vBufferLen, const ::std::string& v
 	{
 		ct::replaceString(st, "\r", "");
 		ct::replaceString(st, "\n", "");
-		//LogVar(st);
+		//LogVarInfo(st);
 	}
 
 	const size_t slen = strlen(vBuffer);
