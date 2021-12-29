@@ -1792,6 +1792,14 @@ int Test_cTools_Vec4_run_test(const std::string vTestCode)
 			is_equal(v2.y, (T)2.0))
 			return 0;
 	}
+	else if (vTestCode.find(".Vec4.xyz") != std::string::npos)
+	{
+		const auto& v3 = v.xyz();
+		if (is_equal(v3.x, (T)5.0) &&
+			is_equal(v3.y, (T)2.0) &&
+			is_equal(v3.z, (T)4.5))
+			return 0;
+	}
 	else if (vTestCode.find(".Vec4.zw") != std::string::npos)
 	{
 		const auto& v2 = v.zw();
@@ -2094,6 +2102,14 @@ int Test_cTools_Vec4_run_test<bool>(const std::string vTestCode)
 			v2.y == false)
 			return 0;
 	}
+	else if (vTestCode.find(".Vec4.xyz") != std::string::npos)
+	{
+		const auto& v3 = v.xyz();
+		if (v3.x == true &&
+			v3.y == false &&
+			v3.z == true)
+			return 0;
+	}
 	else if (vTestCode.find(".Vec4.zw") != std::string::npos)
 	{
 		const auto& v2 = v.zw();
@@ -2207,6 +2223,14 @@ int Test_cTools_signed_integer_Vec4_run_test(const std::string vTestCode)
 		const auto& v2 = v.xy();
 		if (is_equal(v2.x, (T)5.0) &&
 			is_equal(v2.y, (T)2.0))
+			return 0;
+	}
+	else if (vTestCode.find(".Vec4.xyz") != std::string::npos)
+	{
+		const auto& v3 = v.xyz();
+		if (is_equal(v3.x, (T)5.0) &&
+			is_equal(v3.y, (T)2.0) &&
+			is_equal(v3.z, (T)4.5))
 			return 0;
 	}
 	else if (vTestCode.find(".Vec4.zw") != std::string::npos)

@@ -210,6 +210,8 @@ void Logger::LogStringWithFunction_Debug(const std::string& vFunction, const int
 #ifdef USE_OPENGL
 bool Logger::LogGLError(const std::string& vFile, const std::string& vFunc, int vLine, const std::string& vGLFunc) const
 {
+	UNUSED(vFile);
+
 #if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
 	ZoneScoped;
 #endif

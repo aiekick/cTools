@@ -1072,6 +1072,7 @@ namespace ct // cTools
 		vec4<T> operator -() const { return vec4<T>(-x, -y, -z, -w); }
 		vec4<T> operator !() const { return vec4<T>(!x, !y, !z, !w); }
 		vec2<T> xy() const { return vec2<T>(x, y); }
+		vec3<T> xyz() const { return vec3<T>(x, y, z); }
 		vec2<T> zw() const { return vec2<T>(z, w); }
 		// https://en.cppreference.com/w/cpp/language/operator_incdec
 		vec4<T>& operator ++ () { ++x; ++y; ++z; ++w; return *this; } // pre inc
