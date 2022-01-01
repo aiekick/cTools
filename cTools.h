@@ -1913,16 +1913,28 @@ namespace ct // cTools
 		vec2<T> GetV2(char c = ';')
 		{
 			if (inputtype == "string") return vec2<T>(string_value, c);
+			else if (inputtype == "vectorString")
+			{
+
+			}
 			return point_value;
 		}
 		vec3<T> GetV3(char c = ';')
 		{
 			if (inputtype == "string") return vec3<T>(string_value, c);
+			else if (inputtype == "vectorString")
+			{
+
+			}
 			return v3_value;
 		}
 		vec4<T> GetV4(char c = ';')
 		{
 			if (inputtype == "string") return vec4<T>(string_value, c, 4, 0);
+			else if (inputtype == "vectorString")
+			{
+
+			}
 			return rect_value;
 		}
 		AABB<T> GetAABB(char c = ';')
