@@ -686,8 +686,10 @@ namespace ct // cTools
 		bool emptyAND() const { return x == (T)0 && y == (T)0; }
 		bool emptyOR() const { return x == (T)0 || y == (T)0; }
 		std::string string(const char& c = ';') const { return toStr(x) + c + toStr(y); }
-		T ratioXY() const { if (y != (T)0) return x / y; return (T)0; }
-		T ratioYX() const { if (x != (T)0) return y / x; return (T)0; }
+		template <typename U>
+		U ratioXY() const { if (y != (T)0) return (U)x / (U)y; return (U)0; }
+		template <typename U>
+		U ratioYX() const { if (x != (T)0) return (U)y / (U)x; return (U)0; }
 		T mini() const { return internal_mini<T>(x, y); }
 		T maxi() const { return internal_maxi<T>(x, y); }
 	};
