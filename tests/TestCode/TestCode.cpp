@@ -3,7 +3,7 @@
 #include "FileHelper/Test_FileHelper.h"
 #include "Logger/Test_Logger.h"
 
-int run_test(const std::string vTestCode)
+int run_test(const std::string& vTestCode)
 {
 	if (vTestCode.find("cTools.") != std::string::npos)
 	{
