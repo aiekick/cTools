@@ -17,3 +17,5 @@ jobs:
       run: mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo
     - name: build
       run: cmake --build build --config RelWithDebInfo
+    - name: test
+      run: ctest --output-on-failure
