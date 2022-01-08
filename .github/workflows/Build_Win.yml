@@ -16,6 +16,6 @@ jobs:
     - name: configure
       run: mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Release -DUSE_TEST=ON
     - name: build
-      run: cmake --build build --config Release -DUSE_TEST=ON
+      run: cmake --build build --config Release
     - name: test
       run: ctest --output-on-failure
