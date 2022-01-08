@@ -245,18 +245,18 @@ int Test_cTools_Vec2_run_test(const std::string vTestCode)
 	}
 	else if (vTestCode.find(".Vec2.ratioXY") != std::string::npos)
 	{
-		T pre_r = v.ratioXY();
+		T pre_r = v.ratioXY<T>();
 		v.y = (T)0.0;
-		T post_r = v.ratioXY(); // return 0
+		T post_r = v.ratioXY<T>(); // return 0
 		if (is_equal(pre_r, (T)2.5) &&
 			is_equal(post_r, (T)0.0))
 			return 0;
 	}
 	else if (vTestCode.find(".Vec2.ratioYX") != std::string::npos)
 	{
-		T pre_r = v.ratioYX();
+		T pre_r = v.ratioYX<T>();
 		v.x = (T)0.0;
-		T post_r = v.ratioYX(); // return 0
+		T post_r = v.ratioYX<T>(); // return 0
 		if (is_equal(pre_r, (T)0.4) &&
 			is_equal(post_r, (T)0.0))
 			return 0;
@@ -829,10 +829,10 @@ int Test_cTools_Vec3_run_test(const std::string vTestCode)
 	}
 	else if (vTestCode.find(".Vec3.yzx") != std::string::npos)
 	{
-		const auto& v2 = v.yzx();
-		if (is_equal(v.x, (T)2.0) &&
-			is_equal(v.y, (T)6.5) &&
-			is_equal(v.z, (T)5.0))
+		const auto& v3 = v.yzx();
+		if (is_equal(v3.x, (T)2.0) &&
+			is_equal(v3.y, (T)6.5) &&
+			is_equal(v3.z, (T)5.0))
 			return 0;
 	}
 	else if (vTestCode.find(".Vec3.post++") != std::string::npos)
@@ -1106,10 +1106,10 @@ int Test_cTools_Vec3_run_test<bool>(const std::string vTestCode)
 	}
 	else if (vTestCode.find(".Vec3.yzx") != std::string::npos)
 	{
-		const auto& v2 = v.yzx();
-		if (v.x == true &&
-			v.y == false &&
-			v.z == true)
+		const auto& v3 = v.yzx();
+		if (v3.x == true &&
+			v3.y == false &&
+			v3.z == true)
 			return 0;
 	}
 	else if (vTestCode.find(".Vec3.==a") != std::string::npos)
@@ -1232,10 +1232,10 @@ int Test_cTools_signed_integer_Vec3_run_test(const std::string vTestCode)
 	}
 	else if (vTestCode.find(".Vec3.yzx") != std::string::npos)
 	{
-		const auto& v2 = v.yzx();
-		if (is_equal(v.x, (T)2.0) &&
-			is_equal(v.y, (T)6.0) &&
-			is_equal(v.z, (T)5.0))
+		const auto& v3 = v.yzx();
+		if (is_equal(v3.x, (T)2.0) &&
+			is_equal(v3.y, (T)6.0) &&
+			is_equal(v3.z, (T)5.0))
 			return 0;
 	}
 	else if (vTestCode.find(".Vec3.post++") != std::string::npos)
@@ -1511,10 +1511,10 @@ int Test_cTools_unsigned_integer_Vec3_run_test(const std::string vTestCode)
 	}
 	else if (vTestCode.find(".Vec3.yzx") != std::string::npos)
 	{
-		const auto& v2 = v.yzx();
-		if (is_equal(v.x, (T)2.0) &&
-			is_equal(v.y, (T)6.0) &&
-			is_equal(v.z, (T)5.0))
+		const auto& v3 = v.yzx();
+		if (is_equal(v3.x, (T)2.0) &&
+			is_equal(v3.y, (T)6.0) &&
+			is_equal(v3.z, (T)5.0))
 			return 0;
 	}
 	else if (vTestCode.find(".Vec3.post++") != std::string::npos)
