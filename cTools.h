@@ -1206,11 +1206,11 @@ namespace ct // cTools
 		rect(vec2<T> xy, vec2<T> zw) { setRect(xy.x, xy.y, zw.x, zw.y); }
 		void setRect(vec2<T> xy, vec2<T> zw) { setRect(xy.x, xy.y, zw.x, zw.y); }
 		void setRect(T vX, T vY, T vW, T vH) { x = vX; y = vY; w = vW; h = vH; left = vX; right = vX + vW; top = vY + vH; bottom = vY; }
-		vec2<T> rightBottom() { return vec2<T>(right, bottom); }
-		vec2<T> rightTop() { return vec2<T>(right, top); }
-		vec2<T> leftBottom() { return vec2<T>(left, bottom); }
-		vec2<T> leftTop() { return vec2<T>(left, top); }
-		vec2<T> center() { return vec2<T>((left + right) / (T)2, (top + bottom) / (T)2); }
+		vec2<T> rightBottom() const { return vec2<T>(right, bottom); }
+		vec2<T> rightTop() const { return vec2<T>(right, top); }
+		vec2<T> leftBottom() const { return vec2<T>(left, bottom); }
+		vec2<T> leftTop() const { return vec2<T>(left, top); }
+		vec2<T> center() const { return vec2<T>((left + right) / (T)2, (top + bottom) / (T)2); }
 		vec2<T>* vertices() { vec2<T>* buf = new vec2<T>[4]; buf[0] = leftBottom(); buf[1] = leftTop(); buf[2] = rightTop(); buf[3] = rightBottom(); return buf; }
 		vec2<T>* texCoords(T scaleX, T scaleY) { vec2<T>* buf = new vec2<T>[4]; buf[0] = vec2<T>((T)0, (T)0); buf[1] = vec2<T>((T)scaleX, (T)0); buf[2] = vec2<T>(scaleX, scaleY); buf[3] = vec2<T>((T)0, scaleY); return buf; }
 		void setWidth(T vw) { w = vw; }
