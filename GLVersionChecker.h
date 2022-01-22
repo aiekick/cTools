@@ -189,21 +189,21 @@ struct OpenGlVersionStruct
 class GLVersionChecker
 {
 private:
-	std::map<std::string, OpenGlVersionStruct> OpenGlVersionsMap;
-	std::map<std::string, std::string> ContextParamsMap;
-	std::string puDefaultGlslVersionHeader;
-	int puDefaultGlslVersionInt;
-	std::string puOpenglVersion;
+	std::map<std::string, OpenGlVersionStruct> m_OpenGlVersionsMap;
+	std::map<std::string, std::string> m_ContextParamsMap;
+	std::string m_DefaultGlslVersionHeader;
+	int m_DefaultGlslVersionInt;
+	std::string m_OpenglVersion;
 	
 public: //extention
-	bool puGeometryShaderSupported = false;
-	bool puTesselationShaderSupported = false;
-	bool puComputeShaderSupported = false;
-	bool puAttribLayoutSupportedCore = false;
-	bool puAttribLayoutSupportedExtention = false;
+	bool m_GeometryShaderSupported = false;
+	bool m_TesselationShaderSupported = false;
+	bool m_ComputeShaderSupported = false;
+	bool m_AttribLayoutSupportedCore = false;
+	bool m_AttribLayoutSupportedExtention = false;
 
 public:
-	OpenglInfosStruct puOpenglInfosStruct;
+	OpenglInfosStruct m_OpenglInfosStruct;
 
 public:
 	static GLVersionChecker* Instance()
@@ -220,10 +220,10 @@ public:
 
 public:
 	OpenGlVersionStruct* GetOpenglVersionStruct(std::string vVersion);
-	std::map<std::string, OpenGlVersionStruct>* GetOpenglVersionMap() { return &OpenGlVersionsMap; }
-	std::string GetOpenglVersion() { return puOpenglVersion; }
-	int GetGlslVersionInt() { return puDefaultGlslVersionInt; }
-	std::string GetGlslVersionHeader() { return puDefaultGlslVersionHeader; }
+	std::map<std::string, OpenGlVersionStruct>* GetOpenglVersionMap() { return &m_OpenGlVersionsMap; }
+	std::string GetOpenglVersion() { return m_OpenglVersion; }
+	int GetGlslVersionInt() { return m_DefaultGlslVersionInt; }
+	std::string GetGlslVersionHeader() { return m_DefaultGlslVersionHeader; }
 	bool CheckVersions();
 
 private:

@@ -460,9 +460,9 @@ GLVersionChecker::~GLVersionChecker()
 
 OpenGlVersionStruct* GLVersionChecker::GetOpenglVersionStruct(std::string vVersion)
 {
-	if (OpenGlVersionsMap.find(vVersion) != OpenGlVersionsMap.end())
+	if (m_OpenGlVersionsMap.find(vVersion) != m_OpenGlVersionsMap.end())
 	{
-		return &(OpenGlVersionsMap[vVersion]);
+		return &(m_OpenGlVersionsMap[vVersion]);
 	}
 	return 0;
 }
@@ -471,34 +471,34 @@ OpenGlVersionStruct* GLVersionChecker::GetOpenglVersionStruct(std::string vVersi
 
 void GLVersionChecker::InitSupportedVars()
 {
-	puGeometryShaderSupported = false;
-	puTesselationShaderSupported = false;
-	puComputeShaderSupported = false;
-	puAttribLayoutSupportedCore = false;
-	puAttribLayoutSupportedExtention = false;
+	m_GeometryShaderSupported = false;
+	m_TesselationShaderSupported = false;
+	m_ComputeShaderSupported = false;
+	m_AttribLayoutSupportedCore = false;
+	m_AttribLayoutSupportedExtention = false;
 }
 
 void GLVersionChecker::DisplaySupport()
 {
-	auto glStruct = GetOpenglVersionStruct(puOpenglVersion);
+	auto glStruct = GetOpenglVersionStruct(m_OpenglVersion);
 	if (glStruct)
 	{
 		LogVarLightInfo("OpenGl version : %i.%i", glStruct->major, glStruct->minor);
-		if (puAttribLayoutSupportedCore)
+		if (m_AttribLayoutSupportedCore)
 			LogVarLightInfo("- Attrib Location Available in Core");
-		else if (puAttribLayoutSupportedExtention)
+		else if (m_AttribLayoutSupportedExtention)
 			LogVarLightInfo("- Attrib Location Available in Extension");
 		else
 			LogVarLightInfo("- Attrib Location Not Available");
-		if (puGeometryShaderSupported)
+		if (m_GeometryShaderSupported)
 			LogVarLightInfo("- Geometry Stage Available");
 		else
 			LogVarLightInfo("- Geometry Stage Not Available");
-		if (puTesselationShaderSupported)
+		if (m_TesselationShaderSupported)
 			LogVarLightInfo("- Tesselation Stage Available");
 		else
 			LogVarLightInfo("- Tesselation Stage Not Available");
-		if (puComputeShaderSupported)
+		if (m_ComputeShaderSupported)
 			LogVarLightInfo("- Compute Stage Available");
 		else
 			LogVarLightInfo("- Compute Stage Not Available");
@@ -528,20 +528,20 @@ void GLVersionChecker::FillOpenglVersionMap()
 	4.40[11] 	4.4 	July 2013 		#version 440
 	4.50[12] 	4.5 	August 2014 	#version 450
 	*/
-	OpenGlVersionsMap["2.0 ES"] =	OpenGlVersionStruct(2, -1,	"2.0 ES",	100, "#version 100",		false,	false,	false,	false,	false);
-	OpenGlVersionsMap["2.0"] =		OpenGlVersionStruct(2,	0,	"2.0",		110, "#version 110",		true,	false,	false,	false,	false);
-	OpenGlVersionsMap["2.1"] =		OpenGlVersionStruct(2,	1,	"2.1",		120, "#version 120",		true,	false,	false,	false,	false);
-	OpenGlVersionsMap["3.0 ES"] =	OpenGlVersionStruct(3, -1,	"3.0 ES",	300, "#version 300 es",		true,	false,	false,	false,	false);
-	OpenGlVersionsMap["3.0"] =		OpenGlVersionStruct(3,	0,	"3.0",		130, "#version 130",		true,	false,	false,	false,	false);
-	OpenGlVersionsMap["3.1"] =		OpenGlVersionStruct(3,	1,	"3.1",		140, "#version 140",		true,	false,	false,	false,	false);
-	OpenGlVersionsMap["3.2"] =		OpenGlVersionStruct(3,	2,	"3.2",		150, "#version 150",		true,	true,	false,	false,	false);
-	OpenGlVersionsMap["3.3"] =		OpenGlVersionStruct(3,	3,	"3.3",		330, "#version 330",		false,	true,	true,	false,	false);
-	OpenGlVersionsMap["4.0"] =		OpenGlVersionStruct(4,	0,	"4.0",		400, "#version 400",		false,	true,	true,	true,	false);
-	OpenGlVersionsMap["4.1"] =		OpenGlVersionStruct(4,	1,	"4.1",		410, "#version 410",		false,	true,	true,	false,	false);
-	OpenGlVersionsMap["4.2"] =		OpenGlVersionStruct(4,	2,	"4.2",		420, "#version 420",		false,	true,	true,	false,	false);
-	OpenGlVersionsMap["4.3"] =		OpenGlVersionStruct(4,	3,	"4.3",		430, "#version 430",		false,	true,	true,	true,	true);
-	OpenGlVersionsMap["4.4"] =		OpenGlVersionStruct(4,	4,	"4.4",		440, "#version 440",		false,	true,	true,	true,	true);
-	OpenGlVersionsMap["4.5"] =		OpenGlVersionStruct(4,	5,	"4.5",		450, "#version 450",		false,	true,	true,	true,	true);
+	m_OpenGlVersionsMap["2.0 ES"] =	OpenGlVersionStruct(2, -1,	"2.0 ES",	100, "#version 100",		false,	false,	false,	false,	false);
+	m_OpenGlVersionsMap["2.0"] =		OpenGlVersionStruct(2,	0,	"2.0",		110, "#version 110",		true,	false,	false,	false,	false);
+	m_OpenGlVersionsMap["2.1"] =		OpenGlVersionStruct(2,	1,	"2.1",		120, "#version 120",		true,	false,	false,	false,	false);
+	m_OpenGlVersionsMap["3.0 ES"] =	OpenGlVersionStruct(3, -1,	"3.0 ES",	300, "#version 300 es",		true,	false,	false,	false,	false);
+	m_OpenGlVersionsMap["3.0"] =		OpenGlVersionStruct(3,	0,	"3.0",		130, "#version 130",		true,	false,	false,	false,	false);
+	m_OpenGlVersionsMap["3.1"] =		OpenGlVersionStruct(3,	1,	"3.1",		140, "#version 140",		true,	false,	false,	false,	false);
+	m_OpenGlVersionsMap["3.2"] =		OpenGlVersionStruct(3,	2,	"3.2",		150, "#version 150",		true,	true,	false,	false,	false);
+	m_OpenGlVersionsMap["3.3"] =		OpenGlVersionStruct(3,	3,	"3.3",		330, "#version 330",		false,	true,	true,	false,	false);
+	m_OpenGlVersionsMap["4.0"] =		OpenGlVersionStruct(4,	0,	"4.0",		400, "#version 400",		false,	true,	true,	true,	false);
+	m_OpenGlVersionsMap["4.1"] =		OpenGlVersionStruct(4,	1,	"4.1",		410, "#version 410",		false,	true,	true,	false,	false);
+	m_OpenGlVersionsMap["4.2"] =		OpenGlVersionStruct(4,	2,	"4.2",		420, "#version 420",		false,	true,	true,	false,	false);
+	m_OpenGlVersionsMap["4.3"] =		OpenGlVersionStruct(4,	3,	"4.3",		430, "#version 430",		false,	true,	true,	true,	true);
+	m_OpenGlVersionsMap["4.4"] =		OpenGlVersionStruct(4,	4,	"4.4",		440, "#version 440",		false,	true,	true,	true,	true);
+	m_OpenGlVersionsMap["4.5"] =		OpenGlVersionStruct(4,	5,	"4.5",		450, "#version 450",		false,	true,	true,	true,	true);
 }
 
 bool GLVersionChecker::IsGlSupported(int vMajorGLVersion, int MinorGLVersion)
@@ -563,19 +563,19 @@ bool GLVersionChecker::CheckVersion(int vMajorGLVersion, int MinorGLVersion)
 	bool res = IsGlSupported(vMajorGLVersion, MinorGLVersion);
 	if (res)
 	{
-		puOpenglVersion = ct::toStr(vMajorGLVersion) + "." + ct::toStr(MinorGLVersion);
-		auto version = GetOpenglVersionStruct(puOpenglVersion);
+		m_OpenglVersion = ct::toStr(vMajorGLVersion) + "." + ct::toStr(MinorGLVersion);
+		auto version = GetOpenglVersionStruct(m_OpenglVersion);
 		if (version)
 		{
 			version->supported = true;
-			puDefaultGlslVersionInt = version->DefaultGlslVersionInt;
-			puDefaultGlslVersionHeader = version->DefineCode;
+			m_DefaultGlslVersionInt = version->DefaultGlslVersionInt;
+			m_DefaultGlslVersionHeader = version->DefineCode;
 
-			puAttribLayoutSupportedExtention = version->attribLayoutSupportedExtention;
-			puAttribLayoutSupportedCore = version->attribLayoutSupportedCore;
-			puGeometryShaderSupported = version->geometryShaderSupported;
-			puTesselationShaderSupported = version->tesselationShaderSupported;
-			puComputeShaderSupported = version->computeShaderSupported;
+			m_AttribLayoutSupportedExtention = version->attribLayoutSupportedExtention;
+			m_AttribLayoutSupportedCore = version->attribLayoutSupportedCore;
+			m_GeometryShaderSupported = version->geometryShaderSupported;
+			m_TesselationShaderSupported = version->tesselationShaderSupported;
+			m_ComputeShaderSupported = version->computeShaderSupported;
 		}
 	}
 	else
@@ -605,7 +605,7 @@ bool GLVersionChecker::CheckVersions()
 											if (!CheckVersion(2, 1))
 												CheckVersion(2, 0);
 
-	puOpenglInfosStruct.fill();
+	m_OpenglInfosStruct.fill();
 
 	return true;
 }
