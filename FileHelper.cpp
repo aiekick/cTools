@@ -923,7 +923,13 @@ std::vector<std::string> FileHelper::GetAbsolutePathForFileLocation(const std::v
 
 std::string FileHelper::GetAbsolutePathForFileLocation(const std::string & vRelativeFilePathName, FileLocation vFileType)
 {
-	const std::string registeredPath = puRegisteredPaths[vFileType];
+	std::string registeredPath;
+
+	if (puRegisteredPaths.find(vFileType) != puRegisteredPaths.end())
+	{
+		registeredPath = puRegisteredPaths[vFileType];
+	}
+	
 	if (vRelativeFilePathName.find(registeredPath) != std::string::npos) // deja un chemin absolu
 	{
 		return vRelativeFilePathName;
