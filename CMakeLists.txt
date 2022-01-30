@@ -4,7 +4,6 @@ set(PROJECT ctools)
 enable_language(C CXX)
 project(${PROJECT} CXX)
 
-
 option(USE_GL_VERSION_CHECKER "Use Gl Version Checker class" OFF)
 option(USE_CONFIG_SYSTEM "Use Config Load/Save class" ON)
 option(USE_GLFW_CLIPBOARD "Use Clipboard via GLFW3 (need glfW3)" OFF)
@@ -59,7 +58,7 @@ if(MSVC)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 	add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
 else ()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -std=c++11")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
 endif ()
 
 add_library(${PROJECT} STATIC ${CTOOLS_SRC} ${CONFIG_SYSTEM_SRC} ${GLVERSIONCHECKER_SRC})

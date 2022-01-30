@@ -554,6 +554,89 @@ bool ct::ActionTime::IsTimeToAct(long vMs, bool vFix)
 	return res;
 }
 #endif
+
+
+
+/////////////////////////////////////////////////////////////
+///////// SPECIALIZATION // VEC2 / VEC3 / VEC4 / QUAT ///////
+/////////////////////////////////////////////////////////////
+
+template <>
+bool ct::vec2<float>::operator == (const float& a) { return (IS_FLOAT_EQUAL(x, a) && IS_FLOAT_EQUAL(y, a)); }
+template <>
+bool ct::vec2<float>::operator == (const ct::vec2<float>& v) { return (IS_FLOAT_EQUAL(x, v.x) && IS_FLOAT_EQUAL(y, v.y)); }
+template <>
+bool ct::vec2<float>::operator != (const float& a) { return (IS_FLOAT_DIFFERENT(x, a) || IS_FLOAT_DIFFERENT(y, a)); }
+template <>
+bool ct::vec2<float>::operator != (const ct::vec2<float>& v) { return (IS_FLOAT_DIFFERENT(x, v.x) || IS_FLOAT_DIFFERENT(y, v.y)); }
+
+template <>
+bool ct::vec2<double>::operator == (const double& a) { return (IS_DOUBLE_EQUAL(x, a) && IS_DOUBLE_EQUAL(y, a)); }
+template <>
+bool ct::vec2<double>::operator == (const ct::vec2<double>& v) { return (IS_DOUBLE_EQUAL(x, v.x) && IS_DOUBLE_EQUAL(y, v.y)); }
+template <>
+bool ct::vec2<double>::operator != (const double& a) { return (IS_DOUBLE_DIFFERENT(x, a) || IS_DOUBLE_DIFFERENT(y, a)); }
+template <>
+bool ct::vec2<double>::operator != (const ct::vec2<double>& v) { return (IS_DOUBLE_DIFFERENT(x, v.x) || IS_DOUBLE_DIFFERENT(y, v.y)); }
+
+template <>
+bool ct::vec3<float>::operator == (const float& a) { return (IS_FLOAT_EQUAL(x, a) && IS_FLOAT_EQUAL(y, a) && IS_FLOAT_EQUAL(z, a)); }
+template <>
+bool ct::vec3<float>::operator == (const ct::vec3<float>& v) { return (IS_FLOAT_EQUAL(x, v.x) && IS_FLOAT_EQUAL(y, v.y) && IS_FLOAT_EQUAL(z, v.z)); }
+template <>
+bool ct::vec3<float>::operator != (const float& a) { return (IS_FLOAT_DIFFERENT(x, a) || IS_FLOAT_DIFFERENT(y, a) || IS_FLOAT_DIFFERENT(z, a)); }
+template <>
+bool ct::vec3<float>::operator != (const ct::vec3<float>& v) { return (IS_FLOAT_DIFFERENT(x, v.x) || IS_FLOAT_DIFFERENT(y, v.y) || IS_FLOAT_DIFFERENT(z, v.z)); }
+
+template <>
+bool ct::vec3<double>::operator == (const double& a) { return (IS_DOUBLE_EQUAL(x, a) && IS_DOUBLE_EQUAL(y, a) && IS_DOUBLE_EQUAL(z, a)); }
+template <>
+bool ct::vec3<double>::operator == (const ct::vec3<double>& v) { return (IS_DOUBLE_EQUAL(x, v.x) && IS_DOUBLE_EQUAL(y, v.y) && IS_DOUBLE_EQUAL(z, v.z)); }
+template <>
+bool ct::vec3<double>::operator != (const double& a) { return (IS_DOUBLE_DIFFERENT(x, a) || IS_DOUBLE_DIFFERENT(y, a) || IS_DOUBLE_DIFFERENT(z, a)); }
+template <>
+bool ct::vec3<double>::operator != (const ct::vec3<double>& v) { return (IS_DOUBLE_DIFFERENT(x, v.x) || IS_DOUBLE_DIFFERENT(y, v.y) || IS_DOUBLE_DIFFERENT(z, v.z)); }
+
+template <>
+bool ct::vec4<float>::operator == (const float& a) { return (IS_FLOAT_EQUAL(x, a) && IS_FLOAT_EQUAL(y, a) && IS_FLOAT_EQUAL(z, a) && IS_FLOAT_EQUAL(w, a)); }
+template <>
+bool ct::vec4<float>::operator == (const ct::vec4<float>& v) { return (IS_FLOAT_EQUAL(x, v.x) && IS_FLOAT_EQUAL(y, v.y) && IS_FLOAT_EQUAL(z, v.z) && IS_FLOAT_EQUAL(w, v.w)); }
+template <>
+bool ct::vec4<float>::operator != (const float& a) { return (IS_FLOAT_DIFFERENT(x, a) || IS_FLOAT_DIFFERENT(y, a) || IS_FLOAT_DIFFERENT(z, a) || IS_FLOAT_DIFFERENT(w, a)); }
+template <>
+bool ct::vec4<float>::operator != (const ct::vec4<float>& v) { return (IS_FLOAT_DIFFERENT(x, v.x) || IS_FLOAT_DIFFERENT(y, v.y) || IS_FLOAT_DIFFERENT(z, v.z) || IS_FLOAT_DIFFERENT(w, v.w)); }
+
+template <>
+bool ct::vec4<double>::operator == (const double& a) { return (IS_DOUBLE_EQUAL(x, a) && IS_DOUBLE_EQUAL(y, a) && IS_DOUBLE_EQUAL(z, a) && IS_DOUBLE_EQUAL(w, a)); }
+template <>
+bool ct::vec4<double>::operator == (const ct::vec4<double>& v) { return (IS_DOUBLE_EQUAL(x, v.x) && IS_DOUBLE_EQUAL(y, v.y) && IS_DOUBLE_EQUAL(z, v.z) && IS_DOUBLE_EQUAL(w, v.w)); }
+template <>
+bool ct::vec4<double>::operator != (const double& a) { return (IS_DOUBLE_DIFFERENT(x, a) || IS_DOUBLE_DIFFERENT(y, a) || IS_DOUBLE_DIFFERENT(z, a) || IS_DOUBLE_DIFFERENT(w, a)); }
+template <>
+bool ct::vec4<double>::operator != (const ct::vec4<double>& v) { return (IS_DOUBLE_DIFFERENT(x, v.x) || IS_DOUBLE_DIFFERENT(y, v.y) || IS_DOUBLE_DIFFERENT(z, v.z) || IS_DOUBLE_DIFFERENT(w, v.w)); }
+
+template <>
+void ct::quat<float>::normalize()
+{
+	float n = sqrt(x * x + y * y + z * z + w * w);
+	if (IS_FLOAT_EQUAL(n, 0.0f)) { return; }
+	x /= n;
+	y /= n;
+	z /= n;
+	w /= n;
+}
+
+template <>
+void ct::quat<double>::normalize()
+{
+	double n = sqrt(x * x + y * y + z * z + w * w);
+	if (IS_DOUBLE_EQUAL(n, 0.0)) { return; }
+	x /= n;
+	y /= n;
+	z /= n;
+	w /= n;
+}
+
 /////////////////////////////////////////////////////////////
 ///////// BUFFERS ///////////////////////////////////////////
 /////////////////////////////////////////////////////////////

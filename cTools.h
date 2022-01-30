@@ -694,25 +694,6 @@ namespace ct // cTools
 		T maxi() const { return internal_maxi<T>(x, y); }
 	};
 
-	// specialisation
-	template <>
-	bool vec2<float>::operator == (const float& a) { return (IS_FLOAT_EQUAL(x, a) && IS_FLOAT_EQUAL(y, a)); }
-	template <>
-	bool vec2<float>::operator == (const vec2<float>& v) { return (IS_FLOAT_EQUAL(x, v.x) && IS_FLOAT_EQUAL(y, v.y)); }
-	template <>
-	bool vec2<float>::operator != (const float& a) { return (IS_FLOAT_DIFFERENT(x, a) || IS_FLOAT_DIFFERENT(y, a)); }
-	template <>
-	bool vec2<float>::operator != (const vec2<float>& v) { return (IS_FLOAT_DIFFERENT(x, v.x) || IS_FLOAT_DIFFERENT(y, v.y)); }
-
-	template <>
-	bool vec2<double>::operator == (const double& a) { return (IS_DOUBLE_EQUAL(x, a) && IS_DOUBLE_EQUAL(y, a)); }
-	template <>
-	bool vec2<double>::operator == (const vec2<double>& v) { return (IS_DOUBLE_EQUAL(x, v.x) && IS_DOUBLE_EQUAL(y, v.y)); }
-	template <>
-	bool vec2<double>::operator != (const double& a) { return (IS_DOUBLE_DIFFERENT(x, a) || IS_DOUBLE_DIFFERENT(y, a)); }
-	template <>
-	bool vec2<double>::operator != (const vec2<double>& v) { return (IS_DOUBLE_DIFFERENT(x, v.x) || IS_DOUBLE_DIFFERENT(y, v.y)); }
-
 	// https://en.cppreference.com/w/cpp/language/operator_incdec
 	template <typename T> inline vec2<T>& operator ++ (vec2<T>& v) { ++v; return v; } // pre inc
 	template <typename T> inline vec2<T>& operator -- (vec2<T>& v) { --v; return v; } // pre dec
@@ -917,26 +898,6 @@ namespace ct // cTools
 		T mini() const { return internal_mini<T>(x, internal_mini<T>(y, z)); }
 		T maxi() const { return internal_maxi<T>(x, internal_maxi<T>(y, z)); }
 	};
-
-	// specialisation
-	template <>
-	bool vec3<float>::operator == (const float& a) { return (IS_FLOAT_EQUAL(x, a) && IS_FLOAT_EQUAL(y, a) && IS_FLOAT_EQUAL(z, a)); }
-	template <>
-	bool vec3<float>::operator == (const vec3<float>& v) { return (IS_FLOAT_EQUAL(x, v.x) && IS_FLOAT_EQUAL(y, v.y) && IS_FLOAT_EQUAL(z, v.z)); }
-	template <>
-	bool vec3<float>::operator != (const float& a) { return (IS_FLOAT_DIFFERENT(x, a) || IS_FLOAT_DIFFERENT(y, a) || IS_FLOAT_DIFFERENT(z, a)); }
-	template <>
-	bool vec3<float>::operator != (const vec3<float>& v) { return (IS_FLOAT_DIFFERENT(x, v.x) || IS_FLOAT_DIFFERENT(y, v.y) || IS_FLOAT_DIFFERENT(z, v.z)); }
-
-	template <>
-	bool vec3<double>::operator == (const double& a) { return (IS_DOUBLE_EQUAL(x, a) && IS_DOUBLE_EQUAL(y, a) && IS_DOUBLE_EQUAL(z, a)); }
-	template <>
-	bool vec3<double>::operator == (const vec3<double>& v) { return (IS_DOUBLE_EQUAL(x, v.x) && IS_DOUBLE_EQUAL(y, v.y) && IS_DOUBLE_EQUAL(z, v.z)); }
-	template <>
-	bool vec3<double>::operator != (const double& a) { return (IS_DOUBLE_DIFFERENT(x, a) || IS_DOUBLE_DIFFERENT(y, a) || IS_DOUBLE_DIFFERENT(z, a)); }
-	template <>
-	bool vec3<double>::operator != (const vec3<double>& v) { return (IS_DOUBLE_DIFFERENT(x, v.x) || IS_DOUBLE_DIFFERENT(y, v.y) || IS_DOUBLE_DIFFERENT(z, v.z)); }
-
 	// https://en.cppreference.com/w/cpp/language/operator_incdec
 	template <typename T> inline vec3<T>& operator ++ (vec3<T>& v) { ++v; return v; } // pre inc
 	template <typename T> inline vec3<T>& operator -- (vec3<T>& v) { --v; return v; } // pre dec
@@ -1108,26 +1069,7 @@ namespace ct // cTools
 		T mini() const { return internal_mini<T>(x, internal_mini<T>(y, internal_mini<T>(z, w))); }
 		T maxi() const { return internal_maxi<T>(x, internal_maxi<T>(y, internal_maxi<T>(z, w))); }
 	};
-
-	// specialisation
-	template <>
-	bool vec4<float>::operator == (const float& a) { return (IS_FLOAT_EQUAL(x, a) && IS_FLOAT_EQUAL(y, a) && IS_FLOAT_EQUAL(z, a) && IS_FLOAT_EQUAL(w, a)); }
-	template <>
-	bool vec4<float>::operator == (const vec4<float>& v) { return (IS_FLOAT_EQUAL(x, v.x) && IS_FLOAT_EQUAL(y, v.y) && IS_FLOAT_EQUAL(z, v.z) && IS_FLOAT_EQUAL(w, v.w)); }
-	template <>
-	bool vec4<float>::operator != (const float& a) { return (IS_FLOAT_DIFFERENT(x, a) || IS_FLOAT_DIFFERENT(y, a) || IS_FLOAT_DIFFERENT(z, a) || IS_FLOAT_DIFFERENT(w, a)); }
-	template <>
-	bool vec4<float>::operator != (const vec4<float>& v) { return (IS_FLOAT_DIFFERENT(x, v.x) || IS_FLOAT_DIFFERENT(y, v.y) || IS_FLOAT_DIFFERENT(z, v.z) || IS_FLOAT_DIFFERENT(w, v.w)); }
-
-	template <>
-	bool vec4<double>::operator == (const double& a) { return (IS_DOUBLE_EQUAL(x, a) && IS_DOUBLE_EQUAL(y, a) && IS_DOUBLE_EQUAL(z, a) && IS_DOUBLE_EQUAL(w, a)); }
-	template <>
-	bool vec4<double>::operator == (const vec4<double>& v) { return (IS_DOUBLE_EQUAL(x, v.x) && IS_DOUBLE_EQUAL(y, v.y) && IS_DOUBLE_EQUAL(z, v.z) && IS_DOUBLE_EQUAL(w, v.w)); }
-	template <>
-	bool vec4<double>::operator != (const double& a) { return (IS_DOUBLE_DIFFERENT(x, a) || IS_DOUBLE_DIFFERENT(y, a) || IS_DOUBLE_DIFFERENT(z, a) || IS_DOUBLE_DIFFERENT(w, a)); }
-	template <>
-	bool vec4<double>::operator != (const vec4<double>& v) { return (IS_DOUBLE_DIFFERENT(x, v.x) || IS_DOUBLE_DIFFERENT(y, v.y) || IS_DOUBLE_DIFFERENT(z, v.z) || IS_DOUBLE_DIFFERENT(w, v.w)); }
-
+	
 	// https://en.cppreference.com/w/cpp/language/operator_incdec
 	template <typename T> inline vec4<T>& operator ++ (vec4<T>& v) { ++v; return v; } // pre inc
 	template <typename T> inline vec4<T>& operator -- (vec4<T>& v) { --v; return v; } // pre dec
@@ -1739,10 +1681,10 @@ namespace ct // cTools
 			w = -tx * vQuat.x - ty * vQuat.y - tz * vQuat.z + tw * vQuat.w;
 		}
 		void conjugate(const quat<T>& vQuat) {
-			x = -q1.x;
-			y = -q1.y;
-			z = -q1.z;
-			w = q1.w;
+			x = -vQuat.x;
+			y = -vQuat.y;
+			z = -vQuat.z;
+			w = vQuat.w;
 		}
 		void normalize()
 		{
@@ -1758,29 +1700,6 @@ namespace ct // cTools
 	};
 	typedef quat<float> fquat;
 	typedef quat<double> dquat;
-
-	// specialisation
-	template <>
-	void quat<float>::normalize()
-	{
-		float n = sqrt(x * x + y * y + z * z + w * w);
-		if (IS_FLOAT_EQUAL(n, 0.0f)) { return; }
-		x /= n;
-		y /= n;
-		z /= n;
-		w /= n;
-	}
-	
-	template <>
-	void quat<double>::normalize()
-	{
-		double n = sqrt(x * x + y * y + z * z + w * w);
-		if (IS_DOUBLE_EQUAL(n, 0.0)) { return; }
-		x /= n;
-		y /= n;
-		z /= n;
-		w /= n;
-	}
 
 	/////////////////////////////////////////////////////////////
 	///////// variant //////////////////////////////////////////
