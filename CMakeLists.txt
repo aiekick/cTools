@@ -8,7 +8,7 @@ option(USE_GL_VERSION_CHECKER "Use Gl Version Checker class" OFF)
 option(USE_CONFIG_SYSTEM "Use Config Load/Save class" ON)
 option(USE_GLFW_CLIPBOARD "Use Clipboard via GLFW3 (need glfW3)" OFF)
 option(USE_SDL_CLIPBOARD "Use Clipboard via SDL2 (need SDL2)" OFF)
-option(USE_TEST "Enable Tests" OFF)
+option(USE_CTOOLS_TESTING "Enable Tests" OFF)
 
 file(GLOB CTOOLS_SRC 
 	${CMAKE_CURRENT_SOURCE_DIR}/cTools.cpp 
@@ -75,7 +75,7 @@ set(CTOOLS_LIB_DIR ${CMAKE_CURRENT_BINARY_DIR} PARENT_SCOPE)
 ### TESTS ###################################################
 #############################################################
 
-if(USE_TEST)
+if(USE_CTOOLS_TESTING)
 enable_testing()
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests)
 set(LLVM_USE_CRT_DEBUG MTd CACHE STRING "" FORCE)
@@ -85,5 +85,4 @@ set(LLVM_USE_CRT_RELWITHDEBINFO MT CACHE STRING "" FORCE)
 set(USE_MSVC_RUNTIME_LIBRARY_DLL OFF CACHE BOOL "")
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "cmakeTargets")
-
 endif()
