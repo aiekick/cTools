@@ -29,6 +29,8 @@ SOFTWARE.
 
 #ifdef USE_GLFW3
 #include <GLFW/glfw3.h>
+#elif defined(USE_SDL2)
+#include <SDL/include/SDL.h>
 #endif
 #if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
 #include <tracy/Tracy.hpp>
@@ -241,20 +243,21 @@ bool Logger::LogGLError(const std::string& vFile, const std::string& vFunc, int 
 
 			std::string msg;
 
+
 			if (!vGLFunc.empty())
 			{
 #ifdef USE_GLFW3
 				msg = ct::toStr("[%010.3fs][GLFW3 0x%X][%s:%i] %s in %s\n", time, (uintptr_t)glfwGetCurrentContext(), vFunc.c_str(), vLine, error.c_str(), vGLFunc.c_str());
-#else
-				msg = ct::toStr("[%010.3fs][SDL2][%s:%i] %s in %s\n", time, thread, vFunc.c_str(), vLine, error.c_str(), vGLFunc.c_str());
+#elif defined(USE_SDL2)
+				msg = ct::toStr("[%010.3fs][SDL2 0x%X][%s:%i] %s in %s\n", time, (uintptr_t)SDL_GL_GetCurrentContext(), vFunc.c_str(), vLine, error.c_str(), vGLFunc.c_str());
 #endif
 			}
 			else
 			{
 #ifdef USE_GLFW3
 				msg = ct::toStr("[%010.3fs][GLFW3 0x%X][%s:%i] %s\n", time, (uintptr_t)glfwGetCurrentContext(), vFunc.c_str(), vLine, error.c_str());
-#else
-				msg = ct::toStr("[%010.3fs][SDL2][%s:%i] %s\n", time, thread, vFunc.c_str(), vLine, error.c_str());
+#elif defined(USE_SDL2)
+				msg = ct::toStr("[%010.3fs][SDL2 0x%X][%s:%i] %s\n", time, (uintptr_t)SDL_GL_GetCurrentContext(), vFunc.c_str(), vLine, error.c_str());
 #endif
 			}
 			
