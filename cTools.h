@@ -222,9 +222,16 @@ namespace ct // cTools
 
 	template <typename T> T StringToNumber(const ::std::string& text)
 	{
-		::std::stringstream ss(text);
-		T value;
-		ss >> value;
+		T value = (T)0;
+		try
+		{
+			::std::stringstream ss(text);
+			ss >> value;
+		}
+		catch (std::exception)
+		{
+			printf("%s is not a number\n", text.c_str());
+		}
 		return value;
 	}
 	template <typename T> ::std::vector<T> StringToNumberVector(const ::std::string& text, char delimiter)
