@@ -829,7 +829,7 @@ void FileHelper::SelectFile(const std::string & vFileToSelect) const
 #elif defined(LINUX)
 	// todo : is there a similar command on linux ?
 #elif defined(APPLE)
-	if (fileToSelect.size() > 0)
+	if (!fileToSelect.empty())
 	{
 		std::string sCmdOpenWith = "open -R " + fileToSelect;
 		std::system(sCmdOpenWith.c_str());
