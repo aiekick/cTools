@@ -115,7 +115,11 @@ using namespace cocos2d;
 #include USE_IMGUI
 #endif
 
-#ifdef WIN32
+// simple macro for block debuggers
+#if !defined(_DEBUG) && defined(_MSC_VER)
+#define BLOCK_DEBUGGER(ret) if (IsDebuggerPresent()) return ret
+#else
+#define BLOCK_DEBUGGER(ret)
 #endif
 
 namespace ct // cTools

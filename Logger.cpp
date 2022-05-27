@@ -261,7 +261,7 @@ bool Logger::LogGLError(const std::string& vFile, const std::string& vFunc, int 
 #endif
 			}
 			
-			printf("%s", msg.c_str());
+			LogVarLightError("%s", msg.c_str());
 
 			if (sOpenGLLogFunction)
 			{
