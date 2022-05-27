@@ -148,12 +148,17 @@ namespace conf
 		{
 			if (setFromXml(vElem, vParent, vUserDatas))
 			{
-				// CHILDS
-				// parse through all childs elements
-				for (tinyxml2::XMLElement* child = vElem->FirstChildElement(); child != 0; child = child->NextSiblingElement())
-				{
-					RecursParsingConfig(child->ToElement(), vElem, vUserDatas);
-				}
+				RecursParsingConfigChilds(vElem, vUserDatas);
+			}
+		}
+
+		void RecursParsingConfigChilds(tinyxml2::XMLElement* vElem, const std::string& vUserDatas = "")
+		{
+			// CHILDS
+			// parse through all childs elements
+			for (tinyxml2::XMLElement* child = vElem->FirstChildElement(); child != 0; child = child->NextSiblingElement())
+			{
+				RecursParsingConfig(child->ToElement(), vElem, vUserDatas);
 			}
 		}
 
