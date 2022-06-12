@@ -132,10 +132,15 @@ public: /* clipboard */
 #endif
 
 public: // singleton
-	static FileHelper* Instance()
+	static FileHelper* Instance(FileHelper* vCopy = nullptr)
 	{
-		static FileHelper _Instance;
-		return &_Instance;
+		static FileHelper _instance;
+		static FileHelper* _instance_copy = nullptr;
+		if (vCopy)
+			_instance_copy = vCopy;
+		if (_instance_copy)
+			return _instance_copy;
+		return &_instance;
 	}
 
 public:
