@@ -78,8 +78,7 @@ protected:
 	static std::mutex Logger_Mutex;
 
 private:
-	static ofstream* debugLogFile;
-	static wofstream* wdebugLogFile;
+	static ofstream debugLogFile;
 	int64 lastTick = 0;
 
 private:
