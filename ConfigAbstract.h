@@ -147,7 +147,7 @@ namespace conf
 			}
 			catch (std::exception& ex)
 			{
-				printf("parse error => %s", std::string(ex.what()).c_str());
+				printf("error during XML Parsing => %s", std::string(ex.what()).c_str());
 			}
 
 			return res;
