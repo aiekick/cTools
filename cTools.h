@@ -1854,7 +1854,7 @@ namespace ct // cTools
 			return uint32_t_value;
 		}
 
-		::std::string GetS(char c = ';')
+		::std::string GetS(char c = ';', const char* prec = "%.6f")
 		{
 			if (inputtype == "vec4")
 				return
@@ -1888,7 +1888,7 @@ namespace ct // cTools
 				{
 					if (!str.empty())
 						str += c;
-					str += toStr(f);
+					str += toStr(prec, f);
 				}
 				return str;
 			}
@@ -1899,7 +1899,7 @@ namespace ct // cTools
 				{
 					if (!str.empty())
 						str += c;
-					str += toStr(f);
+					str += toStr(prec, f);
 				}
 				return str;
 			}
