@@ -2131,7 +2131,14 @@ namespace ct // cTools
 
 	// clamp
 	template<typename T> vec2<T> clamp(const vec2<T>& vValue, const vec2<T>& vInf, const vec2<T>& vSup);
-	template<typename T> vec3<T> clamp(const vec3<T>& vValue, const vec3<T>& vInf, const vec3<T>& vSup);
+	template<typename T> vec3<T> clamp(const vec3<T>& vValue, const vec3<T>& vInf, const vec3<T>& vSup)
+	{
+		ct::vec3<T> vUniform = vValue;
+		vUniform.x = ct::clamp(vUniform.x, vInf.x, vSup.x);
+		vUniform.y = ct::clamp(vUniform.y, vInf.y, vSup.y);
+		vUniform.z = ct::clamp(vUniform.z, vInf.z, vSup.z);
+		return vUniform;
+	}
 	template<typename T> vec4<T> clamp(const vec4<T>& vValue, const vec4<T>& vInf, const vec4<T>& vSup);
 	template<typename T> vec2<T> clamp(const vec2<T>& vValue, T vInf, T vSup)
 	{

@@ -886,16 +886,6 @@ ct::vec2<T> ct::clamp(const ct::vec2<T>& vValue, const ct::vec2<T>& vInf, const 
 }
 
 template<typename T>
-ct::vec3<T> ct::clamp(const ct::vec3<T>& vValue, const ct::vec3<T>& vInf, const ct::vec3<T>& vSup)
-{
-	ct::vec3<T> vUniform = vValue;
-	vUniform.x = ct::clamp(vUniform.x, vInf.x, vSup.x);
-	vUniform.y = ct::clamp(vUniform.y, vInf.y, vSup.y);
-	vUniform.z = ct::clamp(vUniform.z, vInf.z, vSup.z);
-	return vUniform;
-}
-
-template<typename T>
 ct::vec4<T> ct::clamp(const ct::vec4<T>& vValue, const ct::vec4<T>& vInf, const ct::vec4<T>& vSup)
 {
 	ct::vec4<T> vUniform = vValue;
