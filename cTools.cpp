@@ -641,6 +641,12 @@ void ct::quat<double>::normalize()
 ///////// BUFFERS ///////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 
+void ct::SetBuffer(char* vBuffer, size_t vBufferLen, const ::std::string& vStr)
+{
+	ResetBuffer(vBuffer);
+	AppendToBuffer(vBuffer, vBufferLen, vStr);
+}
+
 void ct::AppendToBuffer(char* vBuffer, size_t vBufferLen, const ::std::string& vStr)
 {
 	::std::string st = vStr;

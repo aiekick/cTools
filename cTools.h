@@ -1220,6 +1220,7 @@ namespace ct // cTools
 	///////// BUFFERS ///////////////////////////////////////////
 	/////////////////////////////////////////////////////////////
 
+	void SetBuffer(char* vBuffer, size_t vBufferLen, const ::std::string& vStr);
 	void AppendToBuffer(char* vBuffer, size_t vBufferLen, const ::std::string& vStr);
 	void ResetBuffer(char* vBuffer);
 
