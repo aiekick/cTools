@@ -232,7 +232,7 @@ namespace ct // cTools
 			::std::stringstream ss(text);
 			ss >> value;
 		}
-		catch (std::exception)
+		catch (std::exception&)
 		{
 			printf("%s is not a number\n", text.c_str());
 		}
@@ -572,7 +572,7 @@ namespace ct // cTools
 			{
 				::std::vector<float> result = StringToNumberVector<float>(colorName, c);
 				if (result.size() == 3) setColor(result[0], result[1], result[2], 1.0f);
-				else if (result.size() == 4) setColor(result[0], result[1], result[2], result[3]);
+				else if (result.size() == 4) setColor(result[0], result[1], result[2], result[3]); //-V112
 			}
 		}
 		Color<T> RandomColor()
@@ -585,7 +585,7 @@ namespace ct // cTools
 		}
 		void setColor(T _r, T _g, T _b, T _a, T Div = (T)1)
 		{
-			assert((int)Div != (T)0);
+			assert((T)Div != (T)0);
 
 			if ((int)Div == 1)
 			{
@@ -1945,7 +1945,7 @@ namespace ct // cTools
 		}
 		vec4<T> GetV4(char c = ';')
 		{
-			if (inputtype == "string") return vec4<T>(string_value, c, 4, 0);
+			if (inputtype == "string") return vec4<T>(string_value, c, 4, 0); //-V112
 			else if (inputtype == "vectorString")
 			{
 
@@ -2194,7 +2194,7 @@ namespace ct // cTools
 	}
 	template <typename T> ::std::string toStr(vec4<T> v, char delimiter = ',')
 	{
-		return ct::toStr(&v.x, 4, delimiter);
+		return ct::toStr(&v.x, 4, delimiter); //-V112
 	}
 
 	/////////////////////////////////////////////////////////////

@@ -58,7 +58,7 @@ SOFTWARE.
 	va_end(args);
 	if (w)
 	{
-		return std::string(TempBuffer, w);
+		return std::string(TempBuffer, (size_t)w);
 	}
 	return std::string();
 }
@@ -692,7 +692,7 @@ T* ct::GetNewBufferFromList(::std::list<T>& lst, int offsetBefore, int offsetAft
 	if (count > 0)
 	{
 		*BufferSize = count + offsetBefore + offsetAfter;
-		T* Buffer = new T[(*BufferSize)]; size_t idx = offsetBefore;
+		T* Buffer = new T[(size_t)(*BufferSize)]; size_t idx = offsetBefore;
 		// before init
 		for (size_t i = 0; i < (size_t)offsetBefore; ++i)
 		{
@@ -728,7 +728,7 @@ P* ct::GetNewBufferFromMap(::std::map<T, P>& mp, int offsetBefore, int offsetAft
 	if (count > 0)
 	{
 		*BufferSize = count + offsetBefore + offsetAfter;
-		P* Buffer = new P[(*BufferSize)]; int idx = offsetBefore;
+		P* Buffer = new P[(size_t)(*BufferSize)]; size_t idx = (size_t)offsetBefore;
 		// before init
 		for (size_t i = 0; i < (size_t)offsetBefore; ++i)
 		{
@@ -1036,7 +1036,7 @@ T ct::cReRange(T vMaxRange,
 /// Returns 1 for non-negative values and -1 for negative values.
 size_t ct::ratioOfSizeT(size_t t, double r)
 {
-	return (size_t)(t * r);
+	return (size_t)((double)t * r);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////

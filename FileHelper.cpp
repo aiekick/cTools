@@ -300,8 +300,13 @@ std::vector<uint8_t> FileHelper::LoadFileToBytes(const std::string & vFilePathNa
 		long fileSize = 0;
 
 		// obtain file size:
+#ifdef _MSC_VER
+		_fseeki64(intput_file, 0, SEEK_END);
+		fileSize = _ftelli64(intput_file);
+#else
 		fseek(intput_file, 0, SEEK_END);
 		fileSize = ftell(intput_file);
+#endif
 		rewind(intput_file);
 
 		bytes.resize(fileSize);
@@ -751,7 +756,7 @@ void FileHelper::OpenFile(const std::string & vShaderToOpen) const
 
 #if defined(WIN32)
 	auto* result = ShellExecute(nullptr, "", shaderToOpen.c_str(), nullptr, nullptr, SW_SHOW);
-	if (result < (HINSTANCE)32)
+	if (result < (HINSTANCE)32) //-V112
 	{
 		// try to open an editor
 		result = ShellExecute(nullptr, "edit", shaderToOpen.c_str(), nullptr, nullptr, SW_SHOW);
@@ -761,7 +766,7 @@ void FileHelper::OpenFile(const std::string & vShaderToOpen) const
 			const std::string sCmdOpenWith = "shell32.dll,OpenAs_RunDLL \"" + shaderToOpen + "\"";
 			result = ShellExecute(nullptr, "", "rundll32.exe", sCmdOpenWith.c_str(), nullptr, SW_NORMAL);
 		}
-		if (result < (HINSTANCE)32) // open in explorer
+		if (result < (HINSTANCE)32) // open in explorer //-V112
 		{
 			const std::string sCmdExplorer = "/select,\"" + shaderToOpen + "\"";
 			ShellExecute(nullptr, "", "explorer.exe", sCmdExplorer.c_str(), nullptr, SW_NORMAL); // ce serait peut etre mieu d'utilsier la commande system comme dans SelectFile
@@ -849,7 +854,7 @@ std::vector<std::string> FileHelper::GetDrives() const
 
 	if (countChars > 0)
 	{
-		std::string var = std::string(lpBuffer, countChars);
+		std::string var = std::string(lpBuffer, (size_t)countChars);
 		ct::replaceString(var, "\\", "");
 		res = ct::splitStringToVector(var, "\0");
 	}
@@ -891,7 +896,7 @@ size_t FileHelper::GetTimeStampToNumber() const
 	const std::string res = GetTimeStampToString("");
 	if (!res.empty())
 	{
-		timeStamp = ct::uvariant(res).GetU();
+		timeStamp = (size_t)ct::uvariant(res).GetU();
 	}
 	return timeStamp;
 }

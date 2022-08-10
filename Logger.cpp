@@ -85,7 +85,7 @@ void Logger::LogString(const LogMessageTypeEnum* vType, const std::string* vFunc
 		w = snprintf(TempBufferBis, 3072, "[%010.3fs] %s", time, vStr);
 	if (w)
 	{
-		const std::string msg = std::string(TempBufferBis, w);
+		const std::string msg = std::string(TempBufferBis, (size_t)w);
 
 		puMessages.push_back(msg);
 
