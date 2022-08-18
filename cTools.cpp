@@ -66,7 +66,7 @@ SOFTWARE.
 ::std::string ct::toUpper(const std::string& vStr, const std::locale& vLocale)
 {
 	std::string str = vStr;
-	for (size_t i = 0U; i < str.size(); i++)
+	for (size_t i = 0U; i < str.size(); ++i)
 		str[i] = std::toupper(str[i], vLocale);
 	return str;
 }
@@ -74,7 +74,7 @@ SOFTWARE.
 ::std::string ct::toLower(const std::string& vStr, const std::locale& vLocale)
 {
 	std::string str = vStr;
-	for (size_t i = 0U; i < str.size(); i++)
+	for (size_t i = 0U; i < str.size(); ++i)
 		str[i] = std::tolower(str[i], vLocale);
 	return str;
 }
