@@ -279,8 +279,8 @@ bool Logger::LogGLError(const std::string& vFile, const std::string& vFunc, int 
 				}
 			}
 
-			if (!debugLogFile->bad())
-				*debugLogFile << msg << std::endl;
+			if (!debugLogFile.bad())
+				debugLogFile << msg << std::endl;
 
 			return true;
 		}
