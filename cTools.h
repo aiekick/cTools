@@ -1962,6 +1962,11 @@ namespace ct // cTools
 			if (inputtype == "string") return StringToNumberVector<float>(string_value, c);
 			return vector_float_value;
 		}
+		std::vector<double> GetVectorDouble(char c = ';') const
+		{
+			if (inputtype == "string") return StringToNumberVector<double>(string_value, c);
+			return vector_double_value;
+		}
 		std::vector<T> GetVectorType(char c = ';')
 		{
 			if (inputtype == "string") return StringToNumberVector<T>(string_value, c);
