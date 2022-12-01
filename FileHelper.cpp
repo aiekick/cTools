@@ -262,6 +262,7 @@ std::string FileHelper::LoadFileToString(const std::string & vFilePathName, bool
 		fileCode = strStream.str();
 
 		ct::replaceString(fileCode, "\r\n", "\n");
+		ct::replaceString(fileCode, "\r", "\n");
 
 		docFile.close();
 	}
