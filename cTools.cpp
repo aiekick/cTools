@@ -58,7 +58,7 @@ SOFTWARE.
 	va_end(args);
 	if (w)
 	{
-		return std::string(TempBuffer, w);
+		return std::string(TempBuffer, (size_t)w);
 	}
 	return std::string();
 }
@@ -66,7 +66,7 @@ SOFTWARE.
 ::std::string ct::toUpper(const std::string& vStr, const std::locale& vLocale)
 {
 	std::string str = vStr;
-	for (size_t i = 0U; i < str.size(); i++)
+	for (size_t i = 0U; i < str.size(); ++i)
 		str[i] = std::toupper(str[i], vLocale);
 	return str;
 }
@@ -74,7 +74,7 @@ SOFTWARE.
 ::std::string ct::toLower(const std::string& vStr, const std::locale& vLocale)
 {
 	std::string str = vStr;
-	for (size_t i = 0U; i < str.size(); i++)
+	for (size_t i = 0U; i < str.size(); ++i)
 		str[i] = std::tolower(str[i], vLocale);
 	return str;
 }
@@ -641,6 +641,12 @@ void ct::quat<double>::normalize()
 ///////// BUFFERS ///////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 
+void ct::SetBuffer(char* vBuffer, size_t vBufferLen, const ::std::string& vStr)
+{
+	ResetBuffer(vBuffer);
+	AppendToBuffer(vBuffer, vBufferLen, vStr);
+}
+
 void ct::AppendToBuffer(char* vBuffer, size_t vBufferLen, const ::std::string& vStr)
 {
 	::std::string st = vStr;
@@ -686,7 +692,7 @@ T* ct::GetNewBufferFromList(::std::list<T>& lst, int offsetBefore, int offsetAft
 	if (count > 0)
 	{
 		*BufferSize = count + offsetBefore + offsetAfter;
-		T* Buffer = new T[(*BufferSize)]; size_t idx = offsetBefore;
+		T* Buffer = new T[(size_t)(*BufferSize)]; size_t idx = offsetBefore;
 		// before init
 		for (size_t i = 0; i < (size_t)offsetBefore; ++i)
 		{
@@ -722,7 +728,7 @@ P* ct::GetNewBufferFromMap(::std::map<T, P>& mp, int offsetBefore, int offsetAft
 	if (count > 0)
 	{
 		*BufferSize = count + offsetBefore + offsetAfter;
-		P* Buffer = new P[(*BufferSize)]; int idx = offsetBefore;
+		P* Buffer = new P[(size_t)(*BufferSize)]; size_t idx = (size_t)offsetBefore;
 		// before init
 		for (size_t i = 0; i < (size_t)offsetBefore; ++i)
 		{
@@ -886,16 +892,6 @@ ct::vec2<T> ct::clamp(const ct::vec2<T>& vValue, const ct::vec2<T>& vInf, const 
 }
 
 template<typename T>
-ct::vec3<T> ct::clamp(const ct::vec3<T>& vValue, const ct::vec3<T>& vInf, const ct::vec3<T>& vSup)
-{
-	ct::vec3<T> vUniform = vValue;
-	vUniform.x = ct::clamp(vUniform.x, vInf.x, vSup.x);
-	vUniform.y = ct::clamp(vUniform.y, vInf.y, vSup.y);
-	vUniform.z = ct::clamp(vUniform.z, vInf.z, vSup.z);
-	return vUniform;
-}
-
-template<typename T>
 ct::vec4<T> ct::clamp(const ct::vec4<T>& vValue, const ct::vec4<T>& vInf, const ct::vec4<T>& vSup)
 {
 	ct::vec4<T> vUniform = vValue;
@@ -915,7 +911,7 @@ ct::vec2<T> ct::clamp(const ct::vec2<T>& vValue, T vInf, T vSup)
 	return vUniform;
 }*/
 
-template<typename T>
+/*template<typename T>
 ct::vec3<T> ct::clamp(const ct::vec3<T>& vValue, T vInf, T vSup)
 {
 	ct::vec3<T> vUniform = vValue;
@@ -923,7 +919,7 @@ ct::vec3<T> ct::clamp(const ct::vec3<T>& vValue, T vInf, T vSup)
 	vUniform.y = ct::clamp(vUniform.y, vInf, vSup);
 	vUniform.z = ct::clamp(vUniform.z, vInf, vSup);
 	return vUniform;
-}
+}*/
 
 template<typename T>
 ct::vec4<T> ct::clamp(const ct::vec4<T>& vValue, T vInf, T vSup)
@@ -1040,7 +1036,7 @@ T ct::cReRange(T vMaxRange,
 /// Returns 1 for non-negative values and -1 for negative values.
 size_t ct::ratioOfSizeT(size_t t, double r)
 {
-	return (size_t)(t * r);
+	return (size_t)((double)t * r);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////

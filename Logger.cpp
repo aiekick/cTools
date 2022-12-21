@@ -48,8 +48,7 @@ std::function<void(const int& vType, const std::string& vMessage)> Logger::sOpen
 ////////////////////////////////////////////////////////////////////////////////
 
 // singleton
-ofstream* Logger::debugLogFile = new ofstream("debug.log", ios::out);
-//wofstream *Logger::wdebugLogFile = new wofstream("wdebug.log", ios::out);
+ofstream Logger::debugLogFile;
 std::mutex Logger::Logger_Mutex;
 
 Logger::Logger(void)
@@ -59,6 +58,7 @@ Logger::Logger(void)
 #endif
 	std::unique_lock<std::mutex> lck(Logger::Logger_Mutex, std::defer_lock);
 	lck.lock();
+	debugLogFile.open("debug.log", ios::out);
 	lastTick = ct::GetTicks();
 	ConsoleVerbose = false;
 	lck.unlock();
@@ -85,7 +85,7 @@ void Logger::LogString(const LogMessageTypeEnum* vType, const std::string* vFunc
 		w = snprintf(TempBufferBis, 3072, "[%010.3fs] %s", time, vStr);
 	if (w)
 	{
-		const std::string msg = std::string(TempBufferBis, w);
+		const std::string msg = std::string(TempBufferBis, (size_t)w);
 
 		puMessages.push_back(msg);
 
@@ -118,8 +118,8 @@ void Logger::LogString(const LogMessageTypeEnum* vType, const std::string* vFunc
 			}
 		}
 
-		if (!debugLogFile->bad())
-			*debugLogFile << msg << std::endl;
+		if (!debugLogFile.bad())
+			debugLogFile << msg << std::endl;
 	}
 }
 
@@ -279,8 +279,8 @@ bool Logger::LogGLError(const std::string& vFile, const std::string& vFunc, int 
 				}
 			}
 
-			if (!debugLogFile->bad())
-				*debugLogFile << msg << std::endl;
+			if (!debugLogFile.bad())
+				debugLogFile << msg << std::endl;
 
 			return true;
 		}
@@ -297,7 +297,7 @@ void Logger::Close()
 #endif
 	std::unique_lock<std::mutex> lck(Logger::Logger_Mutex, std::defer_lock);
 	lck.lock();
-	debugLogFile->close();
+	debugLogFile.close();
 	lck.unlock();
 }
 

@@ -183,8 +183,8 @@ namespace ct // cTools
 #define _pi				3.14159265359f
 #define _2pi			6.28318530717f
 
-#define IS_FLOAT_DIFFERENT(a,b) (fabsf((a) - (b)) > FLT_EPSILON)
-#define IS_FLOAT_EQUAL(a,b) (fabsf((a) - (b)) < FLT_EPSILON)
+#define IS_FLOAT_DIFFERENT(a,b) (fabs((a) - (b)) > FLT_EPSILON)
+#define IS_FLOAT_EQUAL(a,b) (fabs((a) - (b)) < FLT_EPSILON)
 #define IS_DOUBLE_DIFFERENT(a,b) (fabs((a) - (b)) > DBL_EPSILON)
 #define IS_DOUBLE_EQUAL(a,b) (fabs((a) - (b)) < DBL_EPSILON)
 
@@ -232,7 +232,7 @@ namespace ct // cTools
 			::std::stringstream ss(text);
 			ss >> value;
 		}
-		catch (std::exception)
+		catch (std::exception&)
 		{
 			printf("%s is not a number\n", text.c_str());
 		}
@@ -572,7 +572,7 @@ namespace ct // cTools
 			{
 				::std::vector<float> result = StringToNumberVector<float>(colorName, c);
 				if (result.size() == 3) setColor(result[0], result[1], result[2], 1.0f);
-				else if (result.size() == 4) setColor(result[0], result[1], result[2], result[3]);
+				else if (result.size() == 4) setColor(result[0], result[1], result[2], result[3]); //-V112
 			}
 		}
 		Color<T> RandomColor()
@@ -585,7 +585,7 @@ namespace ct // cTools
 		}
 		void setColor(T _r, T _g, T _b, T _a, T Div = (T)1)
 		{
-			assert((int)Div != (T)0);
+			assert((T)Div != (T)0);
 
 			if ((int)Div == 1)
 			{
@@ -1220,6 +1220,7 @@ namespace ct // cTools
 	///////// BUFFERS ///////////////////////////////////////////
 	/////////////////////////////////////////////////////////////
 
+	void SetBuffer(char* vBuffer, size_t vBufferLen, const ::std::string& vStr);
 	void AppendToBuffer(char* vBuffer, size_t vBufferLen, const ::std::string& vStr);
 	void ResetBuffer(char* vBuffer);
 
@@ -1854,7 +1855,7 @@ namespace ct // cTools
 			return uint32_t_value;
 		}
 
-		::std::string GetS(char c = ';')
+		::std::string GetS(char c = ';', const char* prec = "%.6f")
 		{
 			if (inputtype == "vec4")
 				return
@@ -1888,7 +1889,7 @@ namespace ct // cTools
 				{
 					if (!str.empty())
 						str += c;
-					str += toStr(f);
+					str += toStr(prec, f);
 				}
 				return str;
 			}
@@ -1899,7 +1900,7 @@ namespace ct // cTools
 				{
 					if (!str.empty())
 						str += c;
-					str += toStr(f);
+					str += toStr(prec, f);
 				}
 				return str;
 			}
@@ -1944,7 +1945,7 @@ namespace ct // cTools
 		}
 		vec4<T> GetV4(char c = ';')
 		{
-			if (inputtype == "string") return vec4<T>(string_value, c, 4, 0);
+			if (inputtype == "string") return vec4<T>(string_value, c, 4, 0); //-V112
 			else if (inputtype == "vectorString")
 			{
 
@@ -1960,6 +1961,11 @@ namespace ct // cTools
 		{
 			if (inputtype == "string") return StringToNumberVector<float>(string_value, c);
 			return vector_float_value;
+		}
+		std::vector<double> GetVectorDouble(char c = ';') const
+		{
+			if (inputtype == "string") return StringToNumberVector<double>(string_value, c);
+			return vector_double_value;
 		}
 		std::vector<T> GetVectorType(char c = ';')
 		{
@@ -2131,7 +2137,14 @@ namespace ct // cTools
 
 	// clamp
 	template<typename T> vec2<T> clamp(const vec2<T>& vValue, const vec2<T>& vInf, const vec2<T>& vSup);
-	template<typename T> vec3<T> clamp(const vec3<T>& vValue, const vec3<T>& vInf, const vec3<T>& vSup);
+	template<typename T> vec3<T> clamp(const vec3<T>& vValue, const vec3<T>& vInf, const vec3<T>& vSup)
+	{
+		ct::vec3<T> vUniform = vValue;
+		vUniform.x = ct::clamp(vUniform.x, vInf.x, vSup.x);
+		vUniform.y = ct::clamp(vUniform.y, vInf.y, vSup.y);
+		vUniform.z = ct::clamp(vUniform.z, vInf.z, vSup.z);
+		return vUniform;
+	}
 	template<typename T> vec4<T> clamp(const vec4<T>& vValue, const vec4<T>& vInf, const vec4<T>& vSup);
 	template<typename T> vec2<T> clamp(const vec2<T>& vValue, T vInf, T vSup)
 	{
@@ -2140,7 +2153,14 @@ namespace ct // cTools
 		vUniform.y = ct::clamp(vUniform.y, vInf, vSup);
 		return vUniform;
 	}
-	template<typename T> vec3<T> clamp(const vec3<T>& vValue, T vInf, T vSup);
+	template<typename T> vec3<T> clamp(const vec3<T>& vValue, T vInf, T vSup)
+	{
+		ct::vec3<T> vUniform = vValue;
+		vUniform.x = ct::clamp(vUniform.x, vInf, vSup);
+		vUniform.y = ct::clamp(vUniform.y, vInf, vSup);
+		vUniform.z = ct::clamp(vUniform.z, vInf, vSup);
+		return vUniform;
+	}
 	template<typename T> vec4<T> clamp(const vec4<T>& vValue, T vInf, T vSup);
 	template<typename T> vec2<T> clamp(const vec2<T>& vValue);
 	template<typename T> vec3<T> clamp(const vec3<T>& vValue);
@@ -2179,7 +2199,7 @@ namespace ct // cTools
 	}
 	template <typename T> ::std::string toStr(vec4<T> v, char delimiter = ',')
 	{
-		return ct::toStr(&v.x, 4, delimiter);
+		return ct::toStr(&v.x, 4, delimiter); //-V112
 	}
 
 	/////////////////////////////////////////////////////////////

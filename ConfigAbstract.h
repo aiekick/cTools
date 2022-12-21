@@ -31,9 +31,18 @@ SOFTWARE.
 #include <string>
 #include <map>
 
+#ifdef BUILD_SHARED
+#ifdef _WIN32
+#define CTOOLS_API   __declspec( dllimport )
+#endif // _WIN32
+#endif // BUILD_SHARED
+#ifndef CTOOLS_API
+#define CTOOLS_API
+#endif // CTOOLS_API
+
 namespace conf
 {
-	class ConfigAbstract
+	class CTOOLS_API ConfigAbstract
 	{
 	public:
 		virtual std::string getXml(const std::string& vOffset, const std::string& vUserDatas = "") = 0;
@@ -138,7 +147,7 @@ namespace conf
 			}
 			catch (std::exception& ex)
 			{
-				printf("parse error => %s", std::string(ex.what()).c_str());
+				printf("error during XML Parsing => %s", std::string(ex.what()).c_str());
 			}
 
 			return res;
