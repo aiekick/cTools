@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21)
+cmake_minimum_required(VERSION 3.0)
 
 set(PROJECT ctools)
 enable_language(C CXX)
@@ -34,6 +34,7 @@ if (USE_GLFW_CLIPBOARD)
 elseif(USE_SDL_CLIPBOARD)
 	add_definitions(-DUSE_SDL2)
 endif()
+
 if(UNIX)
 	if(APPLE)
 		add_definitions(-DAPPLE)

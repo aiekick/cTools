@@ -30,7 +30,7 @@ SOFTWARE.
 #ifdef USE_GLFW3
 #include <GLFW/glfw3.h>
 #elif defined(USE_SDL2)
-#include <SDL/include/SDL.h>
+#include <SDL.h>
 #endif
 #if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
 #include <tracy/Tracy.hpp>
