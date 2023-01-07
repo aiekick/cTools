@@ -561,7 +561,7 @@ namespace ct // cTools
 	template<typename T>
 	struct Color
 	{
-		T r, g, b, a;
+		T r = (T)1, g = (T)1, b = (T)1, a = (T)1;
 		Color<T>() { r = g = b = a = (T)1; }
 		Color<T>(T _rgba) { setColor(_rgba, _rgba, _rgba, _rgba); }
 		Color<T>(T _rgb, T _a) { setColor(_rgb, _rgb, _rgb, _a); }
@@ -657,7 +657,7 @@ namespace ct // cTools
 	template <typename T>
 	struct vec2
 	{
-		T x, y;
+		T x = (T)0, y = (T)0;
 		vec2<T>() { x = (T)0; y = (T)0; }
 		template <typename U> vec2<T>(const vec2<U>& a) { x = (T)a.x; y = (T)a.y; }
 		vec2<T>(const T& a) { x = a; y = a; }
@@ -684,7 +684,7 @@ namespace ct // cTools
 		vec2<T> Offset(const T& vX, const T& vY) const { return vec2<T>(x + vX, y + vY); }
 		void Set(const T& vX, const T& vY) { x = vX; y = vY; }
 		vec2<T> operator -() const { return vec2<T>(-x, -y); }
-		vec2<T> operator !() const { return vec2<T>(!x, !y); }
+		vec2<T> operator !() const { return vec2<T>(!(bool)x, !(bool)y); }
 		vec2<T>& operator ++ () { ++x; ++y; return *this; } // pre inc
 		vec2<T>& operator -- () { --x; --y; return *this; } // pre dec
 		vec2<T> operator ++ (int) { vec2<T> tmp = *this; ++*this; return tmp; } // post inc
@@ -869,7 +869,7 @@ namespace ct // cTools
 	template <typename T>
 	struct vec3
 	{
-		T x, y, z;
+		T x = (T)0, y = (T)0, z = (T)0;
 		vec3() : x((T)0), y((T)0), z((T)0) {}
 		template <typename U> vec3<T>(vec3<U> a) { x = (T)a.x; y = (T)a.y; z = (T)a.z; }
 		vec3(const T& xyz) : x(xyz), y(xyz), z(xyz) {}
@@ -888,7 +888,7 @@ namespace ct // cTools
 		vec3<T> Offset(const T& vX, const T& vY, const T& vZ) const { return vec3<T>(x + vX, y + vY, z + vZ); }
 		void Set(const T& vX, const T& vY, const T& vZ) { x = vX; y = vY; z = vZ; }
 		vec3<T> operator -() const { return vec3<T>(-x, -y, -z); }
-		vec3<T> operator !() const { return vec3<T>(!x, !y, !z); }
+		vec3<T> operator !() const { return vec3<T>(!(bool)x, !(bool)y, !(bool)z); }
 		vec2<T> xy() const { return vec2<T>(x, y); }
 		vec2<T> xz() const { return vec2<T>(x, z); }
 		vec2<T> yz() const { return vec2<T>(y, z); }
@@ -984,7 +984,7 @@ namespace ct // cTools
 	template <typename T>
 	struct vec4
 	{
-		T x, y, z, w;
+		T x = (T)0, y = (T)0, z = (T)0, w = (T)0;
 		vec4() : x((T)0), y((T)0), z((T)0), w((T)0) {}
 		template <typename U> vec4<T>(vec4<U> a) { x = (T)a.x; y = (T)a.y; z = (T)a.z; w = (T)a.w; }
 		vec4(vec2<T> xy, vec2<T> zw) : x(xy.x), y(xy.y), z(zw.x), w(zw.y) {}
@@ -1057,7 +1057,7 @@ namespace ct // cTools
 		vec4<T> Offset(const T& vX, const T& vY, const T& vZ, const T& vW) const { return vec4<T>(x + vX, y + vY, z + vZ, w + vW); }
 		void Set(const T& vX, const T& vY, const T& vZ, const T& vW) { x = vX; y = vY; z = vZ; w = vW; }
 		vec4<T> operator -() const { return vec4<T>(-x, -y, -z, -w); }
-		vec4<T> operator !() const { return vec4<T>(!x, !y, !z, !w); }
+		vec4<T> operator !() const { return vec4<T>(!(bool)x, !(bool)y, !(bool)z, !(bool)w); }
 		vec2<T> xy() const { return vec2<T>(x, y); }
 		vec3<T> xyz() const { return vec3<T>(x, y, z); }
 		vec2<T> zw() const { return vec2<T>(z, w); }

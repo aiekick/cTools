@@ -148,7 +148,7 @@ struct OpenGlVersionStruct
 	int major = 0;
 	int minor = 0;
 	std::string OpenglVersion;
-	int DefaultGlslVersionInt;
+	int DefaultGlslVersionInt = 0;
 	std::string DefineCode;
 	bool supported = true;
 	bool attribLayoutSupportedExtention = false;
