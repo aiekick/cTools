@@ -106,8 +106,8 @@ using namespace cocos2d;
 #include USE_BOX2D
 #endif
 
-#ifdef SDL2
-#include <SDL2/SDL.h>
+#ifdef USE_SDL2
+#include <SDL.h>
 #include "Logger.h"
 #endif
 
@@ -210,6 +210,19 @@ namespace ct // cTools
 #endif
 
 	/////////////////////////////////////////////////////////////
+	///////// bitwize ///////////////////////////////////////////
+	/////////////////////////////////////////////////////////////
+
+	// is this bit/bit_group is set and maybe others
+	bool isbitset(int32_t vContainer, int32_t vBit);
+	// is this bit/bit_group is set and only this one
+	bool isbitset_exclusive(int32_t vContainer, int32_t vBit);
+	// set this bit/bit_group to 1
+	void setbit(int32_t vContainer, int32_t vBit);
+	// set this bit/bit_group to 0
+	void unsetbit(int32_t vContainer, int32_t vBit);
+
+	/////////////////////////////////////////////////////////////
 	///////// splitStringToVector ///////////////////////////////
 	/////////////////////////////////////////////////////////////
 
@@ -221,7 +234,7 @@ namespace ct // cTools
 	::std::set<::std::string> splitStringToSet(const ::std::string& text, char delimiter, bool pushEmpty = false);
 
 	/////////////////////////////////////////////////////////////
-	///////// StringToFloatVector ///////////////////////////////
+	///////// StringToNumber ////////////////////////////////////
 	/////////////////////////////////////////////////////////////
 
 	template <typename T> T StringToNumber(const ::std::string& text)
@@ -452,10 +465,10 @@ namespace ct // cTools
 	};
 
 	/////////////////////////////////////////////////////////////
-	///////// texture //////////////////////////////////////////
+	///////// texture ///////////////////////////////////////////
 	/////////////////////////////////////////////////////////////
 #ifdef USE_OPENGL
-	struct texture
+	class texture
 	{
 	public:
 		texture()
@@ -548,7 +561,7 @@ namespace ct // cTools
 	template<typename T>
 	struct Color
 	{
-		T r, g, b, a;
+		T r = (T)1, g = (T)1, b = (T)1, a = (T)1;
 		Color<T>() { r = g = b = a = (T)1; }
 		Color<T>(T _rgba) { setColor(_rgba, _rgba, _rgba, _rgba); }
 		Color<T>(T _rgb, T _a) { setColor(_rgb, _rgb, _rgb, _a); }
@@ -644,7 +657,7 @@ namespace ct // cTools
 	template <typename T>
 	struct vec2
 	{
-		T x, y;
+		T x = (T)0, y = (T)0;
 		vec2<T>() { x = (T)0; y = (T)0; }
 		template <typename U> vec2<T>(const vec2<U>& a) { x = (T)a.x; y = (T)a.y; }
 		vec2<T>(const T& a) { x = a; y = a; }
@@ -671,7 +684,7 @@ namespace ct // cTools
 		vec2<T> Offset(const T& vX, const T& vY) const { return vec2<T>(x + vX, y + vY); }
 		void Set(const T& vX, const T& vY) { x = vX; y = vY; }
 		vec2<T> operator -() const { return vec2<T>(-x, -y); }
-		vec2<T> operator !() const { return vec2<T>(!x, !y); }
+		vec2<T> operator !() const { return vec2<T>(!(bool)x, !(bool)y); }
 		vec2<T>& operator ++ () { ++x; ++y; return *this; } // pre inc
 		vec2<T>& operator -- () { --x; --y; return *this; } // pre dec
 		vec2<T> operator ++ (int) { vec2<T> tmp = *this; ++*this; return tmp; } // post inc
@@ -856,7 +869,7 @@ namespace ct // cTools
 	template <typename T>
 	struct vec3
 	{
-		T x, y, z;
+		T x = (T)0, y = (T)0, z = (T)0;
 		vec3() : x((T)0), y((T)0), z((T)0) {}
 		template <typename U> vec3<T>(vec3<U> a) { x = (T)a.x; y = (T)a.y; z = (T)a.z; }
 		vec3(const T& xyz) : x(xyz), y(xyz), z(xyz) {}
@@ -875,7 +888,7 @@ namespace ct // cTools
 		vec3<T> Offset(const T& vX, const T& vY, const T& vZ) const { return vec3<T>(x + vX, y + vY, z + vZ); }
 		void Set(const T& vX, const T& vY, const T& vZ) { x = vX; y = vY; z = vZ; }
 		vec3<T> operator -() const { return vec3<T>(-x, -y, -z); }
-		vec3<T> operator !() const { return vec3<T>(!x, !y, !z); }
+		vec3<T> operator !() const { return vec3<T>(!(bool)x, !(bool)y, !(bool)z); }
 		vec2<T> xy() const { return vec2<T>(x, y); }
 		vec2<T> xz() const { return vec2<T>(x, z); }
 		vec2<T> yz() const { return vec2<T>(y, z); }
@@ -899,7 +912,7 @@ namespace ct // cTools
 		void operator /= (const vec3<T>& v) { x /= v.x; y /= v.y; z /= v.z; }
 		T length() const { return (T)sqrt(lengthSquared()); }
 		T lengthSquared() const { return x * x + y * y + z * z; }
-		T normalize() { T _length = length(); if (_length < (T)1e-5) return (T)0; T _invLength = (T)1 / _length; x *= _invLength; y *= _invLength; z *= _invLength; return _length; }
+		T normalize() { T _length = length(); if (_length < std::numeric_limits<T>::epsilon()) return (T)0; T _invLength = (T)1 / _length; x *= _invLength; y *= _invLength; z *= _invLength; return _length; }
 		vec3<T> GetNormalized() const { vec3<T> n = vec3<T>(x, y, z); n.normalize(); return n; }
 		T sum() const { return x + y + z; }
 		T sumAbs() const { return abs<T>(x) + abs<T>(y) + abs<T>(z); }
@@ -971,7 +984,7 @@ namespace ct // cTools
 	template <typename T>
 	struct vec4
 	{
-		T x, y, z, w;
+		T x = (T)0, y = (T)0, z = (T)0, w = (T)0;
 		vec4() : x((T)0), y((T)0), z((T)0), w((T)0) {}
 		template <typename U> vec4<T>(vec4<U> a) { x = (T)a.x; y = (T)a.y; z = (T)a.z; w = (T)a.w; }
 		vec4(vec2<T> xy, vec2<T> zw) : x(xy.x), y(xy.y), z(zw.x), w(zw.y) {}
@@ -1044,7 +1057,7 @@ namespace ct // cTools
 		vec4<T> Offset(const T& vX, const T& vY, const T& vZ, const T& vW) const { return vec4<T>(x + vX, y + vY, z + vZ, w + vW); }
 		void Set(const T& vX, const T& vY, const T& vZ, const T& vW) { x = vX; y = vY; z = vZ; w = vW; }
 		vec4<T> operator -() const { return vec4<T>(-x, -y, -z, -w); }
-		vec4<T> operator !() const { return vec4<T>(!x, !y, !z, !w); }
+		vec4<T> operator !() const { return vec4<T>(!(bool)x, !(bool)y, !(bool)z, !(bool)w); }
 		vec2<T> xy() const { return vec2<T>(x, y); }
 		vec3<T> xyz() const { return vec3<T>(x, y, z); }
 		vec2<T> zw() const { return vec2<T>(z, w); }
@@ -1215,6 +1228,65 @@ namespace ct // cTools
 	
 	template <typename T> inline bool operator == (rect<T> v, rect<T> f) { return f.x == v.x && f.y == v.y && f.w == v.w && f.h == v.h; }
 	template <typename T> inline bool operator != (rect<T> v, rect<T> f) { return f.x != v.x || f.y != v.y || f.w != v.w || f.h != v.h; }
+
+	/////////////////////////////////////////////////////////////////////////
+	//// PLANE //////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////
+
+	template <typename T>
+	class plane
+	{
+	public:
+		vec3<T> n;
+		T d;
+
+	public:
+		plane() = default;
+		plane(vec3<T> vp) : n(vp.GetNormalized()), d(dotS(vp, n)) {}
+		plane(vec3<T> vp, vec3<T> vn) : n(vn), d(dotS(vp, n)) {}
+		plane(vec3<T> a, vec3<T> b, vec3<T> c) 
+		{
+			auto AB = b - a;
+			auto AC = c - a;
+			n = cCross(AC, AB).GetNormalized();
+			d = dotS(a, n);
+		}
+		plane(vec3<T> vn, double vd) : n(vn), d(vd) {}
+	};
+
+	typedef plane<double> dplane;
+	typedef plane<float> fplane;
+
+	template <typename T> 
+	inline bool get_plane_intersection(const plane<T>& a, const plane<T>& b, const plane<T>& c, vec3<T>& out_res)
+	{
+		vec3<T> m1 = vec3<T>(a.n.x, b.n.x, c.n.x);
+		vec3<T> m2 = vec3<T>(a.n.y, b.n.y, c.n.y);
+		vec3<T> m3 = vec3<T>(a.n.z, b.n.z, c.n.z);
+		vec3<T> d = vec3<T>(a.d, b.d, c.d);
+
+		vec3<T> u = cCross<T>(m2, m3);
+		T denom = dotS<T>(m1, u);
+
+		if (fabs(denom) < std::numeric_limits<T>::epsilon()) {
+			// Planes don't actually intersect in a point
+			// Throw exception maybe?
+			return false;
+		}
+
+		vec3<T> v = cCross<T>(m1, d);
+		out_res.x = dotS<T>(d, u) / denom;
+		out_res.y = dotS<T>(m3, v) / denom;
+		out_res.z = -dotS<T>(m2, v) / denom;
+
+		return true;
+	}
+
+	template <typename T> 
+	inline bool is_on_plane(const plane<T>& pln, const vec3<T>& p)
+	{
+		return (fabs(dotS<T>(pln.n, p) - pln.d)	< std::numeric_limits<T>::epsilon());
+	}
 
 	/////////////////////////////////////////////////////////////
 	///////// BUFFERS ///////////////////////////////////////////
@@ -1961,6 +2033,11 @@ namespace ct // cTools
 		{
 			if (inputtype == "string") return StringToNumberVector<float>(string_value, c);
 			return vector_float_value;
+		}
+		std::vector<double> GetVectorDouble(char c = ';') const
+		{
+			if (inputtype == "string") return StringToNumberVector<double>(string_value, c);
+			return vector_double_value;
 		}
 		std::vector<T> GetVectorType(char c = ';')
 		{

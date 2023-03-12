@@ -12,7 +12,7 @@ int main(int argc, char** argv)
 	
 	// this code will be executed if not called by the tester
 
-	run_test("cTools.uint.Vec2.sum");
+	return run_test("cTools.float.Plane.construtor.3_points");
 
 	return 0;
 }

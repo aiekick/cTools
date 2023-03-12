@@ -2738,6 +2738,61 @@ int Test_cTools_unsigned_integer_Vec4_run_test(const std::string& vTestCode)
 }
 
 ///////////////////////////////////////////////////////////
+//// PLANE ////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+
+// specialisation unsigned intergers
+template <typename T>
+int Test_cTools_float_double_Plane_run_test(const std::string& vTestCode)
+{
+	ct::plane<T> a(ct::vec3<T>((T)5.0, (T)0.0, (T)0.0));
+	ct::plane<T> b(ct::vec3<T>((T)0.0, (T)5.0, (T)0.0));
+	ct::plane<T> c(ct::vec3<T>((T)0.0, (T)0.0, (T)5.0));
+	ct::vec3<T> good_result = ct::vec3<T>((T)5.0, (T)5.0, (T)5.0);
+	ct::vec3<T> res;
+
+	if (vTestCode.find(".Plane.get_plane_intersection") != std::string::npos)
+	{
+		if (ct::get_plane_intersection(a, b, c, res))
+		{
+			return (res != good_result);
+		}
+	}
+	else if (vTestCode.find(".Plane.is_on_plane") != std::string::npos)
+	{
+		return 
+			!ct::is_on_plane(a, good_result) && 
+			!ct::is_on_plane(b, good_result) && 
+			!ct::is_on_plane(c, good_result);
+	}
+	else if (vTestCode.find(".Plane.construtor.point") != std::string::npos)
+	{
+		ct::vec3<T> p = ct::vec3<T>((T)5, (T)0, (T)0);
+		ct::plane<T> pln(p);
+		if (pln.n == ct::vec3<T>((T)1, (T)0, (T)0) && pln.d == (T)5)
+			return 0;
+	}
+	else if (vTestCode.find(".Plane.construtor.point_and_normal") != std::string::npos)
+	{
+		ct::vec3<T> p = ct::vec3<T>((T)5, (T)0, (T)0);
+		ct::vec3<T> n = ct::vec3<T>((T)1, (T)0, (T)0);
+		ct::plane<T> pln(p, n);
+		if (pln.n == ct::vec3<T>((T)1, (T)0, (T)0) && pln.d == (T)5)
+			return 0;
+	}
+	else if (vTestCode.find(".Plane.construtor.3_points") != std::string::npos)
+	{
+		ct::vec3<T> p0 = ct::vec3<T>((T)0, (T)5, (T)0);
+		ct::vec3<T> p1 = ct::vec3<T>((T)5, (T)5, (T)0);
+		ct::vec3<T> p2 = ct::vec3<T>((T)0, (T)5, (T)5);
+		ct::plane<T> pln(p0, p1, p2);
+		if (pln.n == ct::vec3<T>((T)0, (T)1, (T)0) && pln.d == (T)5)
+			return 0;
+	}
+
+	return 1; // error
+}
+///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
@@ -2810,6 +2865,17 @@ int Test_cTools_run_test(const std::string& vTestCode)
 	else if (vTestCode.find("cTools.uint.Vec4.") != std::string::npos)
 	{
 		return Test_cTools_unsigned_integer_Vec4_run_test<uint32_t>(vTestCode);
+	}
+
+	// Plane
+
+	else if (vTestCode.find("cTools.double.Plane.") != std::string::npos)
+	{
+		return Test_cTools_float_double_Plane_run_test<double>(vTestCode);
+	}
+	else if (vTestCode.find("cTools.float.Plane.") != std::string::npos)
+	{
+		return Test_cTools_float_double_Plane_run_test<float>(vTestCode);
 	}
 
 	return 1; // error
