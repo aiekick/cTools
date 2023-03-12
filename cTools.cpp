@@ -90,6 +90,34 @@ SOFTWARE.
 }
 #endif
 
+/////////////////////////////////////////////////////////////
+///////// bitwize ///////////////////////////////////////////
+/////////////////////////////////////////////////////////////
+
+bool ct::isbitset(int32_t vContainer, int32_t vBit)
+{
+	return ((vContainer & vBit) != 0);
+}
+
+bool ct::isbitset_exclusive(int32_t vContainer, int32_t vBit)
+{
+	return ((vContainer & vBit) != vBit);
+}
+
+void ct::setbit(int32_t vContainer, int32_t vBit)
+{
+	vContainer |= vBit;
+}
+
+void ct::unsetbit(int32_t vContainer, int32_t vBit)
+{
+	vContainer = vContainer & ~vBit;
+}
+
+/////////////////////////////////////////////////////////////
+///////// splitStringToVector ///////////////////////////////
+/////////////////////////////////////////////////////////////
+
 ::std::list<::std::string> ct::splitStringToList(const ::std::string& text, const std::string& delimiters, bool pushEmpty, bool vInversion)
 {
 	::std::list<::std::string> arr;
@@ -657,9 +685,7 @@ void ct::AppendToBuffer(char* vBuffer, size_t vBufferLen, const ::std::string& v
 		//LogVarInfo(st);
 	}
 
-	const size_t slen = strlen(vBuffer);
-	vBuffer[slen] = '\0';
-	::std::string str = ::std::string(vBuffer);
+	auto str = ::std::string(vBuffer);
 	if (!str.empty()) str += "\n";
 	str += vStr;
 	const auto len = ct::mini<size_t>(vBufferLen - 1, str.size());
