@@ -106,8 +106,8 @@ using namespace cocos2d;
 #include USE_BOX2D
 #endif
 
-#ifdef SDL2
-#include <SDL2/SDL.h>
+#ifdef USE_SDL2
+#include <SDL.h>
 #include "Logger.h"
 #endif
 

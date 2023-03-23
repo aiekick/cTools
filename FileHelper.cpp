@@ -31,7 +31,6 @@ SOFTWARE.
 #include "FileHelper.h"
 
 #include "cTools.h"
-#include "Logger.h"
 
 #ifdef USE_GLFW3
 // for clipboard
@@ -40,9 +39,7 @@ SOFTWARE.
 
 // general
 #include <fstream>
-#include <sstream>
 #include <sys/stat.h>
-#include <cerrno>
 #include <chrono>
 #include <ctime>
 #include <cstdio>  /* defines FILENAME_MAX */
@@ -50,7 +47,6 @@ SOFTWARE.
 // specific
 #ifdef WIN32
 	// includes
-#include <windows.h>
 #include <shellapi.h>
 #pragma comment(lib,"shlwapi.lib")
 #include <direct.h>
