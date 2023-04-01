@@ -72,17 +72,19 @@ Logger::~Logger(void)
 	Close();
 }
 
+#define MAX_BUFFER_SIZE 1024 * 3
+
 void Logger::LogString(const LogMessageTypeEnum* vType, const std::string* vFunction, const int* vLine, const char* vStr)
 {
 	const int64 ticks = ct::GetTicks();
 	const double time = (ticks - lastTick) / 100.0;
 
-	static char TempBufferBis[3072 + 1];
+	static char TempBufferBis[MAX_BUFFER_SIZE + 1];
 	int w = 0;
 	if (vFunction && vLine)
-		w = snprintf(TempBufferBis, 1024 * 3, "[%010.3fs][%s:%i] %s", time, vFunction->c_str(), *vLine, vStr);
+		w = snprintf(TempBufferBis, MAX_BUFFER_SIZE, "[%010.3fs][%s:%i] %s", time, vFunction->c_str(), *vLine, vStr);
 	else
-		w = snprintf(TempBufferBis, 3072, "[%010.3fs] %s", time, vStr);
+		w = snprintf(TempBufferBis, MAX_BUFFER_SIZE, "[%010.3fs] %s", time, vStr);
 	if (w)
 	{
 		const std::string msg = std::string(TempBufferBis, (size_t)w);
@@ -125,8 +127,8 @@ void Logger::LogString(const LogMessageTypeEnum* vType, const std::string* vFunc
 
 void Logger::LogString(const LogMessageTypeEnum* vType, const std::string* vFunction, const int* vLine, const char* fmt, va_list vArgs)
 {
-	static char TempBuffer[3072 + 1];//3072 = 1024 * 3
-	int w = vsnprintf(TempBuffer, 3072, fmt, vArgs);
+	static char TempBuffer[MAX_BUFFER_SIZE + 1];
+	int w = vsnprintf(TempBuffer, MAX_BUFFER_SIZE, fmt, vArgs);
 	if (w)
 	{
 		LogString(vType, vFunction, vLine, TempBuffer);
