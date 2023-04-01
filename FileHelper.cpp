@@ -776,8 +776,8 @@ void FileHelper::OpenFile(const std::string & vShaderToOpen) const
 		execl("/usr/bin/xdg-open", "xdg-open", shaderToOpen.c_str(), (char*)0);
 	}
 #elif defined(APPLE)
-	//string command = "open -a Tincta " + vShaderToOpen;
-	string command = "open " + shaderToOpen;
+	//std::string command = "open -a Tincta " + vShaderToOpen;
+	std::string command = "open " + shaderToOpen;
 	std::system(command.c_str());
 #endif
 }
