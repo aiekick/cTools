@@ -2429,21 +2429,11 @@ namespace ct // cTools
 		}
 
 		// if not expired, directly return a shared_ptr
-		::std::shared_ptr<T> getValidShared() noexcept
-		{
-			if (this->valid())
-			{
-				return this->lock();
-			}
-			return nullptr;
-		}
-
-		// if not expired, directly return a shared_ptr
 		::std::shared_ptr<T> getValidShared() const noexcept
 		{
-			if (this->valid())
+			if (valid())
 			{
-				return this->lock();
+				return lock();
 			}
 			return nullptr;
 		}
