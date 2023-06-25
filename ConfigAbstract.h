@@ -31,14 +31,17 @@ SOFTWARE.
 #include <string>
 #include <map>
 
-#ifdef BUILD_SHARED
-#ifdef _WIN32
-#define CTOOLS_API   __declspec( dllimport )
-#endif // _WIN32
-#endif // BUILD_SHARED
-#ifndef CTOOLS_API
+#if defined(__WIN32__) || defined(WIN32) || defined(_WIN32) || defined(__WIN64__) || defined(WIN64) || defined(_WIN64) || defined(_MSC_VER)
+#if defined(ctools_EXPORTS)
+#define CTOOLS_API __declspec(dllexport)
+#elif defined(BUILD_SHARED_LIBS)
+#define CTOOLS_API __declspec(dllimport)
+#else
 #define CTOOLS_API
-#endif // CTOOLS_API
+#endif
+#elif defined(__linux__) || defined(__FreeBSD__) || defined(__DragonFly__) || defined(__NetBSD__) || defined(__EMSCRIPTEN__) || defined(__APPLE__)
+#define CTOOLS_API
+#endif
 
 namespace conf
 {

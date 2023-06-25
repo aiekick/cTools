@@ -24,6 +24,18 @@ SOFTWARE.
 
 #pragma once
 
+#if defined(__WIN32__) || defined(WIN32) || defined(_WIN32) || defined(__WIN64__) || defined(WIN64) || defined(_WIN64) || defined(_MSC_VER)
+#if defined(ctools_EXPORTS)
+#define CTOOLS_API __declspec(dllexport)
+#elif defined(BUILD_SHARED_LIBS)
+#define CTOOLS_API __declspec(dllimport)
+#else
+#define CTOOLS_API
+#endif
+#elif defined(__linux__) || defined(__FreeBSD__) || defined(__DragonFly__) || defined(__NetBSD__) || defined(__EMSCRIPTEN__) || defined(__APPLE__)
+#define CTOOLS_API
+#endif
+
 #ifdef WIN32
 #include <Windows.h>
 #endif
@@ -214,13 +226,13 @@ namespace ct // cTools
 	/////////////////////////////////////////////////////////////
 
 	// is this bit/bit_group is set and maybe others
-	bool isbitset(int32_t vContainer, int32_t vBit);
+	bool CTOOLS_API isbitset(int32_t vContainer, int32_t vBit);
 	// is this bit/bit_group is set and only this one
-	bool isbitset_exclusive(int32_t vContainer, int32_t vBit);
+	bool CTOOLS_API isbitset_exclusive(int32_t vContainer, int32_t vBit);
 	// set this bit/bit_group to 1
-	void setbit(int32_t vContainer, int32_t vBit);
+	void CTOOLS_API setbit(int32_t vContainer, int32_t vBit);
 	// set this bit/bit_group to 0
-	void unsetbit(int32_t vContainer, int32_t vBit);
+	void CTOOLS_API unsetbit(int32_t vContainer, int32_t vBit);
 
 	/////////////////////////////////////////////////////////////
 	///////// splitStringToVector ///////////////////////////////

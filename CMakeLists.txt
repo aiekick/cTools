@@ -62,7 +62,15 @@ else ()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
 endif ()
 
-add_library(${PROJECT} STATIC ${CTOOLS_SRC} ${CONFIG_SYSTEM_SRC} ${GLVERSIONCHECKER_SRC})
+#if (BUILD_SHARED_LIBS)
+#	add_library(${PROJECT} ${CTOOLS_SRC} ${CONFIG_SYSTEM_SRC} ${GLVERSIONCHECKER_SRC})
+#	target_compile_definitions(${PROJECT} INTERFACE BUILD_SHARED_LIBS)
+#	set_target_properties(${PROJECT} PROPERTIES	RUNTIME_OUTPUT_DIRECTORY "${FINAL_BIN_DIR}")
+#	set_target_properties(${PROJECT} PROPERTIES POSITION_INDEPENDENT_CODE ON)
+#	target_link_libraries(${PROJECT} glfw)
+#else()
+	add_library(${PROJECT} STATIC ${CTOOLS_SRC} ${CONFIG_SYSTEM_SRC} ${GLVERSIONCHECKER_SRC})
+#endif()
 
 include_directories(.)
 

@@ -24,6 +24,18 @@ SOFTWARE.
 
 #pragma once
 
+#if defined(__WIN32__) || defined(WIN32) || defined(_WIN32) || defined(__WIN64__) || defined(WIN64) || defined(_WIN64) || defined(_MSC_VER)
+#if defined(ctools_EXPORTS)
+#define CTOOLS_API __declspec(dllexport)
+#elif defined(BUILD_SHARED_LIBS)
+#define CTOOLS_API __declspec(dllimport)
+#else
+#define CTOOLS_API
+#endif
+#elif defined(__linux__) || defined(__FreeBSD__) || defined(__DragonFly__) || defined(__NetBSD__) || defined(__EMSCRIPTEN__) || defined(__APPLE__)
+#define CTOOLS_API
+#endif
+
 #include "cTools.h"
 
 #include <cstdarg>     /* va_list, va_start, va_arg, va_end */
@@ -68,7 +80,7 @@ enum class LogMessageTypeEnum
 #endif
 
 struct ImGuiContext;
-class Logger
+class CTOOLS_API Logger
 {
 public:
 	static std::function<void(const int& vType, const std::string& vMessage)> sStandardLogFunction;

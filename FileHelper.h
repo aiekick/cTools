@@ -28,6 +28,18 @@ SOFTWARE.
 #include <map>
 #include <memory>
 
+#if defined(__WIN32__) || defined(WIN32) || defined(_WIN32) || defined(__WIN64__) || defined(WIN64) || defined(_WIN64) || defined(_MSC_VER)
+#if defined(ctools_EXPORTS)
+#define CTOOLS_API __declspec(dllexport)
+#elif defined(BUILD_SHARED_LIBS)
+#define CTOOLS_API __declspec(dllimport)
+#else
+#define CTOOLS_API
+#endif
+#elif defined(__linux__) || defined(__FreeBSD__) || defined(__DragonFly__) || defined(__NetBSD__) || defined(__EMSCRIPTEN__) || defined(__APPLE__)
+#define CTOOLS_API
+#endif
+
 struct PathStruct
 {
 	std::string path;
@@ -55,7 +67,7 @@ typedef int FileLocation;
 #ifdef USE_GLFW3
 struct GLFWwindow;
 #endif
-class FileHelper
+class CTOOLS_API FileHelper
 {
 public: // static
 	static std::string AppPath;

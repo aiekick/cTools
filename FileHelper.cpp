@@ -49,7 +49,7 @@ SOFTWARE.
 	// includes
 #include <shellapi.h>
 #pragma comment(lib,"shlwapi.lib")
-#include <direct.h>
+#include <direct.h> // _chdir
 // defines
 #define stat _stat
 #define S_IFDIR _S_IFDIR
