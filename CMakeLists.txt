@@ -8,8 +8,8 @@ option(USE_GL_VERSION_CHECKER "Use Gl Version Checker class" OFF)
 option(USE_CONFIG_SYSTEM "Use Config Load/Save class" ON)
 option(USE_GLFW_CLIPBOARD "Use Clipboard via GLFW3 (need glfW3)" OFF)
 option(USE_SDL_CLIPBOARD "Use Clipboard via SDL2 (need SDL2)" OFF)
-option(USE_CTOOLS_TESTING "Enable Tests" OFF)
-option(USE_TOOLS_SHARED_LIB  "Enable Ctools Shared Lib" OFF)
+option(USE_TESTING_CTOOLS "Enable Ctools Tests" OFF)
+option(USE_SHARED_LIB_CTOOLS  "Enable Ctools Shared Lib" OFF)
 
 file(GLOB CTOOLS_SRC 
 	${CMAKE_CURRENT_SOURCE_DIR}/src/cTools.cpp 
@@ -67,7 +67,7 @@ else ()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
 endif ()
 
-if (USE_TOOLS_SHARED_LIB)
+if (USE_SHARED_LIB_CTOOLS)
 	set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
 	set(USE_MSVC_RUNTIME_LIBRARY_DLL ON CACHE BOOL "" FORCE)
 	add_library(${PROJECT} ${CTOOLS_SRC} ${CONFIG_SYSTEM_SRC} ${GLVERSIONCHECKER_SRC})
@@ -107,7 +107,7 @@ set(CTOOLS_LIB_DIR ${CMAKE_CURRENT_BINARY_DIR} PARENT_SCOPE)
 ### TESTS ###################################################
 #############################################################
 
-if(USE_CTOOLS_TESTING)
+if(USE_TESTING_CTOOLS)
 	enable_testing()
 	add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests)
 	set(LLVM_USE_CRT_DEBUG MTd CACHE STRING "" FORCE)
