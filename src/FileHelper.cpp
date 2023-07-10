@@ -224,7 +224,7 @@ std::string PathStruct::GetFPNE_WithExt(const std::string& vExt)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // static
-std::string FileHelper::AppPath = std::string();
+CTOOLS_API std::string FileHelper::AppPath = std::string();
 
 FileHelper::FileHelper()
 {

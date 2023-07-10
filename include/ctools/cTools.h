@@ -137,10 +137,10 @@ using namespace cocos2d;
 
 namespace ct // cTools
 {
-	CTOOLS_API::std::string toStr(const char* fmt, ...);
+	CTOOLS_API ::std::string toStr(const char* fmt, ...);
 
-	CTOOLS_API::std::string toUpper(const std::string& vStr, const std::locale& vLocale = std::locale());
-	CTOOLS_API::std::string toLower(const std::string& vStr, const std::locale& vLocale = std::locale());
+	CTOOLS_API ::std::string toUpper(const std::string& vStr, const std::locale& vLocale = std::locale());
+	CTOOLS_API ::std::string toLower(const std::string& vStr, const std::locale& vLocale = std::locale());
 
 	template <typename T> ::std::string toStrFromArray(T* arr, size_t n, char delimiter = ';')
 	{
@@ -239,12 +239,12 @@ namespace ct // cTools
 	///////// splitStringToVector ///////////////////////////////
 	/////////////////////////////////////////////////////////////
 
-	::std::list<::std::string> splitStringToList(const ::std::string& text, const std::string& delimiters, bool pushEmpty = false, bool vInversion = false);
-	::std::vector<::std::string> splitStringToVector(const ::std::string& text, const std::string& delimiters, bool pushEmpty = false);
-	::std::set<::std::string> splitStringToSet(const ::std::string& text, const std::string& delimiters, bool pushEmpty = false);
-	::std::list<::std::string> splitStringToList(const ::std::string& text, char delimiter, bool pushEmpty = false, bool vInversion = false);
-	::std::vector<::std::string> splitStringToVector(const ::std::string& text, char delimiter, bool pushEmpty = false);
-	::std::set<::std::string> splitStringToSet(const ::std::string& text, char delimiter, bool pushEmpty = false);
+	CTOOLS_API ::std::list<::std::string> splitStringToList(const ::std::string& text, const std::string& delimiters, bool pushEmpty = false, bool vInversion = false);
+	CTOOLS_API ::std::vector<::std::string> splitStringToVector(const ::std::string& text, const std::string& delimiters, bool pushEmpty = false);
+	CTOOLS_API ::std::set<::std::string> splitStringToSet(const ::std::string& text, const std::string& delimiters, bool pushEmpty = false);
+	CTOOLS_API ::std::list<::std::string> splitStringToList(const ::std::string& text, char delimiter, bool pushEmpty = false, bool vInversion = false);
+	CTOOLS_API ::std::vector<::std::string> splitStringToVector(const ::std::string& text, char delimiter, bool pushEmpty = false);
+	CTOOLS_API ::std::set<::std::string> splitStringToSet(const ::std::string& text, char delimiter, bool pushEmpty = false);
 
 	/////////////////////////////////////////////////////////////
 	///////// StringToNumber ////////////////////////////////////
@@ -292,27 +292,27 @@ namespace ct // cTools
 	::std::wstring s2ws(const ::std::string& s);
 #endif
 
-	::std::vector<::std::string::size_type> strContains(const ::std::string& text, const ::std::string& word);
+	CTOOLS_API ::std::vector<::std::string::size_type> strContains(const ::std::string& text, const ::std::string& word);
 
-	bool replaceString(::std::string& str, const ::std::string& oldStr, const ::std::string& newStr);
+	CTOOLS_API bool replaceString(::std::string& str, const ::std::string& oldStr, const ::std::string& newStr);
 
-	size_t GetCountOccurence(const ::std::string& vSrcString, const ::std::string& vStringToCount);
-	size_t GetCountOccurenceInSection(const ::std::string& vSrcString, size_t vStartPos, size_t vEndpos, const ::std::string& vStringToCount);
-	size_t GetCountOccurence(const ::std::string& vSrcString, const char& vStringToCount);
-	size_t GetCountOccurenceInSection(const ::std::string& vSrcString, size_t vStartPos, size_t vEndpos, const char& vStringToCount);
+	CTOOLS_API size_t GetCountOccurence(const ::std::string& vSrcString, const ::std::string& vStringToCount);
+	CTOOLS_API size_t GetCountOccurenceInSection(const ::std::string& vSrcString, size_t vStartPos, size_t vEndpos, const ::std::string& vStringToCount);
+	CTOOLS_API size_t GetCountOccurence(const ::std::string& vSrcString, const char& vStringToCount);
+	CTOOLS_API size_t GetCountOccurenceInSection(const ::std::string& vSrcString, size_t vStartPos, size_t vEndpos, const char& vStringToCount);
 
 	// std::wstring to std::string
 	// std::wstring(unicode/multibytes/char16/wchar_t) to std::string(char)
-	std::string wstring_to_string(const std::wstring& wstr);
+	CTOOLS_API std::string wstring_to_string(const std::wstring& wstr);
 	// std::string to std::wstring
 	// std::string(char) to std::wstring(unicode/multibytes/char16/wchar_t)
-	std::wstring string_to_wstring(const std::string& mbstr);
+	CTOOLS_API std::wstring string_to_wstring(const std::string& mbstr);
 
 	/////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////
 
-	inline std::string round_n(double vvalue, int n)
+	CTOOLS_API inline std::string round_n(double vvalue, int n)
 	{
 		std::stringstream tmp;
 		tmp << std::setprecision(n) << std::fixed << vvalue;
@@ -320,7 +320,7 @@ namespace ct // cTools
 	}
 
 	/// This function is used to ensure that a floating point number is not a NaN or infinity.
-	inline bool floatIsValid(float x)
+	CTOOLS_API inline bool floatIsValid(float x)
 	{
 		const union {
 			float f;
@@ -481,7 +481,7 @@ namespace ct // cTools
 	///////// texture ///////////////////////////////////////////
 	/////////////////////////////////////////////////////////////
 #ifdef USE_OPENGL
-	class texture
+	class CTOOLS_API texture
 	{
 	public:
 		texture()
@@ -787,20 +787,20 @@ namespace ct // cTools
 	using u64vec2 = vec2<uint64_t>;
 
 	// convert
-	inline fvec2 convert(const ivec2& v) { return fvec2((float)v.x, (float)v.y); }
-	inline ivec2 convert(const fvec2& v) { return ivec2((int)v.x, (int)v.y); }
+	CTOOLS_API inline fvec2 convert(const ivec2& v) { return fvec2((float)v.x, (float)v.y); }
+	CTOOLS_API inline ivec2 convert(const fvec2& v) { return ivec2((int)v.x, (int)v.y); }
 
 #ifdef USE_BOX2D
-	inline b2Vec2 tob2v2(const fvec2& v) { return b2Vec2(v.x, v.y); }
-	inline b2Vec2 tob2v2(const fvec2& v, const float& r) { return b2Vec2(v.x / r, v.y / r); }
+	CTOOLS_API inline b2Vec2 tob2v2(const fvec2& v) { return b2Vec2(v.x, v.y); }
+	CTOOLS_API inline b2Vec2 tob2v2(const fvec2& v, const float& r) { return b2Vec2(v.x / r, v.y / r); }
 #endif
 
 	// specialization for float32 test to fvec2
-	inline bool valid(const fvec2& a) { return floatIsValid(a.x) && floatIsValid(a.y); }
+	CTOOLS_API inline bool valid(const fvec2& a) { return floatIsValid(a.x) && floatIsValid(a.y); }
 
 	// specialization for fvec2
-	inline bool operator == (const fvec2& v, const fvec2& f) { return (IS_FLOAT_EQUAL(f.x, v.x) && IS_FLOAT_EQUAL(f.y, v.y)); }
-	inline bool operator != (const fvec2& v, const fvec2& f) { return (IS_FLOAT_DIFFERENT(f.x, v.x) || IS_FLOAT_DIFFERENT(f.y, v.y)); }
+	CTOOLS_API inline bool operator == (const fvec2& v, const fvec2& f) { return (IS_FLOAT_EQUAL(f.x, v.x) && IS_FLOAT_EQUAL(f.y, v.y)); }
+	CTOOLS_API inline bool operator != (const fvec2& v, const fvec2& f) { return (IS_FLOAT_DIFFERENT(f.x, v.x) || IS_FLOAT_DIFFERENT(f.y, v.y)); }
 
 	// ne peut focntionner qu'avec double ou float au fond
 	template <typename T>
@@ -815,8 +815,8 @@ namespace ct // cTools
 	}
 
 	// specialisation
-	inline float radAngleFromVec2(const fvec2& vec) { return prototype_radAngleFromVec2(vec); }
-	inline double radAngleFromVec2(const dvec2& vec) { return prototype_radAngleFromVec2(vec); }
+	CTOOLS_API inline float radAngleFromVec2(const fvec2& vec) { return prototype_radAngleFromVec2(vec); }
+	CTOOLS_API inline double radAngleFromVec2(const dvec2& vec) { return prototype_radAngleFromVec2(vec); }
 
 	// ne peut focntionner qu'avec double ou float au fond
 	template <typename T>
@@ -829,8 +829,8 @@ namespace ct // cTools
 	}
 
 	// specialisation
-	inline float radAngleContinuousFromVec2(const fvec2& vec, float angleOffset) { return prototype_radAngleContinuousFromVec2(vec, angleOffset); }
-	inline double radAngleContinuousFromVec2(const dvec2& vec, double angleOffset) { return prototype_radAngleContinuousFromVec2(vec, angleOffset); }
+	CTOOLS_API inline float radAngleContinuousFromVec2(const fvec2& vec, float angleOffset) { return prototype_radAngleContinuousFromVec2(vec, angleOffset); }
+	CTOOLS_API inline double radAngleContinuousFromVec2(const dvec2& vec, double angleOffset) { return prototype_radAngleContinuousFromVec2(vec, angleOffset); }
 
 	/////////////////////////////////////////////////////////////////////////
 
@@ -987,10 +987,10 @@ namespace ct // cTools
 	using u64vec3 = vec3<uint64_t>;
 
 	// specialization for float32 test to fvec3
-	inline bool valid(const fvec3& a) { return floatIsValid(a.x) && floatIsValid(a.y) && floatIsValid(a.z); }
+	CTOOLS_API inline bool valid(const fvec3& a) { return floatIsValid(a.x) && floatIsValid(a.y) && floatIsValid(a.z); }
 	// specialization for fvec2
-	inline bool operator == (const fvec3& v, const fvec3& f) { return IS_FLOAT_EQUAL(f.x, v.x) && IS_FLOAT_EQUAL(f.y, v.y) && IS_FLOAT_EQUAL(f.z, v.z); }
-	inline bool operator != (const fvec3& v, const fvec3& f) { return IS_FLOAT_DIFFERENT(f.x, v.x) || IS_FLOAT_DIFFERENT(f.y, v.y) || IS_FLOAT_DIFFERENT(f.z, v.z); }
+	CTOOLS_API inline bool operator == (const fvec3& v, const fvec3& f) { return IS_FLOAT_EQUAL(f.x, v.x) && IS_FLOAT_EQUAL(f.y, v.y) && IS_FLOAT_EQUAL(f.z, v.z); }
+	CTOOLS_API inline bool operator != (const fvec3& v, const fvec3& f) { return IS_FLOAT_DIFFERENT(f.x, v.x) || IS_FLOAT_DIFFERENT(f.y, v.y) || IS_FLOAT_DIFFERENT(f.z, v.z); }
 
 	/////////////////////////////////////////////////////////////////////////
 
@@ -1156,21 +1156,21 @@ namespace ct // cTools
 	using u64vec4 = vec4<uint64_t>;
 
 	// specialization for float32 test to fvec4
-	inline bool valid(const fvec4& a) { return floatIsValid(a.x) && floatIsValid(a.y) && floatIsValid(a.z) && floatIsValid(a.w); }
+	CTOOLS_API inline bool valid(const fvec4& a) { return floatIsValid(a.x) && floatIsValid(a.y) && floatIsValid(a.z) && floatIsValid(a.w); }
 
 	// specialization for fvec4
-	inline bool operator == (const fvec4& v, const fvec4& f) { return IS_FLOAT_EQUAL(f.x, v.x) && IS_FLOAT_EQUAL(f.y, v.y) && IS_FLOAT_EQUAL(f.z, v.z) && IS_FLOAT_EQUAL(f.w, v.w); }
-	inline bool operator != (const fvec4& v, const fvec4& f) { return IS_FLOAT_DIFFERENT(f.x, v.x) || IS_FLOAT_DIFFERENT(f.y, v.y) || IS_FLOAT_DIFFERENT(f.z, v.z) || IS_FLOAT_DIFFERENT(f.w, v.w); }
+	CTOOLS_API inline bool operator == (const fvec4& v, const fvec4& f) { return IS_FLOAT_EQUAL(f.x, v.x) && IS_FLOAT_EQUAL(f.y, v.y) && IS_FLOAT_EQUAL(f.z, v.z) && IS_FLOAT_EQUAL(f.w, v.w); }
+	CTOOLS_API inline bool operator != (const fvec4& v, const fvec4& f) { return IS_FLOAT_DIFFERENT(f.x, v.x) || IS_FLOAT_DIFFERENT(f.y, v.y) || IS_FLOAT_DIFFERENT(f.z, v.z) || IS_FLOAT_DIFFERENT(f.w, v.w); }
 
 	/////////////////////////////////////////////////////////////////////////
 
 #ifdef USE_IMGUI
-	inline ImVec2 toImVec2(const fvec2& v) { return ImVec2(v.x, v.y); }
-	inline ImVec2 toImVec2(const ivec2& v) { return ImVec2((float)v.x, (float)v.y); }
-	inline ImVec2 toImVec2(const dvec2& v) { return ImVec2((float)v.x, (float)v.y); }
-	inline ImVec4 toImVec4(const fvec4& v) { return ImVec4(v.x, v.y, v.z, v.w); }
-	inline ImVec4 toImVec4(const ivec4& v) { return ImVec4((float)v.x, (float)v.y, (float)v.z, (float)v.w); }
-	inline ImVec4 toImVec4(const dvec4& v) { return ImVec4((float)v.x, (float)v.y, (float)v.z, (float)v.w); }
+	CTOOLS_API inline ImVec2 toImVec2(const fvec2& v) { return ImVec2(v.x, v.y); }
+	CTOOLS_API inline ImVec2 toImVec2(const ivec2& v) { return ImVec2((float)v.x, (float)v.y); }
+	CTOOLS_API inline ImVec2 toImVec2(const dvec2& v) { return ImVec2((float)v.x, (float)v.y); }
+	CTOOLS_API inline ImVec4 toImVec4(const fvec4& v) { return ImVec4(v.x, v.y, v.z, v.w); }
+	CTOOLS_API inline ImVec4 toImVec4(const ivec4& v) { return ImVec4((float)v.x, (float)v.y, (float)v.z, (float)v.w); }
+	CTOOLS_API inline ImVec4 toImVec4(const dvec4& v) { return ImVec4((float)v.x, (float)v.y, (float)v.z, (float)v.w); }
 #endif
 
 	/////////////////////////////////////////////////////////////////////////
@@ -1305,9 +1305,9 @@ namespace ct // cTools
 	///////// BUFFERS ///////////////////////////////////////////
 	/////////////////////////////////////////////////////////////
 
-	void SetBuffer(char* vBuffer, size_t vBufferLen, const ::std::string& vStr);
-	void AppendToBuffer(char* vBuffer, size_t vBufferLen, const ::std::string& vStr);
-	void ResetBuffer(char* vBuffer);
+	CTOOLS_API void SetBuffer(char* vBuffer, size_t vBufferLen, const ::std::string& vStr);
+	CTOOLS_API void AppendToBuffer(char* vBuffer, size_t vBufferLen, const ::std::string& vStr);
+	CTOOLS_API void ResetBuffer(char* vBuffer);
 
 	/////////////////////////////////////////////////////////////
 	///////// AABB //////////////////////////////////////////////
@@ -2265,10 +2265,10 @@ namespace ct // cTools
 		T vNewRangeInf, T vNewRangeSup,
 		T vValue);
 
-	size_t ratioOfSizeT(size_t t, double r);
+	CTOOLS_API size_t ratioOfSizeT(size_t t, double r);
 
 	// format 2500000 to 2.5M by ex
-	std::string FormatNum(size_t vNum, int vDecimalCount);
+	CTOOLS_API std::string FormatNum(size_t vNum, int vDecimalCount);
 
 	/////////////////////////////////////////////////////////////
 	/// Specialisation et gestion des type complex de toStr /////
