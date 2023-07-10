@@ -28,9 +28,9 @@ SOFTWARE.
 //#pragma warning(disable:4311)
 //#pragma warning(disable:4302)
 
-#include "FileHelper.h"
+#include <ctools/FileHelper.h>
 
-#include "cTools.h"
+#include <ctools/cTools.h>
 
 #ifdef USE_GLFW3
 // for clipboard
@@ -299,7 +299,7 @@ std::vector<uint8_t> FileHelper::LoadFileToBytes(const std::string & vFilePathNa
 		// obtain file size:
 #ifdef _MSC_VER
 		_fseeki64(intput_file, 0, SEEK_END);
-		fileSize = _ftelli64(intput_file);
+		fileSize = (long)_ftelli64(intput_file);
 #else
 		fseek(intput_file, 0, SEEK_END);
 		fileSize = ftell(intput_file);

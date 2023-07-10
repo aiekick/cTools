@@ -137,10 +137,10 @@ using namespace cocos2d;
 
 namespace ct // cTools
 {
-	::std::string toStr(const char* fmt, ...);
+	CTOOLS_API::std::string toStr(const char* fmt, ...);
 
-	::std::string toUpper(const std::string& vStr, const std::locale& vLocale = std::locale());
-	::std::string toLower(const std::string& vStr, const std::locale& vLocale = std::locale());
+	CTOOLS_API::std::string toUpper(const std::string& vStr, const std::locale& vLocale = std::locale());
+	CTOOLS_API::std::string toLower(const std::string& vStr, const std::locale& vLocale = std::locale());
 
 	template <typename T> ::std::string toStrFromArray(T* arr, size_t n, char delimiter = ';')
 	{
@@ -451,9 +451,9 @@ namespace ct // cTools
 	///////// ActionTime ///////////////////////////////////////
 	/////////////////////////////////////////////////////////////
 
-	uint64_t GetTicks();
-	float GetTimeInterval();
-	class ActionTime
+	CTOOLS_API uint64_t GetTicks();
+	CTOOLS_API float GetTimeInterval();
+	class CTOOLS_API ActionTime
 	{
 	public:
 		uint64_t lastTick = 0;
