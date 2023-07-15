@@ -28,9 +28,8 @@ SOFTWARE.
 //#pragma warning(disable:4311)
 //#pragma warning(disable:4302)
 
-#include "FileHelper.h"
-
-#include "cTools.h"
+#include <ctools/FileHelper.h>
+#include <ctools/cTools.h>
 
 #ifdef USE_GLFW3
 // for clipboard

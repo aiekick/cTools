@@ -25,7 +25,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "Logger.h"
+#include <ctools/Logger.h>
 
 #ifdef USE_GLFW3
 #include <GLFW/glfw3.h>
