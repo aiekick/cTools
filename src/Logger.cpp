@@ -40,16 +40,16 @@ SOFTWARE.
 //// STATIC ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-std::function<void(const int& vType, const std::string& vMessage)> Logger::sStandardLogFunction = nullptr;
-std::function<void(const int& vType, const std::string& vMessage)> Logger::sOpenGLLogFunction = nullptr;
+CTOOLS_API std::function<void(const int& vType, const std::string& vMessage)> Logger::sStandardLogFunction = nullptr;
+CTOOLS_API std::function<void(const int& vType, const std::string& vMessage)> Logger::sOpenGLLogFunction = nullptr;
 
 ////////////////////////////////////////////////////////////////////////////////
 //// CONSTRUCTORS //////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
 // singleton
-ofstream Logger::debugLogFile;
-std::mutex Logger::Logger_Mutex;
+CTOOLS_API ofstream Logger::debugLogFile;
+CTOOLS_API std::mutex Logger::Logger_Mutex;
 
 Logger::Logger(void)
 {

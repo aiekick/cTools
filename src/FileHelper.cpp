@@ -223,7 +223,7 @@ std::string PathStruct::GetFPNE_WithExt(const std::string& vExt)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // static
-std::string FileHelper::AppPath = std::string();
+CTOOLS_API std::string FileHelper::AppPath = std::string();
 
 FileHelper::FileHelper()
 {
@@ -298,7 +298,7 @@ std::vector<uint8_t> FileHelper::LoadFileToBytes(const std::string & vFilePathNa
 		// obtain file size:
 #ifdef _MSC_VER
 		_fseeki64(intput_file, 0, SEEK_END);
-		fileSize = _ftelli64(intput_file);
+		fileSize = (long)_ftelli64(intput_file);
 #else
 		fseek(intput_file, 0, SEEK_END);
 		fileSize = ftell(intput_file);

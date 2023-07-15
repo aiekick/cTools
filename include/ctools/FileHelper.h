@@ -41,7 +41,7 @@ SOFTWARE.
 #define CTOOLS_API
 #endif
 
-struct PathStruct
+struct CTOOLS_API PathStruct
 {
 	std::string path;
 	std::string name;
