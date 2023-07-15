@@ -95,7 +95,7 @@ void Logger::LogString(const LogMessageTypeEnum* vType, const std::string* vFunc
 		TracyMessageL(puMessages[puMessages.size() - 1U].c_str());
 #endif
 
-		printf("%s\n", msg.c_str());
+		std::cout << msg << std::endl;
 
 		if (vStr && sStandardLogFunction)
 		{
