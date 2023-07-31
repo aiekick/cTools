@@ -550,7 +550,7 @@ public:
     void Resume();
     uint64_t Get() const;
     double GetTime() const;
-    void setTime(double vValue);  // set le temps
+    void SetTime(double vValue);  // set le temps
 
     // verifie si vMs millisecond depuis le dernier fix et donc si on peut agir
     // vFix permet de fixer le temps pour la prochaine action

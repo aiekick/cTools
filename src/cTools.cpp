@@ -432,7 +432,7 @@ void ct::ActionTime::Fix()  // fixe les marqueur de temps
 void ct::ActionTime::FixTime(double vValue)  // fixe les marqueur de temps
 {
     Fix();
-    setTime(vValue);
+    SetTime(vValue);
 }
 
 void ct::ActionTime::Pause() {
@@ -451,12 +451,12 @@ uint64_t ct::ActionTime::Get() const {
 }
 
 double ct::ActionTime::GetTime() const {
-    static double secMult = 1.0 / 1000.0;
+    static double secMult = 1e-3;
     return (ct::GetTicks() - lastTick) * secMult;
 }
 
-void ct::ActionTime::setTime(double vValue) {
-    const auto v = (uint64_t)(((double)vValue) * 1000.0);
+void ct::ActionTime::SetTime(double vValue) {
+    const auto v = (uint64_t)(vValue * 1000.0);
     lastTick     = ct::GetTicks() - v;
 }
 
