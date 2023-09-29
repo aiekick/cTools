@@ -23,8 +23,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "GLVersionChecker.h"
-#include "Logger.h"
+#include <ctools/GLVersionChecker.h>
+#include <ctools/Logger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -242,7 +242,7 @@ void OpenglInfosStruct::fill()
 #ifdef USE_IMGUI
 void OpenglInfosStruct::drawImGui()
 {
-    /*if (ImGui::BeginMenu("Opengl Infos"))
+    if (ImGui::BeginMenu("Opengl Infos"))
 	{
 		ImGui::Text("Opengl Version %i.%i", majorGLVersion, minorGLVersion);
 		
@@ -310,7 +310,7 @@ void OpenglInfosStruct::drawImGui()
 				ImGui::EndMenu();
 			}
 			
-			if (ImGui::BeginMenu("Teseelation Infos"))
+			if (ImGui::BeginMenu("Tesselation Infos"))
 			{
 				ImGui::Text("Control");
 				ImGui::Text("GL_MAX_TESS_CONTROL_ATOMIC_COUNTERS :          %i", maxTesselationControlAtomicCounters);
@@ -324,7 +324,7 @@ void OpenglInfosStruct::drawImGui()
 				ImGui::EndMenu();
 			}
 
-			if (ImGui::BeginMenu("Frament Infos"))
+			if (ImGui::BeginMenu("Fragment Infos"))
 			{
 				ImGui::Text("GL_MAX_FRAGMENT_ATOMIC_COUNTERS :       %i", maxFragmentAtomicCounters);
 				ImGui::Text("GL_MAX_FRAGMENT_SHADER_STORAGE_BLOCKS : %i", maxFragmentShaderStorageBlocks);
@@ -436,7 +436,7 @@ void OpenglInfosStruct::drawImGui()
 		}
 
 		ImGui::EndMenu();
-	}*/
+	}
 }
 #endif
 

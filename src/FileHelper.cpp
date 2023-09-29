@@ -414,6 +414,16 @@ void FileHelper::Test_GetRelativePathToPath()
 }
 #endif
 
+std::string FileHelper::GetAppRelativeFilePathName(const std::string& vFilePathName) {
+    if (!vFilePathName.empty()) {
+        if (IsFileExist(vFilePathName)) {
+            auto file_path_name = SimplifyFilePath(vFilePathName);
+            return GetPathRelativeToApp(file_path_name);
+        }
+    }
+    return {};
+}
+
 std::string FileHelper::GetRelativePathToPath(const std::string & vFilePathName, const std::string & vRootPath)
 {
 	std::string res = vFilePathName;
@@ -424,50 +434,47 @@ std::string FileHelper::GetRelativePathToPath(const std::string & vFilePathName,
 	{
 		if (IsAbsolutePath(vFilePathName))
 		{
-			//vRootPath = "C:\\gamedev\\github\\ImGuiFontStudio_avp\\build\\Debug\\..\\..\\projects"
-			//vFilePathName = "C:\\gamedev\\github\\ImGuiFontStudio_avp\\samples_Fonts\\fontawesome-webfont.ttf"
-			auto rootArr = ct::splitStringToVector(CorrectSlashTypeForFilePathName(vRootPath), puSlashType);
-			auto inArr = ct::splitStringToVector(CorrectSlashTypeForFilePathName(vFilePathName), puSlashType);
-			if (!inArr.empty() && !rootArr.empty())
-			{
-				std::vector<std::string> outArr;
-				size_t ro = 0, in = 0;
-				while (ro < rootArr.size() || in < inArr.size())
-				{
-					if (ro < rootArr.size() && in < inArr.size())
-					{
-						if (rootArr[ro] != inArr[in])
-						{
-							outArr.emplace_back("..");
-							++ro;
-						}
-						else
-						{
-							++ro;
-							++in;
-						}
-					}
-					else if (ro < rootArr.size()) // rootArr > inArr
-					{
-						outArr.emplace_back("..");
-						++ro;
-					}
-					else if (in < inArr.size()) // rootArr < inArr
-					{
-						outArr.emplace_back(inArr[in]);
-						++in;
-					}
-				}
+#ifdef WIN32
+            if (vFilePathName[0] == vRootPath[0]) // same drive letter.
+#else
+#endif
+            {
+                // vRootPath = "C:\\gamedev\\github\\ImGuiFontStudio_avp\\build\\Debug\\..\\..\\projects"
+                // vFilePathName = "C:\\gamedev\\github\\ImGuiFontStudio_avp\\samples_Fonts\\fontawesome-webfont.ttf"
+                auto rootArr = ct::splitStringToVector(CorrectSlashTypeForFilePathName(vRootPath), puSlashType);
+                auto inArr = ct::splitStringToVector(CorrectSlashTypeForFilePathName(vFilePathName), puSlashType);
+                if (!inArr.empty() && !rootArr.empty()) {
+                    std::vector<std::string> outArr;
+                    size_t ro = 0, in = 0;
+                    while (ro < rootArr.size() || in < inArr.size()) {
+                        if (ro < rootArr.size() && in < inArr.size()) {
+                            if (rootArr[ro] != inArr[in]) {
+                                outArr.emplace_back("..");
+                                ++ro;
+                            } else {
+                                ++ro;
+                                ++in;
+                            }
+                        } else if (ro < rootArr.size())  // rootArr > inArr
+                        {
+                            outArr.emplace_back("..");
+                            ++ro;
+                        } else if (in < inArr.size())  // rootArr < inArr
+                        {
+                            outArr.emplace_back(inArr[in]);
+                            ++in;
+                        }
+                    }
 
-				// assemble path
-				res.clear();
-				for (auto& it : outArr)
-				{
-					if (!res.empty())
-						res += puSlashType;
-					res += it;
-				}
-			}
+                    // assemble path
+                    res.clear();
+                    for (auto& it : outArr) {
+                        if (!res.empty())
+                            res += puSlashType;
+                        res += it;
+                    }
+                }
+            }
 		}
 #ifdef _DEBUG
 		else

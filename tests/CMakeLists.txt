@@ -15,7 +15,7 @@ file(GLOB_RECURSE PROJECT_TEST_SRC_RECURSE
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${PROJECT_TEST_SRC_RECURSE})
 include_directories(${CTOOLS_INCLUDE_DIR})
 add_executable(${PROJECT} ${PROJECT_TEST_SRC_RECURSE})
-target_link_libraries(${PROJECT} PRIVATE ${CTOOLS_LIBRARIES})
+target_link_libraries(${PROJECT} ${CTOOLS_LIBRARIES})
 set_target_properties(${PROJECT} PROPERTIES FOLDER Tests)
 
 function(AddTest arg)

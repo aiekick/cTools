@@ -74,7 +74,7 @@ Logger::~Logger(void)
 
 #define MAX_BUFFER_SIZE 1024 * 3
 
-void Logger::LogString(const LogMessageTypeEnum* vType, const std::string* vFunction, const int* vLine, const char* vStr)
+void Logger::LogString(const LogMessageType* vType, const std::string* vFunction, const int* vLine, const char* vStr)
 {
 	const int64 ticks = ct::GetTicks();
 	const double time = (ticks - lastTick) / 100.0;
@@ -125,7 +125,7 @@ void Logger::LogString(const LogMessageTypeEnum* vType, const std::string* vFunc
 	}
 }
 
-void Logger::LogString(const LogMessageTypeEnum* vType, const std::string* vFunction, const int* vLine, const char* fmt, va_list vArgs)
+void Logger::LogString(const LogMessageType* vType, const std::string* vFunction, const int* vLine, const char* fmt, va_list vArgs)
 {
 	static char TempBuffer[MAX_BUFFER_SIZE + 1];
 	int w = vsnprintf(TempBuffer, MAX_BUFFER_SIZE, fmt, vArgs);
@@ -149,7 +149,7 @@ void Logger::LogSimpleString(const char* fmt, ...)
 	lck.unlock();
 }
 
-void Logger::LogSimpleStringByType(const LogMessageTypeEnum& vType, const char* fmt, ...)
+void Logger::LogSimpleStringByType(const LogMessageType& vType, const char* fmt, ...)
 {
 #if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
 	ZoneScoped;
@@ -177,7 +177,7 @@ void Logger::LogStringWithFunction(const std::string& vFunction, const int& vLin
 	lck.unlock();
 }
 
-void Logger::LogStringByTypeWithFunction(const LogMessageTypeEnum& vType, const std::string& vFunction, const int& vLine, const char* fmt, ...)
+void Logger::LogStringByTypeWithFunction(const LogMessageType& vType, const std::string& vFunction, const int& vLine, const char* fmt, ...)
 {
 #if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
 	ZoneScoped;
@@ -189,6 +189,26 @@ void Logger::LogStringByTypeWithFunction(const LogMessageTypeEnum& vType, const 
 	LogString(&vType, &vFunction, &vLine, fmt, args);
 	va_end(args);
 	lck.unlock();
+}
+
+void Logger::LogStringByTypeWithFunction_Debug(
+    const LogMessageType& vType, const std::string& vFunction, const int& vLine, const char* fmt, ...) {
+#ifdef _DEBUG
+#if defined(TRACY_ENABLE) && defined(LOG_TRACY_MESSAGES)
+    ZoneScoped;
+#endif
+    std::unique_lock<std::mutex> lck(Logger::Logger_Mutex, std::defer_lock);
+    lck.lock();
+    va_list args;
+    va_start(args, fmt);
+    LogString(&vType, &vFunction, &vLine, fmt, args);
+    va_end(args);
+    lck.unlock();
+#else
+    UNUSED(vFunction);
+    UNUSED(vLine);
+    UNUSED(fmt);
+#endif
 }
 
 void Logger::LogStringWithFunction_Debug(const std::string& vFunction, const int& vLine, const char* fmt, ...)

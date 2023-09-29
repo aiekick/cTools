@@ -25,7 +25,8 @@ SOFTWARE.
 #pragma once
 #pragma warning(disable : 4251)
 
-#if defined(__WIN32__) || defined(WIN32) || defined(_WIN32) || defined(__WIN64__) || defined(WIN64) || defined(_WIN64) || defined(_MSC_VER)
+#if defined(__WIN32__) || defined(WIN32) || defined(_WIN32) || defined(__WIN64__) || defined(WIN64) || \
+    defined(_WIN64) || defined(_MSC_VER)
 #if defined(ctools_EXPORTS)
 #define CTOOLS_API __declspec(dllexport)
 #elif defined(BUILD_CTOOLS_SHARED_LIBS)
