@@ -923,7 +923,7 @@ std::vector<std::string> FileHelper::GetAbsolutePathForFileLocation(const std::v
 
 	for (const auto& it : vRelativeFilePathNames)
 	{
-		res.emplace_back(GetAbsolutePathForFileLocation(it, vFileType));
+		res.push_back(GetAbsolutePathForFileLocation(it, vFileType));
 	}
 
 	return res;
