@@ -1,6 +1,6 @@
-[<img src="https://github.com/aiekick/cTools/workflows/Win/badge.svg" width="150"/>](https://github.com/aiekick/cTools/actions?query=workflow%3AWin) 
-[<img src="https://github.com/aiekick/cTools/workflows/Linux/badge.svg" width="165"/>](https://github.com/aiekick/cTools/actions?query=workflow%3ALinux) 
-[<img src="https://github.com/aiekick/cTools/workflows/Osx/badge.svg" width="150"/>](https://github.com/aiekick/cTools/actions?query=workflow%3AOsx)
+[![Win](https://github.com/aiekick/cTools/actions/workflows/Win.yml/badge.svg)](https://github.com/aiekick/cTools/actions/workflows/Win.yml)
+[![Linux](https://github.com/aiekick/cTools/actions/workflows/Linux.yml/badge.svg)](https://github.com/aiekick/cTools/actions/workflows/Linux.yml)
+[![Osx](https://github.com/aiekick/cTools/actions/workflows/Osx.yml/badge.svg)](https://github.com/aiekick/cTools/actions/workflows/Osx.yml)
 
 ## cTools :
 
