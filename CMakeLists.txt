@@ -11,6 +11,10 @@ option(USE_SDL_CLIPBOARD "Use Clipboard via SDL2 (need SDL2)" OFF)
 option(USE_TESTING_CTOOLS "Enable Ctools Tests" OFF)
 option(USE_SHARED_LIB_CTOOLS  "Enable Ctools Shared Lib" OFF)
 
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 file(GLOB CTOOLS_SRC 
 	${CMAKE_CURRENT_SOURCE_DIR}/src/cTools.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Logger.cpp 
