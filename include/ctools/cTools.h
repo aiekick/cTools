@@ -160,15 +160,15 @@ using namespace cocos2d;
 
 namespace ct  // cTools
 {
-CTOOLS_API ::std::string toStr(const char* fmt, ...);
+CTOOLS_API std::string toStr(const char* fmt, ...);
 
-CTOOLS_API ::std::string toUpper(const std::string& vStr, const std::locale& vLocale = std::locale());
-CTOOLS_API ::std::string toLower(const std::string& vStr, const std::locale& vLocale = std::locale());
+CTOOLS_API std::string toUpper(const std::string& vStr, const std::locale& vLocale = std::locale());
+CTOOLS_API std::string toLower(const std::string& vStr, const std::locale& vLocale = std::locale());
 
 template <typename T>
 ::std::string toStrFromArray(T* arr, size_t n, char delimiter = ';') {
     if (arr) {
-        ::std::ostringstream os;
+        std::ostringstream os;
         for (size_t i = 0; i < n; ++i) {
             os << arr[i];
             if (i < n - 1)
@@ -181,26 +181,26 @@ template <typename T>
 
 template <typename T>
 ::std::string toStr(T t) {
-    ::std::ostringstream os;
+    std::ostringstream os;
     os << t;
     return os.str();
 }
 
 #ifdef USE_IMGUI
-::std::string toStrFromImVec2(ImVec2 v, char delimiter = ';');
-::std::string toStrFromImVec4(ImVec4 v, char delimiter = ';');
+std::string toStrFromImVec2(ImVec2 v, char delimiter = ';');
+std::string toStrFromImVec4(ImVec4 v, char delimiter = ';');
 #endif
 
 #include <ios>
 template <typename T>
-::std::string toHexStr(T t) {
-    ::std::ostringstream os;
+std::string toHexStr(T t) {
+    std::ostringstream os;
     os << std::hex << t;
     return os.str();
 }
 template <typename T>
-::std::string toDecStr(T t) {
-    ::std::ostringstream os;
+std::string toDecStr(T t) {
+    std::ostringstream os;
     os << std::dec << t;
     return os.str();
 }
@@ -265,22 +265,22 @@ void CTOOLS_API unsetbit(int32_t vContainer, int32_t vBit);
 ///////// splitStringToVector ///////////////////////////////
 /////////////////////////////////////////////////////////////
 
-CTOOLS_API ::std::list<::std::string> splitStringToList(const ::std::string& text, const std::string& delimiters, bool pushEmpty = false, bool vInversion = false);
-CTOOLS_API ::std::vector<::std::string> splitStringToVector(const ::std::string& text, const std::string& delimiters, bool pushEmpty = false);
-CTOOLS_API ::std::set<::std::string> splitStringToSet(const ::std::string& text, const std::string& delimiters, bool pushEmpty = false);
-CTOOLS_API ::std::list<::std::string> splitStringToList(const ::std::string& text, char delimiter, bool pushEmpty = false, bool vInversion = false);
-CTOOLS_API ::std::vector<::std::string> splitStringToVector(const ::std::string& text, char delimiter, bool pushEmpty = false);
-CTOOLS_API ::std::set<::std::string> splitStringToSet(const ::std::string& text, char delimiter, bool pushEmpty = false);
+CTOOLS_API std::list<std::string> splitStringToList(const std::string& text, const std::string& delimiters, bool pushEmpty = false, bool vInversion = false);
+CTOOLS_API std::vector<std::string> splitStringToVector(const std::string& text, const std::string& delimiters, bool pushEmpty = false);
+CTOOLS_API std::set<std::string> splitStringToSet(const std::string& text, const std::string& delimiters, bool pushEmpty = false);
+CTOOLS_API std::list<std::string> splitStringToList(const std::string& text, char delimiter, bool pushEmpty = false, bool vInversion = false);
+CTOOLS_API std::vector<std::string> splitStringToVector(const std::string& text, char delimiter, bool pushEmpty = false);
+CTOOLS_API std::set<std::string> splitStringToSet(const std::string& text, char delimiter, bool pushEmpty = false);
 
 /////////////////////////////////////////////////////////////
 ///////// StringToNumber ////////////////////////////////////
 /////////////////////////////////////////////////////////////
 
 template <typename T>
-T StringToNumber(const ::std::string& text) {
+T StringToNumber(const std::string& text) {
     T value = (T)0;
     try {
-        ::std::stringstream ss(text);
+        std::stringstream ss(text);
         ss >> value;
     } catch (std::exception&) {
         printf("%s is not a number\n", text.c_str());
@@ -288,12 +288,12 @@ T StringToNumber(const ::std::string& text) {
     return value;
 }
 template <typename T>
-::std::vector<T> StringToNumberVector(const ::std::string& text, char delimiter) {
-    ::std::vector<T> arr;
-    ::std::string::size_type start = 0;
-    ::std::string::size_type end   = text.find(delimiter, start);
-    while (end != ::std::string::npos) {
-        ::std::string token = text.substr(start, end - start);
+std::vector<T> StringToNumberVector(const std::string& text, char delimiter) {
+    std::vector<T> arr;
+    std::string::size_type start = 0;
+    std::string::size_type end   = text.find(delimiter, start);
+    while (end != std::string::npos) {
+        std::string token = text.substr(start, end - start);
 
         arr.emplace_back(StringToNumber<T>(token));
         start = end + 1;
@@ -305,23 +305,23 @@ template <typename T>
 
 /*
 #ifndef MINGW32
-bool StringToFloat(::std::string vWord, float *vFloat);
-bool StringToInt(::std::string vWord, int *vInt);
+bool StringToFloat(std::string vWord, float *vFloat);
+bool StringToInt(std::string vWord, int *vInt);
 #endif
 */
 
 #ifdef WXWIDGETS
-::std::wstring s2ws(const ::std::string& s);
+std::wstring s2ws(const std::string& s);
 #endif
 
-CTOOLS_API ::std::vector<::std::string::size_type> strContains(const ::std::string& text, const ::std::string& word);
+CTOOLS_API std::vector<std::string::size_type> strContains(const std::string& text, const std::string& word);
 
-CTOOLS_API bool replaceString(::std::string& str, const ::std::string& oldStr, const ::std::string& newStr);
+CTOOLS_API bool replaceString(std::string& str, const std::string& oldStr, const std::string& newStr);
 
-CTOOLS_API size_t GetCountOccurence(const ::std::string& vSrcString, const ::std::string& vStringToCount);
-CTOOLS_API size_t GetCountOccurenceInSection(const ::std::string& vSrcString, size_t vStartPos, size_t vEndpos, const ::std::string& vStringToCount);
-CTOOLS_API size_t GetCountOccurence(const ::std::string& vSrcString, const char& vStringToCount);
-CTOOLS_API size_t GetCountOccurenceInSection(const ::std::string& vSrcString, size_t vStartPos, size_t vEndpos, const char& vStringToCount);
+CTOOLS_API size_t GetCountOccurence(const std::string& vSrcString, const std::string& vStringToCount);
+CTOOLS_API size_t GetCountOccurenceInSection(const std::string& vSrcString, size_t vStartPos, size_t vEndpos, const std::string& vStringToCount);
+CTOOLS_API size_t GetCountOccurence(const std::string& vSrcString, const char& vStringToCount);
+CTOOLS_API size_t GetCountOccurenceInSection(const std::string& vSrcString, size_t vStartPos, size_t vEndpos, const char& vStringToCount);
 
 // std::wstring to std::string
 // std::wstring(unicode/multibytes/char16/wchar_t) to std::string(char)
@@ -351,15 +351,15 @@ CTOOLS_API inline bool floatIsValid(float x) {
 
 template <typename T>
 inline T round(const T& v) {
-    return (T)(::std::round((double)v));
+    return (T)(std::round((double)v));
 }
 template <typename T>
 inline T floor(const T& v) {
-    return (T)(::std::floor((double)v));
+    return (T)(std::floor((double)v));
 }
 template <typename T>
 inline T ceil(const T& v) {
-    return (T)(::std::ceil((double)v));
+    return (T)(std::ceil((double)v));
 }
 template <typename T>
 inline T fract(const T& v) {
@@ -367,27 +367,27 @@ inline T fract(const T& v) {
 }
 template <typename T>
 inline T cos(const T& v) {
-    return ::std::cos(v);
+    return std::cos(v);
 }
 template <typename T>
 inline T acos(const T& v) {
-    return ::std::acos(v);
+    return std::acos(v);
 }
 template <typename T>
 inline T sin(const T& v) {
-    return ::std::sin(v);
+    return std::sin(v);
 }
 template <typename T>
 inline T asin(const T& v) {
-    return ::std::asin(v);
+    return std::asin(v);
 }
 template <typename T>
 inline T tan(const T& v) {
-    return ::std::tan(v);
+    return std::tan(v);
 }
 template <typename T>
 inline T atan(const T& v) {
-    return ::std::atan(v);
+    return std::atan(v);
 }
 template <typename T>
 inline T mini(const T& a, const T& b) {
@@ -437,7 +437,7 @@ inline T step(const T& a, const T& b) {
 }
 template <typename T>
 inline T mod(const T& v, const T& l) {
-    return ::std::modf(v, l);
+    return std::modf(v, l);
 }
 template <typename T>
 inline T invMix(const T& i, const T& s, const T& r) {
@@ -468,7 +468,7 @@ inline T mix(const T& a, const T& b, const T& t) {
 template <typename T>
 class cCyclicArray {
 private:
-    ::std::vector<T> puArray;
+    std::vector<T> puArray;
     int puCount      = 0;
     T puDefaultValue = (T)0;
 
@@ -606,10 +606,10 @@ public:
     }
 
 public:
-    ::std::string GetString() const;
+    std::string GetString() const;
 
-    ::std::string format;
-    ::std::string relativPath;
+    std::string format;
+    std::string relativPath;
 
     bool flipY       = false;
     bool useMipMap   = false;
@@ -641,7 +641,7 @@ public:
 
     GLuint glTex = 0;
 
-    ::std::vector<GLuint> glTexLayered;
+    std::vector<GLuint> glTexLayered;
 };
 #endif
 /////////////////////////////////////////////////////////////
@@ -675,7 +675,7 @@ struct Color {
         if (size > 3)
             a = col[3] / range;
     }
-    Color<T>(::std::string colorName, char c) {
+    Color<T>(std::string colorName, char c) {
         if (colorName == "red")
             setColor(1.0f, 0.0f, 0.0f, 1.0f);
         else if (colorName == "green")
@@ -688,7 +688,7 @@ struct Color {
             setColor(0.0f, 1.0f, 1.0f, 1.0f);
         else  // may be in format "0.2f,0.3f,0.4f"
         {
-            ::std::vector<float> result = StringToNumberVector<float>(colorName, c);
+            std::vector<float> result = StringToNumberVector<float>(colorName, c);
             if (result.size() == 3)
                 setColor(result[0], result[1], result[2], 1.0f);
             else if (result.size() == 4)
@@ -824,13 +824,13 @@ struct vec2 {
         x = a;
         y = b;
     }
-    vec2<T>(const ::std::string& vec, const char& c = ';', vec2<T>* def = nullptr)  // may be in format "0.2f,0.3f,0.4f"
+    vec2<T>(const std::string& vec, const char& c = ';', vec2<T>* def = nullptr)  // may be in format "0.2f,0.3f,0.4f"
     {
         if (def) {
             x = def->x;
             y = def->y;
         }
-        ::std::vector<T> result = StringToNumberVector<T>(vec, c);
+        std::vector<T> result = StringToNumberVector<T>(vec, c);
         const size_t s          = result.size();
         if (s > 0)
             x = result[0];
@@ -1290,14 +1290,14 @@ struct vec3 {
     }
     vec3(const vec2<T>& xy, const T& z) : x(xy.x), y(xy.y), z(z) {
     }
-    vec3(const ::std::string& vec, const char& c = ';', vec3<T>* def = nullptr)  // may be in format "0.2f,0.3f,0.4f"
+    vec3(const std::string& vec, const char& c = ';', vec3<T>* def = nullptr)  // may be in format "0.2f,0.3f,0.4f"
     {
         if (def) {
             x = def->x;
             y = def->y;
             z = def->z;
         }
-        ::std::vector<T> result = StringToNumberVector<T>(vec, c);
+        std::vector<T> result = StringToNumberVector<T>(vec, c);
         const size_t s          = result.size();
         if (s > 0)
             x = result[0];
@@ -1657,7 +1657,7 @@ struct vec4 {
         w = (T)vec.w;
     }
 #endif
-    vec4(::std::string vec, char c = ';', vec4<T>* def = nullptr)  // may be in format "0.2f,0.3f,0.4f,0.8f"
+    vec4(std::string vec, char c = ';', vec4<T>* def = nullptr)  // may be in format "0.2f,0.3f,0.4f,0.8f"
     {
         if (def) {
             x = def->x;
@@ -1665,7 +1665,7 @@ struct vec4 {
             z = def->z;
             w = def->w;
         }
-        ::std::vector<T> result = StringToNumberVector<T>(vec, c);
+        std::vector<T> result = StringToNumberVector<T>(vec, c);
         const size_t s          = result.size();
         if (s > 0)
             x = result[0];
@@ -1676,7 +1676,7 @@ struct vec4 {
         if (s > 3)
             w = result[3];
     }
-    vec4(::std::string vec, char c = ';', int n = 4, vec4<T>* def = nullptr)  // may be in format "0.2f,0.3f,0.4f,0.8f"
+    vec4(std::string vec, char c = ';', int n = 4, vec4<T>* def = nullptr)  // may be in format "0.2f,0.3f,0.4f,0.8f"
     {
         if (def) {
             x = def->x;
@@ -1689,7 +1689,7 @@ struct vec4 {
             z = (T)0;
             w = (T)0;
         }
-        ::std::vector<T> result = StringToNumberVector<T>(vec, c);
+        std::vector<T> result = StringToNumberVector<T>(vec, c);
         const size_t s          = result.size();
         if ((int)s != n) {
             if (s == 1) {
@@ -2280,8 +2280,8 @@ inline bool is_on_plane(const plane<T>& pln, const vec3<T>& p) {
 ///////// BUFFERS ///////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 
-CTOOLS_API void SetBuffer(char* vBuffer, size_t vBufferLen, const ::std::string& vStr);
-CTOOLS_API void AppendToBuffer(char* vBuffer, size_t vBufferLen, const ::std::string& vStr);
+CTOOLS_API void SetBuffer(char* vBuffer, size_t vBufferLen, const std::string& vStr);
+CTOOLS_API void AppendToBuffer(char* vBuffer, size_t vBufferLen, const std::string& vStr);
 CTOOLS_API void ResetBuffer(char* vBuffer);
 
 /////////////////////////////////////////////////////////////
@@ -2306,9 +2306,9 @@ struct AABB  // copy of b2AABB struct
         upperBound.x = vVec4.z;
         upperBound.y = vVec4.w;
     }
-    AABB(::std::string vec, char c)  // may be in format "0.2f,0.3f,0.4f,0.8f" left, bottom, right, top
+    AABB(std::string vec, char c)  // may be in format "0.2f,0.3f,0.4f,0.8f" left, bottom, right, top
     {
-        ::std::vector<float> result = StringToNumberVector<float>(vec, c);
+        std::vector<float> result = StringToNumberVector<float>(vec, c);
         const size_t s              = result.size();
         if (s > 0)
             lowerBound.x = result[0];
@@ -2766,10 +2766,10 @@ typedef quat<double> dquat;
 template <typename T>
 class variant {
 private:
-    ::std::string inputtype;  // type of input data
-    ::std::string datatype;   // real type corresponding to the data
+    std::string inputtype;  // type of input data
+    std::string datatype;   // real type corresponding to the data
 
-    ::std::string string_value;
+    std::string string_value;
     bool bool_value         = false;
     int int_value           = 0;
     float float_value       = 0.0f;
@@ -2785,10 +2785,10 @@ private:
     vec3<T> v3_value;
     vec4<T> rect_value;
     AABB<T> aabb_value;
-    ::std::vector<float> vector_float_value;
-    ::std::vector<double> vector_double_value;
-    ::std::vector<::std::string> vector_string_value;
-    ::std::set<::std::string> set_string_value;
+    std::vector<float> vector_float_value;
+    std::vector<double> vector_double_value;
+    std::vector<std::string> vector_string_value;
+    std::set<std::string> set_string_value;
 
 public:
     variant() {
@@ -2825,12 +2825,12 @@ public:
         inputtype    = "double";
         datatype     = inputtype;
     }
-    variant(const ::std::string& v, const ::std::string& dt) {
+    variant(const std::string& v, const std::string& dt) {
         string_value = v;
         inputtype    = "string";
         datatype     = dt;
     }
-    variant(const ::std::string& v) {
+    variant(const std::string& v) {
         string_value = v;
         inputtype    = "string";
         datatype     = inputtype;
@@ -2872,34 +2872,34 @@ public:
         inputtype  = "AABB";
         datatype   = inputtype;
     }
-    variant(const ::std::vector<double>& c) {
+    variant(const std::vector<double>& c) {
         vector_double_value = c;
         inputtype           = "vectorDouble";
         datatype            = inputtype;
     }
-    variant(const ::std::vector<float>& c) {
+    variant(const std::vector<float>& c) {
         vector_float_value = c;
         inputtype          = "vectorFloat";
         datatype           = inputtype;
     }
-    variant(const ::std::vector<::std::string>& c) {
+    variant(const std::vector<std::string>& c) {
         vector_string_value = c;
         inputtype           = "vectorString";
         datatype            = inputtype;
     }
-    variant(const ::std::set<::std::string>& c) {
+    variant(const std::set<std::string>& c) {
         set_string_value = c;
         inputtype        = "setString";
         datatype         = inputtype;
     }
 
-    ::std::string GetInputType() const {
+    std::string GetInputType() const {
         return inputtype;
     }
-    ::std::string GetDataType() const {
+    std::string GetDataType() const {
         return datatype;
     }
-    void setCustomDataType(const ::std::string& vDataType) {
+    void setCustomDataType(const std::string& vDataType) {
         datatype = vDataType;
     }
 
@@ -2972,7 +2972,7 @@ public:
         return uint32_t_value;
     }
 
-    ::std::string GetS(char c = ';', const char* prec = "%.6f") {
+    std::string GetS(char c = ';', const char* prec = "%.6f") {
         if (inputtype == "vec4")
             return toStr(rect_value.x) + c + toStr(rect_value.y) + c + toStr(rect_value.z) + c + toStr(rect_value.w);
         if (inputtype == "vec3")
@@ -3064,12 +3064,12 @@ public:
             return StringToNumberVector<T>(string_value, c);
         return vector_float_value;
     }
-    ::std::vector<::std::string> GetVectorString(char c = ';') const {
+    std::vector<std::string> GetVectorString(char c = ';') const {
         if (inputtype == "string")
             return splitStringToVector(string_value, c);
         return vector_string_value;
     }
-    ::std::set<::std::string> GetSetString(char c = ';') const {
+    std::set<std::string> GetSetString(char c = ';') const {
         if (inputtype == "string")
             return splitStringToSet(string_value, c);
         return set_string_value;
@@ -3137,7 +3137,7 @@ typedef variant<int> ivariant;
 // in : lst, offset
 // out : return, BufferSize
 template <typename T>
-T* GetNewBufferFromList(::std::list<T>& lst, int offsetBefore, int offsetAfter, int* BufferSize);
+T* GetNewBufferFromList(std::list<T>& lst, int offsetBefore, int offsetAfter, int* BufferSize);
 
 /////////////////////////////////////////////////////////////
 ///////// GetNewBufferFromMap ///////////////////////////////
@@ -3147,7 +3147,7 @@ T* GetNewBufferFromList(::std::list<T>& lst, int offsetBefore, int offsetAfter, 
 // in : lst, offset
 // out : return, BufferSize
 template <typename T, typename P>
-P* GetNewBufferFromMap(::std::map<T, P>& mp, int offsetBefore, int offsetAfter, int* BufferSize);
+P* GetNewBufferFromMap(std::map<T, P>& mp, int offsetBefore, int offsetAfter, int* BufferSize);
 
 /////////////////////////////////////////////////////////////
 ///////// DeleteObjectsAndClearPointerList //////////////////
@@ -3158,9 +3158,9 @@ P* GetNewBufferFromMap(::std::map<T, P>& mp, int offsetBefore, int offsetAfter, 
 /////////////////////////////////////////////////////////////
 
 template <typename T>
-void DeleteObjectsAndClearPointerList(::std::list<T*>& lst) {
+void DeleteObjectsAndClearPointerList(std::list<T*>& lst) {
     if (!lst.empty()) {
-        for (typename ::std::list<T*>::iterator it = lst.begin(); it != lst.end(); ++it) {
+        for (typename std::list<T*>::iterator it = lst.begin(); it != lst.end(); ++it) {
             T* type = nullptr;
             type    = *it;
             if (type != nullptr) {
@@ -3173,9 +3173,9 @@ void DeleteObjectsAndClearPointerList(::std::list<T*>& lst) {
 }
 
 template <typename T>
-void DeleteObjectsAndClearPointerVector(::std::vector<T*>& vec) {
+void DeleteObjectsAndClearPointerVector(std::vector<T*>& vec) {
     if (!vec.empty()) {
-        for (typename ::std::vector<T*>::iterator it = vec.begin(); it != vec.end(); ++it) {
+        for (typename std::vector<T*>::iterator it = vec.begin(); it != vec.end(); ++it) {
             T* type = nullptr;
             type    = *it;
             if (type != nullptr) {
@@ -3189,21 +3189,21 @@ void DeleteObjectsAndClearPointerVector(::std::vector<T*>& vec) {
 }
 
 template <typename T>
-::std::string VectorToString(::std::vector<T>& vec, char vCharDelimiter);
+std::string VectorToString(std::vector<T>& vec, char vCharDelimiter);
 template <typename T>
-::std::string VectorVec2ToString(::std::vector<vec2<T>>& vec, char vCharDelimiter);
+std::string VectorVec2ToString(std::vector<vec2<T> >& vec, char vCharDelimiter); // vec2<T>> give an error in osx... must be vec2<T> >
 template <typename T>
-::std::string VectorVec3ToString(::std::vector<vec3<T>>& vec, char vCharDelimiter);
+std::string VectorVec3ToString(std::vector<vec3<T> >& vec, char vCharDelimiter); // vec3<T>> give an error in osx... must be vec3<T> >
 template <typename T>
-::std::string VectorVec4ToString(::std::vector<vec4<T>>& vec, char vCharDelimiter);
+std::string VectorVec4ToString(std::vector<vec4<T> >& vec, char vCharDelimiter); // vec4<T>> give an error in osx... must be vec4<T> >
 
 // return "vParamName=\"" + toStr(vValue) + "\";
 template <typename T>
-::std::string ParamToXMLString(::std::string vParamName, T vValue);
+std::string ParamToXMLString(std::string vParamName, T vValue);
 
 // return "vParamName=\"" + toStr(vValue) + "\" si vValue est different de vValueDiff;
 template <typename T>
-::std::string ParamToXMLStringDiff(::std::string vParamName, T vValue, T vValueDiff);
+std::string ParamToXMLStringDiff(std::string vParamName, T vValue, T vValueDiff);
 // Mix : Get value based on ratio and inf and sup limit // https://www.opengl.org/sdk/docs/man/html/mix.xhtml
 // ex : mix(2.0f, 6.0f, 0.5f) => 4.0f
 
@@ -3290,15 +3290,15 @@ CTOOLS_API std::string FormatNum(size_t vNum, int vDecimalCount);
 /////////////////////////////////////////////////////////////
 
 template <typename T>
-::std::string toStr(vec2<T> v, char delimiter = ',') {
+std::string toStr(vec2<T> v, char delimiter = ',') {
     return ct::toStr(&v.x, 2, delimiter);
 }
 template <typename T>
-::std::string toStr(vec3<T> v, char delimiter = ',') {
+std::string toStr(vec3<T> v, char delimiter = ',') {
     return ct::toStr(&v.x, 3, delimiter);
 }
 template <typename T>
-::std::string toStr(vec4<T> v, char delimiter = ',') {
+std::string toStr(vec4<T> v, char delimiter = ',') {
     return ct::toStr(&v.x, 4, delimiter);  //-V112
 }
 
@@ -3401,46 +3401,46 @@ ct::rect<T> GetScreenRectWithRatio(float vRatio, ct::vec2<T> vMaxSize, bool vLog
 /*
 #if 1
 template <bool _Test, class _Ty = void>
-using ct_enable_if_t = typename ::std::enable_if<_Test, _Ty>::type;
+using ct_enable_if_t = typename std::enable_if<_Test, _Ty>::type;
 
 template <class _Yty, class _Ty>
-struct ct_SP_pointer_compatible : ::std::is_convertible<_Yty*, _Ty*>::type {};
+struct ct_SP_pointer_compatible : std::is_convertible<_Yty*, _Ty*>::type {};
 template <class _Uty, size_t _Ext>
-struct ct_SP_pointer_compatible<_Uty[_Ext], _Uty[]> : ::std::true_type {};
+struct ct_SP_pointer_compatible<_Uty[_Ext], _Uty[]> : std::true_type {};
 template <class _Uty, size_t _Ext>
-struct ct_SP_pointer_compatible<_Uty[_Ext], const _Uty[]> : ::std::true_type {};
+struct ct_SP_pointer_compatible<_Uty[_Ext], const _Uty[]> : std::true_type {};
 template <class _Uty, size_t _Ext>
-struct ct_SP_pointer_compatible<_Uty[_Ext], volatile _Uty[]> : ::std::true_type {};
+struct ct_SP_pointer_compatible<_Uty[_Ext], volatile _Uty[]> : std::true_type {};
 template <class _Uty, size_t _Ext>
-struct ct_SP_pointer_compatible<_Uty[_Ext], const volatile _Uty[]> : ::std::true_type {	};
+struct ct_SP_pointer_compatible<_Uty[_Ext], const volatile _Uty[]> : std::true_type {	};
 
 template<typename T>
-class cWeak : public ::std::weak_ptr<T>
+class cWeak : public std::weak_ptr<T>
 {
     template<typename TArg>
-    using uConstructible = typename ::std::enable_if<::std::is_constructible<::std::weak_ptr<T>, TArg>::value>::type;
+    using uConstructible = typename std::enable_if<std::is_constructible<std::weak_ptr<T>, TArg>::value>::type;
 
     template<typename TArg>
-    using uAssignable = typename ::std::enable_if<::std::is_assignable<::std::weak_ptr<T>&, TArg>::value, cWeak&>::type;
+    using uAssignable = typename std::enable_if<std::is_assignable<std::weak_ptr<T>&, TArg>::value, cWeak&>::type;
 
     template<typename TArg>
-    using uConvertible = typename ::std::enable_if<::std::is_convertible<::std::weak_ptr<T>&, TArg>::value, cWeak&>::type;
+    using uConvertible = typename std::enable_if<std::is_convertible<std::weak_ptr<T>&, TArg>::value, cWeak&>::type;
 
 public:
     constexpr cWeak() noexcept {}
 
-    cWeak(const cWeak& _Other) noexcept : ::std::weak_ptr<T>(_Other) {}
+    cWeak(const cWeak& _Other) noexcept : std::weak_ptr<T>(_Other) {}
 
     template <class T2, ct_enable_if_t<ct_SP_pointer_compatible<T2, T>::value, int> = 0>
-    cWeak(const ::std::shared_ptr<T2>& _Other) noexcept : ::std::weak_ptr<T>(_Other) {}
+    cWeak(const std::shared_ptr<T2>& _Other) noexcept : std::weak_ptr<T>(_Other) {}
 
     template <class T2, ct_enable_if_t<ct_SP_pointer_compatible<T2, T>::value, int> = 0>
-    cWeak(const ::std::weak_ptr<T2>& _Other) noexcept : ::std::weak_ptr<T>(_Other) {}
+    cWeak(const std::weak_ptr<T2>& _Other) noexcept : std::weak_ptr<T>(_Other) {}
 
-    cWeak(::std::weak_ptr<T>&& _Other) noexcept : ::std::weak_ptr<T>(_Other) {}
+    cWeak(std::weak_ptr<T>&& _Other) noexcept : std::weak_ptr<T>(_Other) {}
 
     template <class T2, ct_enable_if_t<ct_SP_pointer_compatible<T2, T>::value, int> = 0>
-    cWeak(::std::weak_ptr<T2>&& _Other) noexcept : ::std::weak_ptr<T>(_Other) {}
+    cWeak(std::weak_ptr<T2>&& _Other) noexcept : std::weak_ptr<T>(_Other) {}
 
     bool valid() const noexcept
     {
@@ -3448,7 +3448,7 @@ public:
     }
 
     // if not expired, directly return a shared_ptr
-    ::std::shared_ptr<T> lock() const noexcept
+    std::shared_ptr<T> lock() const noexcept
     {
         if (valid())
         {
@@ -3461,34 +3461,34 @@ public:
     template<typename T2>
     uAssignable<const cWeak<T2>&> operator=(const cWeak<T2>& vWeak) noexcept
     {
-        this->::std::weak_ptr<T>::operator=(vWeak);
+        this->std::weak_ptr<T>::operator=(vWeak);
         return *this;
     }
 
     template<typename T2>
-    uAssignable<const cWeak<T2>&> operator=(const ::std::weak_ptr<T2>& vWeak) noexcept
+    uAssignable<const cWeak<T2>&> operator=(const std::weak_ptr<T2>& vWeak) noexcept
     {
-        this->::std::weak_ptr<T>::operator=(vWeak);
+        this->std::weak_ptr<T>::operator=(vWeak);
         return *this;
     }
 
     // weak = shared
     template<typename T2>
-    uAssignable<const cWeak<T2>&> operator=(const ::std::shared_ptr<T2>& vShared) noexcept
+    uAssignable<const cWeak<T2>&> operator=(const std::shared_ptr<T2>& vShared) noexcept
     {
-        this->::std::weak_ptr<T>::operator=(vShared);
+        this->std::weak_ptr<T>::operator=(vShared);
         return *this;
     }
 
-    cWeak& operator=(const ::std::weak_ptr<T>& vWeak) noexcept
+    cWeak& operator=(const std::weak_ptr<T>& vWeak) noexcept
     {
-        this->::std::weak_ptr<T>::operator=(vWeak);
+        this->std::weak_ptr<T>::operator=(vWeak);
         return *this;
     }
 
-    bool operator<(const ::std::weak_ptr<T>& vWeak) noexcept
+    bool operator<(const std::weak_ptr<T>& vWeak) noexcept
     {
-        return this->::std::weak_ptr<T>::operator<(vWeak);
+        return this->std::weak_ptr<T>::operator<(vWeak);
     }
     explicit operator bool() const noexcept
     {
@@ -3507,7 +3507,7 @@ template<typename T>
 class cWeak
 {
 private:
-    ::std::weak_ptr<T> m_WeakPtr;
+    std::weak_ptr<T> m_WeakPtr;
 
 public:
     constexpr cWeak() noexcept {}
@@ -3515,7 +3515,7 @@ public:
     cWeak(const cWeak& _Other) noexcept : m_WeakPtr(_Other) {}
 
     template <class T2>
-    cWeak(const ::std::shared_ptr<T2>& _Other) noexcept : m_WeakPtr(_Other) {}
+    cWeak(const std::shared_ptr<T2>& _Other) noexcept : m_WeakPtr(_Other) {}
 
     template <class T2>
     cWeak(const cWeak<T2>& _Other) noexcept : cWeak<T>(_Other) {}
@@ -3531,13 +3531,13 @@ public:
     }
 
     // if not expired, directly return a shared_ptr
-    ::std::shared_ptr<T> lock() noexcept
+    std::shared_ptr<T> lock() noexcept
     {
         if (m_WeakPtr.valid())
         {
             return m_WeakPtr.lock();
         }
-        return ::std::shared_ptr<T>();
+        return std::shared_ptr<T>();
     }
 
     cWeak& operator=(const cWeak& _Right) noexcept
@@ -3555,19 +3555,19 @@ public:
 
     cWeak& operator=(cWeak&& _Right) noexcept
     {
-        cWeak(::std::move(_Right)).swap(m_WeakPtr);
+        cWeak(std::move(_Right)).swap(m_WeakPtr);
         return m_WeakPtr;
     }
 
     template <class T2>
     cWeak& operator=(cWeak<T2>&& _Right) noexcept
     {
-        cWeak(::std::move(_Right)).swap(m_WeakPtr);
+        cWeak(std::move(_Right)).swap(m_WeakPtr);
         return m_WeakPtr;
     }
 
     template <class T2>
-    cWeak& operator=(const ::std::shared_ptr<T2>& _Right) noexcept
+    cWeak& operator=(const std::shared_ptr<T2>& _Right) noexcept
     {
         cWeak(_Right).swap(m_WeakPtr);
         return m_WeakPtr;
@@ -3588,7 +3588,7 @@ public:
         return m_WeakPtr.expired();
     }
 
-    ::std::shared_ptr<T> lock() const noexcept
+    std::shared_ptr<T> lock() const noexcept
     {
         return m_WeakPtr.lock();
     }
