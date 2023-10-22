@@ -54,6 +54,7 @@ SOFTWARE.
 #include <set>
 #include <cmath>
 #include <float.h>
+#include <unordered_map>
 #include <cstdarg> /* va_list, va_start, va_arg, va_end */
 #include <sstream>
 #include <iostream>
@@ -160,6 +161,46 @@ using namespace cocos2d;
 
 namespace ct  // cTools
 {
+
+template <typename T>
+class SearchableVector {
+private:
+    std::unordered_map<T, size_t> m_Dico;
+    std::vector<T> m_Array;
+
+public:
+    void clear() {
+        m_Dico.clear();
+        m_Array.clear();
+    }
+    bool empty() const { return m_Array.empty(); }
+    size_t size() const { return m_Array.size(); }
+    T& operator[](const size_t& vIdx) { return m_Array[vIdx]; }
+    T& at(const size_t& vIdx) { return m_Array.at(vIdx); }
+    T* data() { return m_Array.data(); }
+    typename std::vector<T>::iterator begin() { return m_Array.begin(); }
+    typename std::vector<T>::const_iterator begin() const { return m_Array.begin(); }
+    typename std::vector<T>::iterator end() { return m_Array.end(); }
+    typename std::vector<T>::const_iterator end() const { return m_Array.end(); }
+    bool try_add(T vKey) {
+        if (!exist(vKey)) {
+            m_Dico[vKey] = m_Array.size();
+            m_Array.push_back(vKey);
+            return true;
+        }
+        return false;
+    }
+    bool try_set_existing(T vKey) {
+        if (exist(vKey)) {
+            auto row = m_Dico.at(vKey);
+            m_Array[row] = vKey;
+            return true;
+        }
+        return false;
+    }
+    bool exist(const T& vKey) const { return (m_Dico.find(vKey) != m_Dico.end()); }
+};
+
 CTOOLS_API std::string toStr(const char* fmt, ...);
 
 CTOOLS_API std::string toUpper(const std::string& vStr, const std::locale& vLocale = std::locale());
