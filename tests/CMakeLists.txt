@@ -483,3 +483,7 @@ AddTest("cTools.float.Plane.construtor.point_and_normal")
 AddTest("cTools.float.Plane.construtor.3_points")
 AddTest("cTools.float.Plane.get_plane_intersection")
 AddTest("cTools.float.Plane.is_on_plane")
+
+### TESTS for cTools.EncodeID
+
+AddTest("cTools.EncodeID")

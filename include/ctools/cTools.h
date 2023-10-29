@@ -162,6 +162,39 @@ using namespace cocos2d;
 namespace ct  // cTools
 {
 
+/////////////////////////////////////////////
+/////////////////////////////////////////////
+/////////////////////////////////////////////
+
+// is a user datas of type void* is used
+// we cant do a dynamic_cast, so for test if we have the good class
+// we can use a magic number, because this member will not cause compiling issue
+// and if this is the good class, the magic_number will point to a random memory zone
+// so will not have the good value
+
+inline int64_t EncodeId(const std::string& vArr) {
+    if (vArr.empty() || vArr.size() != 8U) {
+        return 0;
+    }
+    return vArr[0] |                     //
+           (vArr[1] << 8) |              //
+           (vArr[2] << 16) |             //
+           (vArr[3] << 24) |             //
+           ((int64_t)(vArr[4]) << 32) |  //
+           ((int64_t)(vArr[5]) << 40) |  //
+           ((int64_t)(vArr[6]) << 48) |  //
+           ((int64_t)(vArr[7]) << 56);
+}
+
+inline bool IsIdEqualTo(const int64_t& vId, char vArr[8]) {
+    return (EncodeId(vArr) == vId);
+}
+
+/////////////////////////////////////////////
+/////////////////////////////////////////////
+/////////////////////////////////////////////
+/////////////////////////////////////////////
+
 template <typename T>
 class SearchableVector {
 private:
@@ -198,7 +231,8 @@ public:
         }
         return false;
     }
-    bool exist(const T& vKey) const { return (m_Dico.find(vKey) != m_Dico.end()); }
+    bool exist(const T& vKey) const { 
+        return (m_Dico.find(vKey) != m_Dico.end()); }
 };
 
 CTOOLS_API std::string toStr(const char* fmt, ...);

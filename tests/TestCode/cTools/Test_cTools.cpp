@@ -2792,6 +2792,30 @@ int Test_cTools_float_double_Plane_run_test(const std::string& vTestCode)
 
 	return 1; // error
 }
+
+///////////////////////////////////////////////////////////
+//// ENCODE ID ////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+
+int Test_cTools_Encode_ID() {
+    if (ct::EncodeId("lgfkhklfgjhlgkfkjfghlkfgh") != 0) {  // more than 8
+        return 1;                                          // error
+    }
+    if (ct::EncodeId("") != 0) {  // empty
+        return 1;                 // error
+    }
+    if (ct::EncodeId("IProject") != 5282848185757557618) {
+        return 1;  // error
+    }
+    if (!ct::IsIdEqualTo(5282848185757557618, "IProject")) {
+        return 1;  // error
+    }
+    if (ct::IsIdEqualTo(5282848185757557618, "TOTO")) {
+        return 1;  // error
+    }
+    return 0; // no error
+}
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -2876,7 +2900,13 @@ int Test_cTools_run_test(const std::string& vTestCode)
 	else if (vTestCode.find("cTools.float.Plane.") != std::string::npos)
 	{
 		return Test_cTools_float_double_Plane_run_test<float>(vTestCode);
-	}
+    }
+
+    // Encode ID
+
+    else if (vTestCode.find("cTools.EncodeID") != std::string::npos) {
+        return Test_cTools_Encode_ID();
+    } 
 
 	return 1; // error
 }
