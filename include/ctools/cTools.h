@@ -3414,7 +3414,7 @@ ct::rect<T> GetScreenRectWithSize(ct::vec2<T> vItemSize, ct::vec2<T> vMaxSize, b
             rc.h = (T)newY;
         }
 
-        if constexpr (std::is_same<T, float>::value || constexpr std::is_same<T, double>::value) {
+        if constexpr (std::is_same<T, float>::value || std::is_same<T, double>::value) {
             rc = ct::floor<T>(rc);
         }
 
