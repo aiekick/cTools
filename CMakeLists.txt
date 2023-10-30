@@ -68,14 +68,14 @@ elseif(WIN32)
 endif()
 
 if(MSVC)
-    # Ignore 4055 for glad
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /IGNORE:4055")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4  /std:c++11")
 	add_definitions(-D__STDC__)
 	add_definitions(-DMSVC)
+	add_definitions(-DNOMINMAX)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 	add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
 else ()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -std=c++11 -Wunused-parameter -Wno-unknown-pragmas")
 endif ()
 
 if (USE_SHARED_LIB_CTOOLS)
