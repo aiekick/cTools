@@ -3414,8 +3414,9 @@ ct::rect<T> GetScreenRectWithSize(ct::vec2<T> vItemSize, ct::vec2<T> vMaxSize, b
             rc.h = (T)newY;
         }
 
-        if (std::is_same<T, float>::value || std::is_same<T, double>::value)
+        if constexpr (std::is_same<T, float>::value || constexpr std::is_same<T, double>::value) {
             rc = ct::floor<T>(rc);
+        }
 
         const float newRatio = (float)rc.w / (float)rc.h;
         if (vLogError)
@@ -3457,8 +3458,9 @@ ct::rect<T> GetScreenRectWithRatio(float vRatio, ct::vec2<T> vMaxSize, bool vLog
             rc.h = (T)newY;
         }
 
-        if (std::is_same<T, float>::value || std::is_same<T, double>::value)
+        if constexpr (std::is_same<T, float>::value || std::is_same<T, double>::value) {
             rc = ct::floor<T>(rc);
+        }
 
         const float newRatio = (float)rc.w / (float)rc.h;
         if (vLogError)
