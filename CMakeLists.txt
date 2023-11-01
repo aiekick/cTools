@@ -68,7 +68,7 @@ elseif(WIN32)
 endif()
 
 if(MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /FR /std:c++17")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /std:c++17")
 	add_definitions(-D__STDC__)
 	add_definitions(-DMSVC)
 	add_definitions(-DNOMINMAX)
