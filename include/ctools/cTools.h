@@ -2186,16 +2186,16 @@ struct rect  // bottom left to top right
     vec2<T> center() const {
         return vec2<T>((left + right) / (T)2, (top + bottom) / (T)2);
     }
-    vec2<T>* vertices() {
-        vec2<T>* buf = new vec2<T>[4];
+    std::array<vec2<T>, 4> vertices() {
+        std::array<vec2<T>, 4> buf;
         buf[0]       = leftBottom();
         buf[1]       = leftTop();
         buf[2]       = rightTop();
         buf[3]       = rightBottom();
         return buf;
     }
-    vec2<T>* texCoords(T scaleX, T scaleY) {
-        vec2<T>* buf = new vec2<T>[4];
+    std::array<vec2<T>, 4> texCoords(T scaleX, T scaleY) {
+        std::array<vec2<T>, 4> buf;
         buf[0]       = vec2<T>((T)0, (T)0);
         buf[1]       = vec2<T>((T)scaleX, (T)0);
         buf[2]       = vec2<T>(scaleX, scaleY);

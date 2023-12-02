@@ -320,6 +320,7 @@ void Logger::Close()
 	std::unique_lock<std::mutex> lck(Logger::Logger_Mutex, std::defer_lock);
 	lck.lock();
 	debugLogFile.close();
+    debugLogFile.clear();
 	lck.unlock();
 }
 
