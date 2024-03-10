@@ -25,8 +25,7 @@ SOFTWARE.
 #pragma once
 #pragma warning(disable : 4251)
 
-#if defined(__WIN32__) || defined(WIN32) || defined(_WIN32) || defined(__WIN64__) || defined(WIN64) || \
-    defined(_WIN64) || defined(_MSC_VER)
+#if defined(__WIN32__) || defined(WIN32) || defined(_WIN32) || defined(__WIN64__) || defined(WIN64) || defined(_WIN64) || defined(_MSC_VER)
 #if defined(ctools_EXPORTS)
 #define CTOOLS_API __declspec(dllexport)
 #elif defined(BUILD_CTOOLS_SHARED_LIBS)
@@ -176,14 +175,14 @@ inline int64_t EncodeId(const std::string& vArr) {
     if (vArr.empty() || vArr.size() != 8U) {
         return 0;
     }
-    return vArr[0] |                     //
-           (vArr[1] << 8) |              //
-           (vArr[2] << 16) |             //
-           (vArr[3] << 24) |             //
-           ((int64_t)(vArr[4]) << 32) |  //
-           ((int64_t)(vArr[5]) << 40) |  //
-           ((int64_t)(vArr[6]) << 48) |  //
-           ((int64_t)(vArr[7]) << 56);
+    return vArr[0] |                  //
+        (vArr[1] << 8) |              //
+        (vArr[2] << 16) |             //
+        (vArr[3] << 24) |             //
+        ((int64_t)(vArr[4]) << 32) |  //
+        ((int64_t)(vArr[5]) << 40) |  //
+        ((int64_t)(vArr[6]) << 48) |  //
+        ((int64_t)(vArr[7]) << 56);
 }
 
 inline bool IsIdEqualTo(const int64_t& vId, char vArr[8]) {
@@ -206,15 +205,33 @@ public:
         m_Dico.clear();
         m_Array.clear();
     }
-    bool empty() const { return m_Array.empty(); }
-    size_t size() const { return m_Array.size(); }
-    T& operator[](const size_t& vIdx) { return m_Array[vIdx]; }
-    T& at(const size_t& vIdx) { return m_Array.at(vIdx); }
-    T* data() { return m_Array.data(); }
-    typename std::vector<T>::iterator begin() { return m_Array.begin(); }
-    typename std::vector<T>::const_iterator begin() const { return m_Array.begin(); }
-    typename std::vector<T>::iterator end() { return m_Array.end(); }
-    typename std::vector<T>::const_iterator end() const { return m_Array.end(); }
+    bool empty() const {
+        return m_Array.empty();
+    }
+    size_t size() const {
+        return m_Array.size();
+    }
+    T& operator[](const size_t& vIdx) {
+        return m_Array[vIdx];
+    }
+    T& at(const size_t& vIdx) {
+        return m_Array.at(vIdx);
+    }
+    T* data() {
+        return m_Array.data();
+    }
+    typename std::vector<T>::iterator begin() {
+        return m_Array.begin();
+    }
+    typename std::vector<T>::const_iterator begin() const {
+        return m_Array.begin();
+    }
+    typename std::vector<T>::iterator end() {
+        return m_Array.end();
+    }
+    typename std::vector<T>::const_iterator end() const {
+        return m_Array.end();
+    }
     bool try_add(T vKey) {
         if (!exist(vKey)) {
             m_Dico[vKey] = m_Array.size();
@@ -231,8 +248,9 @@ public:
         }
         return false;
     }
-    bool exist(const T& vKey) const { 
-        return (m_Dico.find(vKey) != m_Dico.end()); }
+    bool exist(const T& vKey) const {
+        return (m_Dico.find(vKey) != m_Dico.end());
+    }
 };
 
 CTOOLS_API std::string toStr(const char* fmt, ...);
@@ -366,13 +384,13 @@ template <typename T>
 std::vector<T> StringToNumberVector(const std::string& text, char delimiter) {
     std::vector<T> arr;
     std::string::size_type start = 0;
-    std::string::size_type end   = text.find(delimiter, start);
+    std::string::size_type end = text.find(delimiter, start);
     while (end != std::string::npos) {
         std::string token = text.substr(start, end - start);
 
         arr.emplace_back(StringToNumber<T>(token));
         start = end + 1;
-        end   = text.find(delimiter, start);
+        end = text.find(delimiter, start);
     }
     arr.emplace_back(StringToNumber<T>(text.substr(start).c_str()));
     return arr;
@@ -544,7 +562,7 @@ template <typename T>
 class cCyclicArray {
 private:
     std::vector<T> puArray;
-    int puCount      = 0;
+    int puCount = 0;
     T puDefaultValue = (T)0;
 
 public:
@@ -553,7 +571,7 @@ public:
 
     void Init(T vDefaultValue, int vCount) {
         puDefaultValue = vDefaultValue;
-        puCount        = vCount;
+        puCount = vCount;
 
         for (int i = 0; i < puCount; ++i) {
             puArray.emplace_back(puDefaultValue);
@@ -593,7 +611,7 @@ public:
     }
 
     T GetMeanExceptValue(T vExceptValue) {
-        T value   = puDefaultValue;
+        T value = puDefaultValue;
         int count = 0;
         for (auto it = puArray.begin(); it != puArray.end(); ++it) {
             if (*it != vExceptValue) {
@@ -613,10 +631,10 @@ CTOOLS_API uint64_t GetTicks();
 CTOOLS_API float GetTimeInterval();
 class CTOOLS_API ActionTime {
 public:
-    uint64_t lastTick   = 0;
-    uint64_t pauseTick  = 0;
+    uint64_t lastTick = 0;
+    uint64_t pauseTick = 0;
     uint64_t resumeTick = 0;
-    bool play           = true;
+    bool play = true;
 
 public:
     ActionTime();
@@ -662,11 +680,11 @@ public:
         surface = nullptr;
 #endif
         glTextureType = GL_TEXTURE_2D;
-        glTex         = 0;
+        glTex = 0;
 
-        glformat         = GL_RGBA;
+        glformat = GL_RGBA;
         glinternalformat = GL_RGBA32F;
-        gldatatype       = GL_FLOAT;
+        gldatatype = GL_FLOAT;
 
         glWrapS = GL_CLAMP_TO_EDGE;
         glWrapT = GL_CLAMP_TO_EDGE;
@@ -675,8 +693,8 @@ public:
         glMinFilter = GL_LINEAR;
         glMagFilter = GL_LINEAR;
 
-        flipY        = false;
-        useMipMap    = false;
+        flipY = false;
+        useMipMap = false;
         maxMipMapLvl = 0;
     }
 
@@ -686,29 +704,29 @@ public:
     std::string format;
     std::string relativPath;
 
-    bool flipY       = false;
-    bool useMipMap   = false;
+    bool flipY = false;
+    bool useMipMap = false;
     int maxMipMapLvl = 0;
 
     GLenum glTextureType = GL_TEXTURE_2D;
 
-    GLenum glformat         = GL_RGBA;
+    GLenum glformat = GL_RGBA;
     GLenum glinternalformat = GL_RGBA32F;
-    GLenum gldatatype       = GL_FLOAT;
+    GLenum gldatatype = GL_FLOAT;
 
-    GLenum glWrapS     = GL_CLAMP_TO_EDGE;  // x
-    GLenum glWrapT     = GL_CLAMP_TO_EDGE;  // y
-    GLenum glWrapR     = GL_CLAMP_TO_EDGE;  // z
+    GLenum glWrapS = GL_CLAMP_TO_EDGE;  // x
+    GLenum glWrapT = GL_CLAMP_TO_EDGE;  // y
+    GLenum glWrapR = GL_CLAMP_TO_EDGE;  // z
     GLenum glMinFilter = GL_LINEAR;
     GLenum glMagFilter = GL_LINEAR;
 
     size_t zOrder = 0;
-    size_t w      = 0;
-    size_t h      = 0;
-    size_t d      = 0;  // depth for texture 3d
-    size_t x      = 0;
-    size_t y      = 0;
-    size_t z      = 0;  // depth for texture 3d
+    size_t w = 0;
+    size_t h = 0;
+    size_t d = 0;  // depth for texture 3d
+    size_t x = 0;
+    size_t y = 0;
+    size_t z = 0;  // depth for texture 3d
 
 #ifdef SDL2
     SDL_Surface* surface = nullptr;
@@ -906,7 +924,7 @@ struct vec2 {
             y = def->y;
         }
         std::vector<T> result = StringToNumberVector<T>(vec, c);
-        const size_t s          = result.size();
+        const size_t s = result.size();
         if (s > 0)
             x = result[0];
         if (s > 1)
@@ -1226,17 +1244,17 @@ template <typename T>
 inline vec2<T> atan(vec2<T> a) {
     return vec2<T>(atan<T>(a.x), atan<T>(a.y));
 }
-using dvec2   = vec2<double>;
-using fvec2   = vec2<float>;
-using bvec2   = vec2<bool>;
-using i8vec2  = vec2<int8_t>;
+using dvec2 = vec2<double>;
+using fvec2 = vec2<float>;
+using bvec2 = vec2<bool>;
+using i8vec2 = vec2<int8_t>;
 using i16vec2 = vec2<int16_t>;
-using ivec2   = vec2<int32_t>;
+using ivec2 = vec2<int32_t>;
 using i32vec2 = vec2<int32_t>;
 using i64vec2 = vec2<int64_t>;
-using u8vec2  = vec2<uint8_t>;
+using u8vec2 = vec2<uint8_t>;
 using u16vec2 = vec2<uint16_t>;
-using uvec2   = vec2<uint32_t>;
+using uvec2 = vec2<uint32_t>;
 using u32vec2 = vec2<uint32_t>;
 using u64vec2 = vec2<uint64_t>;
 
@@ -1334,14 +1352,16 @@ inline vec2<T> operator*(const vec2<T>& a, mat2<T> b) {
     return vec2<T>(
         // ax * (x y)
         // ay * (z w)
-        a.x * b[0] + a.x * b[1], a.y * b[2] + a.y * b[3]);
+        a.x * b[0] + a.x * b[1],
+        a.y * b[2] + a.y * b[3]);
 }
 template <typename T>
 inline vec2<T> operator*(const mat2<T>& a, vec2<T> b) {
     return vec2<T>(
         // (x y) * bx
         // (z w) * by
-        a[0] * b.x + a[1] * b.y, a[2] * b.x + a[3] * b.y);
+        a[0] * b.x + a[1] * b.y,
+        a[2] * b.x + a[3] * b.y);
 }
 typedef mat2<float> mat2f;
 typedef mat2<double> mat2d;
@@ -1373,7 +1393,7 @@ struct vec3 {
             z = def->z;
         }
         std::vector<T> result = StringToNumberVector<T>(vec, c);
-        const size_t s          = result.size();
+        const size_t s = result.size();
         if (s > 0)
             x = result[0];
         if (s > 1)
@@ -1675,18 +1695,18 @@ template <typename T>
 inline vec3<T> cReflect(vec3<T> I, vec3<T> N) {
     return I - (T)2 * dotS(N, I) * N;
 }
-using dvec3   = vec3<double>;
-using fvec3   = vec3<float>;
-using bvec3   = vec3<bool>;
-using ivec3   = vec3<int>;
-using i8vec3  = vec3<int8_t>;
+using dvec3 = vec3<double>;
+using fvec3 = vec3<float>;
+using bvec3 = vec3<bool>;
+using ivec3 = vec3<int>;
+using i8vec3 = vec3<int8_t>;
 using i16vec3 = vec3<int16_t>;
-using ivec3   = vec3<int32_t>;
+using ivec3 = vec3<int32_t>;
 using i32vec3 = vec3<int32_t>;
 using i64vec3 = vec3<int64_t>;
-using u8vec3  = vec3<uint8_t>;
+using u8vec3 = vec3<uint8_t>;
 using u16vec3 = vec3<uint16_t>;
-using uvec3   = vec3<uint32_t>;
+using uvec3 = vec3<uint32_t>;
 using u32vec3 = vec3<uint32_t>;
 using u64vec3 = vec3<uint64_t>;
 
@@ -1741,7 +1761,7 @@ struct vec4 {
             w = def->w;
         }
         std::vector<T> result = StringToNumberVector<T>(vec, c);
-        const size_t s          = result.size();
+        const size_t s = result.size();
         if (s > 0)
             x = result[0];
         if (s > 1)
@@ -1765,19 +1785,22 @@ struct vec4 {
             w = (T)0;
         }
         std::vector<T> result = StringToNumberVector<T>(vec, c);
-        const size_t s          = result.size();
+        const size_t s = result.size();
         if ((int)s != n) {
             if (s == 1) {
                 x = result[0];
                 y = result[0];
                 z = result[0];
                 w = result[0];
-            }
-            if (s == 2) {
+            } else if (s == 2) {
                 x = result[0];
                 y = result[0];
                 z = result[1];
                 w = result[1];
+            } else if (s == 3) {
+                x = result[0];
+                y = result[1];
+                z = result[2];
             }
         } else {
             if (s > 0)
@@ -2091,18 +2114,18 @@ template <typename T>
 inline vec4<T> tan(vec4<T> a) {
     return vec4<T>(tan<T>(a.x), tan<T>(a.y), tan<T>(a.z), tan<T>(a.w));
 }
-using dvec4   = vec4<double>;
-using fvec4   = vec4<float>;
-using bvec4   = vec4<bool>;
-using ivec4   = vec4<int>;
-using i8vec4  = vec4<int8_t>;
+using dvec4 = vec4<double>;
+using fvec4 = vec4<float>;
+using bvec4 = vec4<bool>;
+using ivec4 = vec4<int>;
+using i8vec4 = vec4<int8_t>;
 using i16vec4 = vec4<int16_t>;
-using ivec4   = vec4<int32_t>;
+using ivec4 = vec4<int32_t>;
 using i32vec4 = vec4<int32_t>;
 using i64vec4 = vec4<int64_t>;
-using u8vec4  = vec4<uint8_t>;
+using u8vec4 = vec4<uint8_t>;
 using u16vec4 = vec4<uint16_t>;
-using uvec4   = vec4<uint32_t>;
+using uvec4 = vec4<uint32_t>;
 using u32vec4 = vec4<uint32_t>;
 using u64vec4 = vec4<uint64_t>;
 
@@ -2162,13 +2185,13 @@ struct rect  // bottom left to top right
         setRect(xy.x, xy.y, zw.x, zw.y);
     }
     void setRect(T vX, T vY, T vW, T vH) {
-        x      = vX;
-        y      = vY;
-        w      = vW;
-        h      = vH;
-        left   = vX;
-        right  = vX + vW;
-        top    = vY + vH;
+        x = vX;
+        y = vY;
+        w = vW;
+        h = vH;
+        left = vX;
+        right = vX + vW;
+        top = vY + vH;
         bottom = vY;
     }
     vec2<T> rightBottom() const {
@@ -2188,18 +2211,18 @@ struct rect  // bottom left to top right
     }
     std::array<vec2<T>, 4> vertices() {
         std::array<vec2<T>, 4> buf;
-        buf[0]       = leftBottom();
-        buf[1]       = leftTop();
-        buf[2]       = rightTop();
-        buf[3]       = rightBottom();
+        buf[0] = leftBottom();
+        buf[1] = leftTop();
+        buf[2] = rightTop();
+        buf[3] = rightBottom();
         return buf;
     }
     std::array<vec2<T>, 4> texCoords(T scaleX, T scaleY) {
         std::array<vec2<T>, 4> buf;
-        buf[0]       = vec2<T>((T)0, (T)0);
-        buf[1]       = vec2<T>((T)scaleX, (T)0);
-        buf[2]       = vec2<T>(scaleX, scaleY);
-        buf[3]       = vec2<T>((T)0, scaleY);
+        buf[0] = vec2<T>((T)0, (T)0);
+        buf[1] = vec2<T>((T)scaleX, (T)0);
+        buf[2] = vec2<T>(scaleX, scaleY);
+        buf[3] = vec2<T>((T)0, scaleY);
         return buf;
     }
     void setWidth(T vw) {
@@ -2312,8 +2335,8 @@ public:
     plane(vec3<T> a, vec3<T> b, vec3<T> c) {
         auto AB = b - a;
         auto AC = c - a;
-        n       = cCross(AC, AB).GetNormalized();
-        d       = dotS(a, n);
+        n = cCross(AC, AB).GetNormalized();
+        d = dotS(a, n);
     }
     plane(vec3<T> vn, double vd) : n(vn), d(vd) {
     }
@@ -2327,10 +2350,10 @@ inline bool get_plane_intersection(const plane<T>& a, const plane<T>& b, const p
     vec3<T> m1 = vec3<T>(a.n.x, b.n.x, c.n.x);
     vec3<T> m2 = vec3<T>(a.n.y, b.n.y, c.n.y);
     vec3<T> m3 = vec3<T>(a.n.z, b.n.z, c.n.z);
-    vec3<T> d  = vec3<T>(a.d, b.d, c.d);
+    vec3<T> d = vec3<T>(a.d, b.d, c.d);
 
     vec3<T> u = cCross<T>(m2, m3);
-    T denom   = dotS<T>(m1, u);
+    T denom = dotS<T>(m1, u);
 
     if (fabs(denom) < std::numeric_limits<T>::epsilon()) {
         // Planes don't actually intersect in a point
@@ -2384,7 +2407,7 @@ struct AABB  // copy of b2AABB struct
     AABB(std::string vec, char c)  // may be in format "0.2f,0.3f,0.4f,0.8f" left, bottom, right, top
     {
         std::vector<float> result = StringToNumberVector<float>(vec, c);
-        const size_t s              = result.size();
+        const size_t s = result.size();
         if (s > 0)
             lowerBound.x = result[0];
         if (s > 1)
@@ -2845,11 +2868,11 @@ private:
     std::string datatype;   // real type corresponding to the data
 
     std::string string_value;
-    bool bool_value         = false;
-    int int_value           = 0;
-    float float_value       = 0.0f;
-    double double_value     = 0.0;
-    long long_value         = 0;
+    bool bool_value = false;
+    int int_value = 0;
+    float float_value = 0.0f;
+    double double_value = 0.0;
+    long long_value = 0;
     uint32_t uint32_t_value = 0;
     // uint64_t uint64_t_value = 0;
     Color<T> color_value;
@@ -2867,105 +2890,105 @@ private:
 
 public:
     variant() {
-        bool_value     = false;
-        int_value      = 0;
-        float_value    = 0.0f;
-        double_value   = 0.0;
-        long_value     = 0;
+        bool_value = false;
+        int_value = 0;
+        float_value = 0.0f;
+        double_value = 0.0;
+        long_value = 0;
         uint32_t_value = 0;
     }
     variant(const int& v) {
         int_value = v;
         inputtype = "int";
-        datatype  = inputtype;
+        datatype = inputtype;
     }
     variant(const long& v) {
         long_value = v;
-        inputtype  = "long";
-        datatype   = inputtype;
+        inputtype = "long";
+        datatype = inputtype;
     }
     // variant(const uint64_t& v) { uint64_t_value = v; inputtype = "uint64_t"; datatype = inputtype; }
     variant(const uint32_t& v) {
         uint32_t_value = v;
-        inputtype      = "uint32_t";
-        datatype       = inputtype;
+        inputtype = "uint32_t";
+        datatype = inputtype;
     }
     variant(const float& v) {
         float_value = v;
-        inputtype   = "float";
-        datatype    = inputtype;
+        inputtype = "float";
+        datatype = inputtype;
     }
     variant(const double& v) {
         double_value = v;
-        inputtype    = "double";
-        datatype     = inputtype;
+        inputtype = "double";
+        datatype = inputtype;
     }
     variant(const std::string& v, const std::string& dt) {
         string_value = v;
-        inputtype    = "string";
-        datatype     = dt;
+        inputtype = "string";
+        datatype = dt;
     }
     variant(const std::string& v) {
         string_value = v;
-        inputtype    = "string";
-        datatype     = inputtype;
+        inputtype = "string";
+        datatype = inputtype;
     }
     variant(const bool& v) {
         bool_value = v;
-        inputtype  = "bool";
-        datatype   = inputtype;
+        inputtype = "bool";
+        datatype = inputtype;
     }
     variant(const Color<T>& c) {
         color_value = c;
-        inputtype   = "Color";
-        datatype    = inputtype;
+        inputtype = "Color";
+        datatype = inputtype;
     }
 #ifdef USE_OPENGL
     variant(const texture& c) {
         texture_value = c;
-        inputtype     = "texture";
-        datatype      = inputtype;
+        inputtype = "texture";
+        datatype = inputtype;
     }
 #endif
     variant(const vec2<T>& c) {
         point_value = c;
-        inputtype   = "vec2";
-        datatype    = inputtype;
+        inputtype = "vec2";
+        datatype = inputtype;
     }
     variant(const vec3<T>& c) {
-        v3_value  = c;
+        v3_value = c;
         inputtype = "vec3";
-        datatype  = inputtype;
+        datatype = inputtype;
     }
     variant(const vec4<T>& c) {
         rect_value = c;
-        inputtype  = "vec4";
-        datatype   = inputtype;
+        inputtype = "vec4";
+        datatype = inputtype;
     }
     variant(const AABB<T>& c) {
         aabb_value = c;
-        inputtype  = "AABB";
-        datatype   = inputtype;
+        inputtype = "AABB";
+        datatype = inputtype;
     }
     variant(const std::vector<double>& c) {
         vector_double_value = c;
-        inputtype           = "vectorDouble";
-        datatype            = inputtype;
+        inputtype = "vectorDouble";
+        datatype = inputtype;
     }
     variant(const std::vector<float>& c) {
         vector_float_value = c;
-        inputtype          = "vectorFloat";
-        datatype           = inputtype;
+        inputtype = "vectorFloat";
+        datatype = inputtype;
     }
     variant(const std::vector<std::string>& c) {
         vector_string_value = c;
-        inputtype           = "vectorString";
-        datatype            = inputtype;
+        inputtype = "vectorString";
+        datatype = inputtype;
     }
     variant(const std::set<std::string>& c) {
         set_string_value = c;
-        inputtype        = "setString";
-        datatype         = inputtype;
+        inputtype = "setString";
+        datatype = inputtype;
     }
 
     std::string GetInputType() const {
@@ -3237,7 +3260,7 @@ void DeleteObjectsAndClearPointerList(std::list<T*>& lst) {
     if (!lst.empty()) {
         for (typename std::list<T*>::iterator it = lst.begin(); it != lst.end(); ++it) {
             T* type = nullptr;
-            type    = *it;
+            type = *it;
             if (type != nullptr) {
                 delete type;
                 *it = 0;
@@ -3252,7 +3275,7 @@ void DeleteObjectsAndClearPointerVector(std::vector<T*>& vec) {
     if (!vec.empty()) {
         for (typename std::vector<T*>::iterator it = vec.begin(); it != vec.end(); ++it) {
             T* type = nullptr;
-            type    = *it;
+            type = *it;
             if (type != nullptr) {
                 delete type;
                 *it = 0;
@@ -3266,11 +3289,11 @@ void DeleteObjectsAndClearPointerVector(std::vector<T*>& vec) {
 template <typename T>
 std::string VectorToString(std::vector<T>& vec, char vCharDelimiter);
 template <typename T>
-std::string VectorVec2ToString(std::vector<vec2<T> >& vec, char vCharDelimiter); // vec2<T>> give an error in osx... must be vec2<T> >
+std::string VectorVec2ToString(std::vector<vec2<T>>& vec, char vCharDelimiter);  // vec2<T>> give an error in osx... must be vec2<T> >
 template <typename T>
-std::string VectorVec3ToString(std::vector<vec3<T> >& vec, char vCharDelimiter); // vec3<T>> give an error in osx... must be vec3<T> >
+std::string VectorVec3ToString(std::vector<vec3<T>>& vec, char vCharDelimiter);  // vec3<T>> give an error in osx... must be vec3<T> >
 template <typename T>
-std::string VectorVec4ToString(std::vector<vec4<T> >& vec, char vCharDelimiter); // vec4<T>> give an error in osx... must be vec4<T> >
+std::string VectorVec4ToString(std::vector<vec4<T>>& vec, char vCharDelimiter);  // vec4<T>> give an error in osx... must be vec4<T> >
 
 // return "vParamName=\"" + toStr(vValue) + "\";
 template <typename T>
@@ -3305,9 +3328,9 @@ vec2<T> clamp(const vec2<T>& vValue, const vec2<T>& vInf, const vec2<T>& vSup);
 template <typename T>
 vec3<T> clamp(const vec3<T>& vValue, const vec3<T>& vInf, const vec3<T>& vSup) {
     ct::vec3<T> vUniform = vValue;
-    vUniform.x           = ct::clamp(vUniform.x, vInf.x, vSup.x);
-    vUniform.y           = ct::clamp(vUniform.y, vInf.y, vSup.y);
-    vUniform.z           = ct::clamp(vUniform.z, vInf.z, vSup.z);
+    vUniform.x = ct::clamp(vUniform.x, vInf.x, vSup.x);
+    vUniform.y = ct::clamp(vUniform.y, vInf.y, vSup.y);
+    vUniform.z = ct::clamp(vUniform.z, vInf.z, vSup.z);
     return vUniform;
 }
 template <typename T>
@@ -3315,16 +3338,16 @@ vec4<T> clamp(const vec4<T>& vValue, const vec4<T>& vInf, const vec4<T>& vSup);
 template <typename T>
 vec2<T> clamp(const vec2<T>& vValue, T vInf, T vSup) {
     ct::vec2<T> vUniform = vValue;
-    vUniform.x           = ct::clamp(vUniform.x, vInf, vSup);
-    vUniform.y           = ct::clamp(vUniform.y, vInf, vSup);
+    vUniform.x = ct::clamp(vUniform.x, vInf, vSup);
+    vUniform.y = ct::clamp(vUniform.y, vInf, vSup);
     return vUniform;
 }
 template <typename T>
 vec3<T> clamp(const vec3<T>& vValue, T vInf, T vSup) {
     ct::vec3<T> vUniform = vValue;
-    vUniform.x           = ct::clamp(vUniform.x, vInf, vSup);
-    vUniform.y           = ct::clamp(vUniform.y, vInf, vSup);
-    vUniform.z           = ct::clamp(vUniform.z, vInf, vSup);
+    vUniform.x = ct::clamp(vUniform.x, vInf, vSup);
+    vUniform.y = ct::clamp(vUniform.y, vInf, vSup);
+    vUniform.z = ct::clamp(vUniform.z, vInf, vSup);
     return vUniform;
 }
 template <typename T>
