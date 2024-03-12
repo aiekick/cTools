@@ -145,8 +145,8 @@ using namespace cocos2d;
 #include "Logger.h"
 #endif
 
-#ifdef USE_IMGUI
-#include USE_IMGUI
+#ifdef IMGUI_INCLUDE
+#include IMGUI_INCLUDE
 #endif
 
 // simple macro for block debuggers
@@ -186,7 +186,7 @@ template <typename T>
     return os.str();
 }
 
-#ifdef USE_IMGUI
+#ifdef IMGUI_INCLUDE
 std::string toStrFromImVec2(ImVec2 v, char delimiter = ';');
 std::string toStrFromImVec4(ImVec4 v, char delimiter = ';');
 #endif
@@ -792,7 +792,7 @@ struct Color {
     std::string GetColor4String() {
         return toStr(r) + ";" + toStr(g) + ";" + toStr(b) + ";" + toStr(a);
     }
-#ifdef USE_IMGUI
+#ifdef IMGUI_INCLUDE
     ImVec4 ToImVec4() {
         return ImVec4(r, g, b, a);
     }
@@ -837,7 +837,7 @@ struct vec2 {
         if (s > 1)
             y = result[1];
     }
-#ifdef USE_IMGUI
+#ifdef IMGUI_INCLUDE
     vec2<T>(const ImVec2& vec) {
         x = (T)vec.x;
         y = (T)vec.y;
@@ -1649,7 +1649,7 @@ struct vec4 {
     }
     vec4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {
     }
-#ifdef USE_IMGUI
+#ifdef IMGUI_INCLUDE
     vec4<T>(const ImVec4& vec) {
         x = (T)vec.x;
         y = (T)vec.y;
@@ -2046,7 +2046,7 @@ CTOOLS_API inline bool operator!=(const fvec4& v, const fvec4& f) {
 
 /////////////////////////////////////////////////////////////////////////
 
-#ifdef USE_IMGUI
+#ifdef IMGUI_INCLUDE
 CTOOLS_API inline ImVec2 toImVec2(const fvec2& v) {
     return ImVec2(v.x, v.y);
 }
@@ -2442,7 +2442,7 @@ struct AABB  // copy of b2AABB struct
         return vec2<T>(upperBound - lowerBound);
     }
 
-#ifdef USE_IMGUI
+#ifdef IMGUI_INCLUDE
     ImVec4 ToImVec4() {
         const ImVec4 v = ImVec4(lowerBound.x, lowerBound.y, upperBound.x, upperBound.y);
         return v;

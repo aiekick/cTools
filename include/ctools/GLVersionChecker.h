@@ -139,7 +139,7 @@ struct OpenglInfosStruct
 	}
 
 	void fill();
-#ifdef USE_IMGUI
+#ifdef IMGUI_INCLUDE
 	void drawImGui();
 #endif
 };

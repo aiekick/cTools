@@ -75,7 +75,7 @@ SOFTWARE.
     return str;
 }
 
-#ifdef USE_IMGUI
+#ifdef IMGUI_INCLUDE
 ::std::string ct::toStrFromImVec2(ImVec2 v, char delimiter) {
     return toStrFromArray(&v.x, 2, delimiter);
 }
