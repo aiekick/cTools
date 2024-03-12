@@ -11,7 +11,7 @@ option(USE_SDL_CLIPBOARD "Use Clipboard via SDL2 (need SDL2)" OFF)
 option(USE_TESTING_CTOOLS "Enable Ctools Tests" OFF)
 option(USE_SHARED_LIB_CTOOLS  "Enable Ctools Shared Lib" OFF)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -68,14 +68,14 @@ elseif(WIN32)
 endif()
 
 if(MSVC)
-    # Ignore 4055 for glad
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /IGNORE:4055")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /std:c++17")
 	add_definitions(-D__STDC__)
 	add_definitions(-DMSVC)
+	add_definitions(-DNOMINMAX)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 	add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
 else ()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -std=c++17 -Wunused-parameter -Wno-unknown-pragmas")
 endif ()
 
 if (USE_SHARED_LIB_CTOOLS)
