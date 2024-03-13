@@ -162,6 +162,16 @@ namespace ct  // cTools
 {
 
 /////////////////////////////////////////////
+////// UTF8 <> WideString ///////////////////
+/////////////////////////////////////////////
+
+// Convert a wide Unicode String to a UTF8 string 
+CTOOLS_API std::string UTF8Encode(const std::wstring& wstr);
+
+// Convert a UTF8 string to a wide Unicode String
+CTOOLS_API std::wstring UTF8Decode(const std::string& str);
+
+/////////////////////////////////////////////
 /////////////////////////////////////////////
 /////////////////////////////////////////////
 
@@ -171,23 +181,9 @@ namespace ct  // cTools
 // and if this is the good class, the magic_number will point to a random memory zone
 // so will not have the good value
 
-inline int64_t EncodeId(const std::string& vArr) {
-    if (vArr.empty() || vArr.size() != 8U) {
-        return 0;
-    }
-    return vArr[0] |                  //
-        (vArr[1] << 8) |              //
-        (vArr[2] << 16) |             //
-        (vArr[3] << 24) |             //
-        ((int64_t)(vArr[4]) << 32) |  //
-        ((int64_t)(vArr[5]) << 40) |  //
-        ((int64_t)(vArr[6]) << 48) |  //
-        ((int64_t)(vArr[7]) << 56);
-}
+CTOOLS_API int64_t EncodeId(const std::string& vArr);
 
-inline bool IsIdEqualTo(const int64_t& vId, char vArr[8]) {
-    return (EncodeId(vArr) == vId);
-}
+CTOOLS_API bool IsIdEqualTo(const int64_t& vId, char vArr[8]);
 
 /////////////////////////////////////////////
 /////////////////////////////////////////////

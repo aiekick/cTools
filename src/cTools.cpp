@@ -27,9 +27,9 @@ SOFTWARE.
 
 #include <ctools/cTools.h>
 
-#ifdef WIN32
+#if defined(__WIN32__) || defined(WIN32) || defined(_WIN32) || defined(__WIN64__) || defined(WIN64) || defined(_WIN64) || defined(_MSC_VER)
 #include <Windows.h>
-#elif defined(LINUX) or defined(APPLE)
+#else
 #endif
 
 #include <cstdarg>  // For va_start, etc.
@@ -48,6 +48,59 @@ SOFTWARE.
 #ifdef MSVC
 #include <cwchar>
 #endif
+
+std::string ct::UTF8Encode(const std::wstring& wstr) {
+    std::string res;
+#if defined(__WIN32__) || defined(WIN32) || defined(_WIN32) || defined(__WIN64__) || defined(WIN64) || defined(_WIN64) || defined(_MSC_VER)
+    if (!wstr.empty()) {
+        int size_needed = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), NULL, 0, NULL, NULL);
+        if (size_needed) {
+            res = std::string(size_needed, 0);
+            WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), &res[0], size_needed, NULL, NULL);
+        }
+    }
+#else
+    // Suppress warnings from the compiler.
+    (void)wstr;
+#endif  // _IGFD_WIN_
+    return res;
+}
+
+// Convert an UTF8 string to a wide Unicode String
+std::wstring ct::UTF8Decode(const std::string& str) {
+    std::wstring res;
+#if defined(__WIN32__) || defined(WIN32) || defined(_WIN32) || defined(__WIN64__) || defined(WIN64) || defined(_WIN64) || defined(_MSC_VER)
+    if (!str.empty()) {
+        int size_needed = MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), NULL, 0);
+        if (size_needed) {
+            res = std::wstring(size_needed, 0);
+            MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), &res[0], size_needed);
+        }
+    }
+#else
+    // Suppress warnings from the compiler.
+    (void)str;
+#endif  // _IGFD_WIN_
+    return res;
+}
+
+int64_t ct::EncodeId(const std::string& vArr) {
+    if (vArr.empty() || vArr.size() != 8U) {
+        return 0;
+    }
+    return vArr[0] |                  //
+        (vArr[1] << 8) |              //
+        (vArr[2] << 16) |             //
+        (vArr[3] << 24) |             //
+        ((int64_t)(vArr[4]) << 32) |  //
+        ((int64_t)(vArr[5]) << 40) |  //
+        ((int64_t)(vArr[6]) << 48) |  //
+        ((int64_t)(vArr[7]) << 56);
+}
+
+bool ct::IsIdEqualTo(const int64_t& vId, char vArr[8]) {
+    return (EncodeId(vArr) == vId);
+}
 
 ::std::string ct::toStr(const char* fmt, ...) {
     va_list args;
