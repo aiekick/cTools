@@ -128,15 +128,6 @@ bool ct::IsIdEqualTo(const int64_t& vId, char vArr[8]) {
     return str;
 }
 
-#ifdef IMGUI_INCLUDE
-::std::string ct::toStrFromImVec2(ImVec2 v, char delimiter) {
-    return toStrFromArray(&v.x, 2, delimiter);
-}
-::std::string ct::toStrFromImVec4(ImVec4 v, char delimiter) {
-    return toStrFromArray(&v.x, 4, delimiter);
-}
-#endif
-
 /////////////////////////////////////////////////////////////
 ///////// bitwize ///////////////////////////////////////////
 /////////////////////////////////////////////////////////////

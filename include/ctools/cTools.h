@@ -145,10 +145,6 @@ using namespace cocos2d;
 #include "Logger.h"
 #endif
 
-#ifdef IMGUI_INCLUDE
-#include IMGUI_INCLUDE
-#endif
-
 // simple macro for block debuggers
 #if !defined(_DEBUG) && defined(_MSC_VER)
 #define BLOCK_DEBUGGER(ret)  \
@@ -274,11 +270,6 @@ template <typename T>
     os << t;
     return os.str();
 }
-
-#ifdef IMGUI_INCLUDE
-std::string toStrFromImVec2(ImVec2 v, char delimiter = ';');
-std::string toStrFromImVec4(ImVec4 v, char delimiter = ';');
-#endif
 
 #include <ios>
 template <typename T>
@@ -881,11 +872,6 @@ struct Color {
     std::string GetColor4String() {
         return toStr(r) + ";" + toStr(g) + ";" + toStr(b) + ";" + toStr(a);
     }
-#ifdef IMGUI_INCLUDE
-    ImVec4 ToImVec4() {
-        return ImVec4(r, g, b, a);
-    }
-#endif
 };
 typedef Color<uint8_t> ui8Color;
 typedef Color<float> fColor;
@@ -926,12 +912,6 @@ struct vec2 {
         if (s > 1)
             y = result[1];
     }
-#ifdef IMGUI_INCLUDE
-    vec2<T>(const ImVec2& vec) {
-        x = (T)vec.x;
-        y = (T)vec.y;
-    }
-#endif
 #ifdef USE_BOX2D
     vec2<T>(const b2Vec2& vec, const float& vRatio = 1.0f) {
         x = (T)vec.x * vRatio;
@@ -1740,14 +1720,6 @@ struct vec4 {
     }
     vec4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {
     }
-#ifdef IMGUI_INCLUDE
-    vec4<T>(const ImVec4& vec) {
-        x = (T)vec.x;
-        y = (T)vec.y;
-        z = (T)vec.z;
-        w = (T)vec.w;
-    }
-#endif
     vec4(std::string vec, char c = ';', vec4<T>* def = nullptr)  // may be in format "0.2f,0.3f,0.4f,0.8f"
     {
         if (def) {
@@ -2139,29 +2111,6 @@ CTOOLS_API inline bool operator!=(const fvec4& v, const fvec4& f) {
 }
 
 /////////////////////////////////////////////////////////////////////////
-
-#ifdef IMGUI_INCLUDE
-CTOOLS_API inline ImVec2 toImVec2(const fvec2& v) {
-    return ImVec2(v.x, v.y);
-}
-CTOOLS_API inline ImVec2 toImVec2(const ivec2& v) {
-    return ImVec2((float)v.x, (float)v.y);
-}
-CTOOLS_API inline ImVec2 toImVec2(const dvec2& v) {
-    return ImVec2((float)v.x, (float)v.y);
-}
-CTOOLS_API inline ImVec4 toImVec4(const fvec4& v) {
-    return ImVec4(v.x, v.y, v.z, v.w);
-}
-CTOOLS_API inline ImVec4 toImVec4(const ivec4& v) {
-    return ImVec4((float)v.x, (float)v.y, (float)v.z, (float)v.w);
-}
-CTOOLS_API inline ImVec4 toImVec4(const dvec4& v) {
-    return ImVec4((float)v.x, (float)v.y, (float)v.z, (float)v.w);
-}
-#endif
-
-/////////////////////////////////////////////////////////////////////////
 template <typename T>
 struct rect  // bottom left to top right
 {
@@ -2535,13 +2484,6 @@ struct AABB  // copy of b2AABB struct
     vec2<T> Size() {
         return vec2<T>(upperBound - lowerBound);
     }
-
-#ifdef IMGUI_INCLUDE
-    ImVec4 ToImVec4() {
-        const ImVec4 v = ImVec4(lowerBound.x, lowerBound.y, upperBound.x, upperBound.y);
-        return v;
-    }
-#endif
 };
 typedef AABB<int> iAABB;
 typedef AABB<double> dAABB;
