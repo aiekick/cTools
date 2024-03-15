@@ -78,7 +78,6 @@ std::wstring ct::UTF8Decode(const std::string& str) {
         }
     }
 #else
-    // Suppress warnings from the compiler.
     (void)str;
 #endif  // _IGFD_WIN_
     return res;
