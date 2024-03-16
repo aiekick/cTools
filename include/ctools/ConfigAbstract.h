@@ -50,9 +50,9 @@ namespace conf
 	class CTOOLS_API ConfigAbstract
 	{
 	public:
-		virtual std::string getXml(const std::string& vOffset, const std::string& vUserDatas = "") = 0;
+		virtual std::string getXml(const std::string& vOffset, const std::string& vUserDatas) = 0;
 		// return true for continue xml parsing of childs in this node or false for interrupt the child exploration (if we want explore child ourselves)
-		virtual bool setFromXml(tinyxml2::XMLElement* vElem, tinyxml2::XMLElement* vParent, const std::string& vUserDatas = "") = 0;
+		virtual bool setFromXml(tinyxml2::XMLElement* vElem, tinyxml2::XMLElement* vParent, const std::string& vUserDatas) = 0;
 
 	public:
 		// replace patterns (who can break a xml code) by corresponding escaped pattern
