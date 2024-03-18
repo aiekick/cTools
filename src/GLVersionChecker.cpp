@@ -240,6 +240,7 @@ void OpenglInfosStruct::fill()
 }
 
 #ifdef IMGUI_INCLUDE
+#include IMGUI_INCLUDE
 void OpenglInfosStruct::drawImGui()
 {
     if (ImGui::BeginMenu("Opengl Infos"))

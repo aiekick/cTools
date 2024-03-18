@@ -24,7 +24,7 @@ SOFTWARE.
 #pragma once
 #pragma warning(disable : 4251)
 
-#include "cTools.h"
+#include <ctools/cTools.h>
 #include <glad/glad.h>
 
 #ifdef MSVC
