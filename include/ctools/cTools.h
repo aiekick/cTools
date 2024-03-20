@@ -1690,7 +1690,7 @@ using u64vec3 = vec3<uint64_t>;
 CTOOLS_API inline bool valid(const fvec3& a) {
     return floatIsValid(a.x) && floatIsValid(a.y) && floatIsValid(a.z);
 }
-// specialization for fvec2
+// specialization for fvec3
 CTOOLS_API inline bool operator==(const fvec3& v, const fvec3& f) {
     return IS_FLOAT_EQUAL(f.x, v.x) && IS_FLOAT_EQUAL(f.y, v.y) && IS_FLOAT_EQUAL(f.z, v.z);
 }
@@ -2098,17 +2098,19 @@ using u32vec4 = vec4<uint32_t>;
 using u64vec4 = vec4<uint64_t>;
 
 // specialization for float32 test to fvec4
-CTOOLS_API inline bool valid(const fvec4& a) {
+inline bool valid(const fvec4& a) {
     return floatIsValid(a.x) && floatIsValid(a.y) && floatIsValid(a.z) && floatIsValid(a.w);
 }
 
 // specialization for fvec4
-CTOOLS_API inline bool operator==(const fvec4& v, const fvec4& f) {
+/*template <>
+inline bool operator==(fvec4 v, fvec4 f) {
     return IS_FLOAT_EQUAL(f.x, v.x) && IS_FLOAT_EQUAL(f.y, v.y) && IS_FLOAT_EQUAL(f.z, v.z) && IS_FLOAT_EQUAL(f.w, v.w);
 }
-CTOOLS_API inline bool operator!=(const fvec4& v, const fvec4& f) {
+template <>
+inline bool operator!=(fvec4 v, fvec4 f) {
     return IS_FLOAT_DIFFERENT(f.x, v.x) || IS_FLOAT_DIFFERENT(f.y, v.y) || IS_FLOAT_DIFFERENT(f.z, v.z) || IS_FLOAT_DIFFERENT(f.w, v.w);
-}
+}*/
 
 /////////////////////////////////////////////////////////////////////////
 template <typename T>
