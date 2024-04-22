@@ -161,7 +161,7 @@ namespace ct  // cTools
 ////// UTF8 <> WideString ///////////////////
 /////////////////////////////////////////////
 
-// Convert a wide Unicode String to a UTF8 string 
+// Convert a wide Unicode String to a UTF8 string
 CTOOLS_API std::string UTF8Encode(const std::wstring& wstr);
 
 // Convert a UTF8 string to a wide Unicode String

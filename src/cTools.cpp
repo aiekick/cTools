@@ -155,7 +155,7 @@ void ct::unsetbit(int32_t& vContainer, int32_t vBit) {
     ::std::list<::std::string> arr;
     if (!text.empty()) {
         ::std::string::size_type start = 0;
-        ::std::string::size_type end   = text.find_first_of(delimiters, start);
+        ::std::string::size_type end = text.find_first_of(delimiters, start);
         while (end != ::std::string::npos) {
             ::std::string token = text.substr(start, end - start);
             if (!token.empty() || (token.empty() && pushEmpty)) {
@@ -165,7 +165,7 @@ void ct::unsetbit(int32_t& vContainer, int32_t vBit) {
                     arr.emplace_back(token);
             }
             start = end + 1;
-            end   = text.find_first_of(delimiters, start);
+            end = text.find_first_of(delimiters, start);
         }
         ::std::string token = text.substr(start);
         if (!token.empty() || (token.empty() && pushEmpty)) {
@@ -182,13 +182,13 @@ void ct::unsetbit(int32_t& vContainer, int32_t vBit) {
     ::std::vector<::std::string> arr;
     if (!text.empty()) {
         ::std::string::size_type start = 0;
-        ::std::string::size_type end   = text.find_first_of(delimiters, start);
+        ::std::string::size_type end = text.find_first_of(delimiters, start);
         while (end != ::std::string::npos) {
             ::std::string token = text.substr(start, end - start);
             if (!token.empty() || (token.empty() && pushEmpty))
                 arr.emplace_back(token);
             start = end + 1;
-            end   = text.find_first_of(delimiters, start);
+            end = text.find_first_of(delimiters, start);
         }
         ::std::string token = text.substr(start);
         if (!token.empty() || (token.empty() && pushEmpty))
@@ -201,13 +201,13 @@ void ct::unsetbit(int32_t& vContainer, int32_t vBit) {
     ::std::set<::std::string> arr;
     if (!text.empty()) {
         ::std::string::size_type start = 0;
-        ::std::string::size_type end   = text.find_first_of(delimiters, start);
+        ::std::string::size_type end = text.find_first_of(delimiters, start);
         while (end != ::std::string::npos) {
             ::std::string token = text.substr(start, end - start);
             if (!token.empty() || (token.empty() && pushEmpty))
                 arr.emplace(token);
             start = end + 1;
-            end   = text.find_first_of(delimiters, start);
+            end = text.find_first_of(delimiters, start);
         }
         ::std::string token = text.substr(start);
         if (!token.empty() || (token.empty() && pushEmpty))
@@ -220,7 +220,7 @@ void ct::unsetbit(int32_t& vContainer, int32_t vBit) {
     ::std::list<::std::string> arr;
     if (!text.empty()) {
         ::std::string::size_type start = 0;
-        ::std::string::size_type end   = text.find(delimiter, start);
+        ::std::string::size_type end = text.find(delimiter, start);
         while (end != ::std::string::npos) {
             ::std::string token = text.substr(start, end - start);
             if (!token.empty() || (token.empty() && pushEmpty)) {
@@ -230,7 +230,7 @@ void ct::unsetbit(int32_t& vContainer, int32_t vBit) {
                     arr.emplace_back(token);
             }
             start = end + 1;
-            end   = text.find(delimiter, start);
+            end = text.find(delimiter, start);
         }
         ::std::string token = text.substr(start);
         if (!token.empty() || (token.empty() && pushEmpty)) {
@@ -247,13 +247,13 @@ void ct::unsetbit(int32_t& vContainer, int32_t vBit) {
     ::std::vector<::std::string> arr;
     if (!text.empty()) {
         ::std::string::size_type start = 0;
-        ::std::string::size_type end   = text.find(delimiter, start);
+        ::std::string::size_type end = text.find(delimiter, start);
         while (end != ::std::string::npos) {
             ::std::string token = text.substr(start, end - start);
             if (!token.empty() || (token.empty() && pushEmpty))
                 arr.emplace_back(token);
             start = end + 1;
-            end   = text.find(delimiter, start);
+            end = text.find(delimiter, start);
         }
         ::std::string token = text.substr(start);
         if (!token.empty() || (token.empty() && pushEmpty))
@@ -266,13 +266,13 @@ void ct::unsetbit(int32_t& vContainer, int32_t vBit) {
     ::std::set<::std::string> arr;
     if (!text.empty()) {
         ::std::string::size_type start = 0;
-        ::std::string::size_type end   = text.find(delimiter, start);
+        ::std::string::size_type end = text.find(delimiter, start);
         while (end != ::std::string::npos) {
             ::std::string token = text.substr(start, end - start);
             if (!token.empty() || (token.empty() && pushEmpty))
                 arr.emplace(token);
             start = end + 1;
-            end   = text.find(delimiter, start);
+            end = text.find(delimiter, start);
         }
         ::std::string token = text.substr(start);
         if (!token.empty() || (token.empty() && pushEmpty))
@@ -324,8 +324,8 @@ bool ct::StringToInt(::std::string vWord, int *vInt)
 #ifdef WXWIDGETS
 ::std::wstring ct::s2ws(const ::std::string& s) {
     int len;
-    int slength  = (int)s.length() + 1;
-    len          = MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, 0, 0);
+    int slength = (int)s.length() + 1;
+    len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, 0, 0);
     wchar_t* buf = new wchar_t[len];
     MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, buf, len);
     ::std::wstring r(buf);
@@ -366,8 +366,8 @@ bool ct::replaceString(::std::string& str, const ::std::string& oldStr, const ::
 /////////////////////////////////////////////////////////////
 
 size_t ct::GetCountOccurence(const ::std::string& vSrcString, const ::std::string& vStringToCount) {
-    size_t count   = 0;
-    size_t pos     = 0;
+    size_t count = 0;
+    size_t pos = 0;
     const auto len = vStringToCount.length();
     while ((pos = vSrcString.find(vStringToCount, pos)) != ::std::string::npos) {
         ++count;
@@ -376,8 +376,8 @@ size_t ct::GetCountOccurence(const ::std::string& vSrcString, const ::std::strin
     return count;
 }
 size_t ct::GetCountOccurenceInSection(const ::std::string& vSrcString, size_t vStartPos, size_t vEndpos, const ::std::string& vStringToCount) {
-    size_t count   = 0;
-    size_t pos     = vStartPos;
+    size_t count = 0;
+    size_t pos = vStartPos;
     const auto len = vStringToCount.length();
     while (pos < vEndpos && (pos = vSrcString.find(vStringToCount, pos)) != ::std::string::npos) {
         if (pos < vEndpos) {
@@ -391,7 +391,7 @@ size_t ct::GetCountOccurenceInSection(const ::std::string& vSrcString, size_t vS
 // can be more fast if char is used
 size_t ct::GetCountOccurence(const ::std::string& vSrcString, const char& vStringToCount) {
     size_t count = 0;
-    size_t pos   = 0;
+    size_t pos = 0;
     while ((pos = vSrcString.find(vStringToCount, pos)) != ::std::string::npos) {
         ++count;
         pos++;
@@ -402,7 +402,7 @@ size_t ct::GetCountOccurence(const ::std::string& vSrcString, const char& vStrin
 // can be more fast if char is used
 size_t ct::GetCountOccurenceInSection(const ::std::string& vSrcString, size_t vStartPos, size_t vEndpos, const char& vStringToCount) {
     size_t count = 0;
-    size_t pos   = vStartPos;
+    size_t pos = vStartPos;
     while (pos < vEndpos && (pos = vSrcString.find(vStringToCount, pos)) != ::std::string::npos) {
         if (pos < vEndpos) {
             ++count;
@@ -414,7 +414,7 @@ size_t ct::GetCountOccurenceInSection(const ::std::string& vSrcString, size_t vS
 // std::wstring to std::string
 // std::wstring(unicode/multibytes/char16/wchar_t) to std::string(char)
 std::string ct::wstring_to_string(const std::wstring& wstr) {
-    std::mbstate_t state  = std::mbstate_t();
+    std::mbstate_t state = std::mbstate_t();
     const std::size_t len = wstr.size();
     std::vector<char> mbstr(len);
     const wchar_t* wptr = wstr.c_str();
@@ -430,7 +430,7 @@ std::string ct::wstring_to_string(const std::wstring& wstr) {
 // std::string to std::wstring
 // std::string(char) to std::wstring(unicode/multibytes/char16/wchar_t)
 std::wstring ct::string_to_wstring(const std::string& mbstr) {
-    std::mbstate_t state  = std::mbstate_t();
+    std::mbstate_t state = std::mbstate_t();
     const std::size_t len = mbstr.size();
     std::vector<wchar_t> wstr(len);
     const char* ptr = mbstr.c_str();
@@ -457,7 +457,7 @@ float ct::GetTimeInterval() {
     const uint64_t ticks = GetTicks();
     static float secMult = 1.0f / 1000.0f;
     const float interval = (ticks - lastTick) * secMult;
-    lastTick             = ticks;
+    lastTick = ticks;
     return interval;
 }
 
@@ -467,8 +467,8 @@ ct::ActionTime::ActionTime() {
 
 void ct::ActionTime::Fix()  // fixe les marqueur de temps
 {
-    lastTick   = GetTicks();
-    pauseTick  = GetTicks();
+    lastTick = GetTicks();
+    pauseTick = GetTicks();
     resumeTick = GetTicks();
 }
 
@@ -480,7 +480,7 @@ void ct::ActionTime::FixTime(double vValue)  // fixe les marqueur de temps
 
 void ct::ActionTime::Pause() {
     pauseTick = GetTicks();
-    play      = false;
+    play = false;
 }
 
 void ct::ActionTime::Resume() {
@@ -500,7 +500,7 @@ double ct::ActionTime::GetTime() const {
 
 void ct::ActionTime::SetTime(double vValue) {
     const auto v = (uint64_t)(vValue * 1000.0);
-    lastTick     = ct::GetTicks() - v;
+    lastTick = ct::GetTicks() - v;
 }
 
 bool ct::ActionTime::IsTimeToAct(long vMs, bool vFix) {
@@ -645,15 +645,15 @@ T* ct::GetNewBufferFromList(::std::list<T>& lst, int offsetBefore, int offsetAft
     const int count = (int)lst.size();
     if (count > 0) {
         *BufferSize = count + offsetBefore + offsetAfter;
-        T* Buffer   = new T[(size_t)(*BufferSize)];
-        size_t idx  = offsetBefore;
+        T* Buffer = new T[(size_t)(*BufferSize)];
+        size_t idx = offsetBefore;
         // before init
         for (size_t i = 0; i < (size_t)offsetBefore; ++i) {
             Buffer[i] = T();
         }
         // content
         for (typename ::std::list<T>::iterator it = lst.begin(); it != lst.end(); ++it) {
-            T obj         = *it;
+            T obj = *it;
             Buffer[idx++] = obj;
         }
         // after init
@@ -677,8 +677,8 @@ P* ct::GetNewBufferFromMap(::std::map<T, P>& mp, int offsetBefore, int offsetAft
     const int count = (int)mp.size();
     if (count > 0) {
         *BufferSize = count + offsetBefore + offsetAfter;
-        P* Buffer   = new P[(size_t)(*BufferSize)];
-        size_t idx  = (size_t)offsetBefore;
+        P* Buffer = new P[(size_t)(*BufferSize)];
+        size_t idx = (size_t)offsetBefore;
         // before init
         for (size_t i = 0; i < (size_t)offsetBefore; ++i) {
             Buffer[i] = P();
@@ -812,18 +812,18 @@ ct::vec4<T> ct::invMix(const ct::vec4<T>& vInf, const ct::vec4<T>& vSup, const c
 template <typename T>
 ct::vec2<T> ct::clamp(const ct::vec2<T>& vValue, const ct::vec2<T>& vInf, const ct::vec2<T>& vSup) {
     ct::vec2<T> vUniform = vValue;
-    vUniform.x           = ct::clamp(vUniform.x, vInf.x, vSup.x);
-    vUniform.y           = ct::clamp(vUniform.y, vInf.y, vSup.y);
+    vUniform.x = ct::clamp(vUniform.x, vInf.x, vSup.x);
+    vUniform.y = ct::clamp(vUniform.y, vInf.y, vSup.y);
     return vUniform;
 }
 
 template <typename T>
 ct::vec4<T> ct::clamp(const ct::vec4<T>& vValue, const ct::vec4<T>& vInf, const ct::vec4<T>& vSup) {
     ct::vec4<T> vUniform = vValue;
-    vUniform.x           = ct::clamp(vUniform.x, vInf.x, vSup.x);
-    vUniform.y           = ct::clamp(vUniform.y, vInf.y, vSup.y);
-    vUniform.z           = ct::clamp(vUniform.z, vInf.z, vSup.z);
-    vUniform.w           = ct::clamp(vUniform.w, vInf.w, vSup.w);
+    vUniform.x = ct::clamp(vUniform.x, vInf.x, vSup.x);
+    vUniform.y = ct::clamp(vUniform.y, vInf.y, vSup.y);
+    vUniform.z = ct::clamp(vUniform.z, vInf.z, vSup.z);
+    vUniform.w = ct::clamp(vUniform.w, vInf.w, vSup.w);
     return vUniform;
 }
 
@@ -849,37 +849,37 @@ ct::vec3<T> ct::clamp(const ct::vec3<T>& vValue, T vInf, T vSup)
 template <typename T>
 ct::vec4<T> ct::clamp(const ct::vec4<T>& vValue, T vInf, T vSup) {
     ct::vec4<T> vUniform = vValue;
-    vUniform.x           = ct::clamp(vUniform.x, vInf, vSup);
-    vUniform.y           = ct::clamp(vUniform.y, vInf, vSup);
-    vUniform.z           = ct::clamp(vUniform.z, vInf, vSup);
-    vUniform.w           = ct::clamp(vUniform.w, vInf, vSup);
+    vUniform.x = ct::clamp(vUniform.x, vInf, vSup);
+    vUniform.y = ct::clamp(vUniform.y, vInf, vSup);
+    vUniform.z = ct::clamp(vUniform.z, vInf, vSup);
+    vUniform.w = ct::clamp(vUniform.w, vInf, vSup);
     return vUniform;
 }
 
 template <typename T>
 ct::vec2<T> ct::clamp(const ct::vec2<T>& vValue) {
     ct::vec2<T> vUniform = vValue;
-    vUniform.x           = ct::clamp(vUniform.x);
-    vUniform.y           = ct::clamp(vUniform.y);
+    vUniform.x = ct::clamp(vUniform.x);
+    vUniform.y = ct::clamp(vUniform.y);
     return vUniform;
 }
 
 template <typename T>
 ct::vec3<T> ct::clamp(const ct::vec3<T>& vValue) {
     ct::vec3<T> vUniform = vValue;
-    vUniform.x           = ct::clamp(vUniform.x);
-    vUniform.y           = ct::clamp(vUniform.y);
-    vUniform.z           = ct::clamp(vUniform.z);
+    vUniform.x = ct::clamp(vUniform.x);
+    vUniform.y = ct::clamp(vUniform.y);
+    vUniform.z = ct::clamp(vUniform.z);
     return vUniform;
 }
 
 template <typename T>
 ct::vec4<T> ct::clamp(const ct::vec4<T>& vValue) {
     ct::vec4<T> vUniform = vValue;
-    vUniform.x           = ct::clamp(vUniform.x);
-    vUniform.y           = ct::clamp(vUniform.y);
-    vUniform.z           = ct::clamp(vUniform.z);
-    vUniform.w           = ct::clamp(vUniform.w);
+    vUniform.x = ct::clamp(vUniform.x);
+    vUniform.y = ct::clamp(vUniform.y);
+    vUniform.z = ct::clamp(vUniform.z);
+    vUniform.w = ct::clamp(vUniform.w);
     return vUniform;
 }
 
@@ -888,54 +888,54 @@ ct::vec4<T> ct::clamp(const ct::vec4<T>& vValue) {
 template <typename T>
 ct::vec2<T> ct::mod(const ct::vec2<T>& vValue, const ct::vec2<T>& vLim) {
     ct::vec2<T> vUniform = vValue;
-    vUniform.x           = ct::mod(vUniform.x, vLim.x);
-    vUniform.y           = ct::mod(vUniform.y, vLim.y);
+    vUniform.x = ct::mod(vUniform.x, vLim.x);
+    vUniform.y = ct::mod(vUniform.y, vLim.y);
     return vUniform;
 }
 
 template <typename T>
 ct::vec3<T> ct::mod(const ct::vec3<T>& vValue, const ct::vec3<T>& vLim) {
     ct::vec3<T> vUniform = vValue;
-    vUniform.x           = ct::mod(vUniform.x, vLim.x);
-    vUniform.y           = ct::mod(vUniform.y, vLim.y);
-    vUniform.z           = ct::mod(vUniform.z, vLim.z);
+    vUniform.x = ct::mod(vUniform.x, vLim.x);
+    vUniform.y = ct::mod(vUniform.y, vLim.y);
+    vUniform.z = ct::mod(vUniform.z, vLim.z);
     return vUniform;
 }
 
 template <typename T>
 ct::vec4<T> ct::mod(const ct::vec4<T>& vValue, const ct::vec4<T>& vLim) {
     ct::vec4<T> vUniform = vValue;
-    vUniform.x           = ct::mod(vUniform.x, vLim.x);
-    vUniform.y           = ct::mod(vUniform.y, vLim.y);
-    vUniform.z           = ct::mod(vUniform.z, vLim.z);
-    vUniform.w           = ct::mod(vUniform.w, vLim.w);
+    vUniform.x = ct::mod(vUniform.x, vLim.x);
+    vUniform.y = ct::mod(vUniform.y, vLim.y);
+    vUniform.z = ct::mod(vUniform.z, vLim.z);
+    vUniform.w = ct::mod(vUniform.w, vLim.w);
     return vUniform;
 }
 
 template <typename T>
 ct::vec2<T> ct::mod(const ct::vec2<T>& vValue, T vLim) {
     ct::vec2<T> vUniform = vValue;
-    vUniform.x           = ct::mod(vUniform.x, vLim);
-    vUniform.y           = ct::mod(vUniform.y, vLim);
+    vUniform.x = ct::mod(vUniform.x, vLim);
+    vUniform.y = ct::mod(vUniform.y, vLim);
     return vUniform;
 }
 
 template <typename T>
 ct::vec3<T> ct::mod(const ct::vec3<T>& vValue, T vLim) {
     ct::vec3<T> vUniform = vValue;
-    vUniform.x           = ct::mod(vUniform.x, vLim);
-    vUniform.y           = ct::mod(vUniform.y, vLim);
-    vUniform.z           = ct::mod(vUniform.z, vLim);
+    vUniform.x = ct::mod(vUniform.x, vLim);
+    vUniform.y = ct::mod(vUniform.y, vLim);
+    vUniform.z = ct::mod(vUniform.z, vLim);
     return vUniform;
 }
 
 template <typename T>
 ct::vec4<T> ct::mod(const ct::vec4<T>& vValue, T vLim) {
     ct::vec4<T> vUniform = vValue;
-    vUniform.x           = ct::mod(vUniform.x, vLim);
-    vUniform.y           = ct::mod(vUniform.y, vLim);
-    vUniform.z           = ct::mod(vUniform.z, vLim);
-    vUniform.w           = ct::mod(vUniform.w, vLim);
+    vUniform.x = ct::mod(vUniform.x, vLim);
+    vUniform.y = ct::mod(vUniform.y, vLim);
+    vUniform.z = ct::mod(vUniform.z, vLim);
+    vUniform.w = ct::mod(vUniform.w, vLim);
     return vUniform;
 }
 // ReRange value from range 0-MaxRange to range Sup-Inf and return new value
@@ -958,7 +958,7 @@ std::string ct::FormatNum(size_t vNum, int vDecimalCount) {
     const auto decimalCount = (size_t)std::pow(10, vDecimalCount);
 
     // Enumerate number abbreviations
-    char abbrev[]          = {'k', 'M', 'G', 'T'};
+    char abbrev[] = {'k', 'M', 'G', 'T'};
     const int abbrevLength = 4;
 
     // Go through the array backwards, so we do the largest first

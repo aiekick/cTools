@@ -25,8 +25,7 @@ SOFTWARE.
 #pragma once
 #pragma warning(disable : 4251)
 
-#if defined(__WIN32__) || defined(WIN32) || defined(_WIN32) || defined(__WIN64__) || defined(WIN64) || \
-    defined(_WIN64) || defined(_MSC_VER)
+#if defined(__WIN32__) || defined(WIN32) || defined(_WIN32) || defined(__WIN64__) || defined(WIN64) || defined(_WIN64) || defined(_MSC_VER)
 #if defined(ctools_EXPORTS)
 #define CTOOLS_API __declspec(dllexport)
 #elif defined(BUILD_CTOOLS_SHARED_LIBS)
@@ -40,44 +39,42 @@ SOFTWARE.
 
 #include <tinyxml2.h>
 
-#include <fstream> // ifstream
-#include <sstream> // stringstream
+#include <fstream>  // ifstream
+#include <sstream>  // stringstream
 #include <string>
 #include <map>
 
-namespace conf
-{
-	class CTOOLS_API ConfigAbstract
-	{
-	public:
-		virtual std::string getXml(const std::string& vOffset, const std::string& vUserDatas) = 0;
-		// return true for continue xml parsing of childs in this node or false for interrupt the child exploration (if we want explore child ourselves)
-		virtual bool setFromXml(tinyxml2::XMLElement* vElem, tinyxml2::XMLElement* vParent, const std::string& vUserDatas) = 0;
+namespace conf {
+class CTOOLS_API ConfigAbstract {
+public:
+    virtual std::string getXml(const std::string& vOffset, const std::string& vUserDatas) = 0;
+    // return true for continue xml parsing of childs in this node or false for interrupt the child exploration (if we want explore child ourselves)
+    virtual bool setFromXml(tinyxml2::XMLElement* vElem, tinyxml2::XMLElement* vParent, const std::string& vUserDatas) = 0;
 
-	public:
-		// replace patterns (who can break a xml code) by corresponding escaped pattern
-        std::string escapeXmlCode(std::string vDatas);
+public:
+    // replace patterns (who can break a xml code) by corresponding escaped pattern
+    std::string escapeXmlCode(std::string vDatas);
 
-		// replace xml excaped pattern by corresponding good pattern
-        std::string unEscapeXmlCode(std::string vDatas);
+    // replace xml excaped pattern by corresponding good pattern
+    std::string unEscapeXmlCode(std::string vDatas);
 
-		tinyxml2::XMLError LoadConfigString(const std::string& vConfigString, const std::string& vUserDatas = "", const std::string& vFirstElement = "config");
+    tinyxml2::XMLError LoadConfigString(const std::string& vConfigString, const std::string& vUserDatas = "", const std::string& vFirstElement = "config");
 
-		std::string SaveConfigString(const std::string& vUserDatas = "", const std::string& vFirstElement = "config");
+    std::string SaveConfigString(const std::string& vUserDatas = "", const std::string& vFirstElement = "config");
 
-		tinyxml2::XMLError LoadConfigFile(const std::string& vFilePathName, const std::string& vUserDatas = "", const std::string& vFirstElement = "config");
+    tinyxml2::XMLError LoadConfigFile(const std::string& vFilePathName, const std::string& vUserDatas = "", const std::string& vFirstElement = "config");
 
-		bool SaveConfigFile(const std::string& vFilePathName, const std::string& vUserDatas = "");
+    bool SaveConfigFile(const std::string& vFilePathName, const std::string& vUserDatas = "");
 
-		tinyxml2::XMLError parseConfigDatas(std::string vDatas, const std::string& vUserDatas = "", const std::string& vFirstElement = "config");
+    tinyxml2::XMLError parseConfigDatas(std::string vDatas, const std::string& vUserDatas = "", const std::string& vFirstElement = "config");
 
-		void RecursParsingConfig(tinyxml2::XMLElement* vElem, tinyxml2::XMLElement* vParent, const std::string& vUserDatas = "");
+    void RecursParsingConfig(tinyxml2::XMLElement* vElem, tinyxml2::XMLElement* vParent, const std::string& vUserDatas = "");
 
-		void RecursParsingConfigChilds(tinyxml2::XMLElement* vElem, const std::string& vUserDatas = "");
+    void RecursParsingConfigChilds(tinyxml2::XMLElement* vElem, const std::string& vUserDatas = "");
 
-		std::string getTinyXml2ErrorMessage(tinyxml2::XMLError vErrorCode);
+    std::string getTinyXml2ErrorMessage(tinyxml2::XMLError vErrorCode);
 
-	private:
-        bool m_replaceString(::std::string& str, const ::std::string& oldStr, const ::std::string& newStr);
-	};
-}
+private:
+    bool m_replaceString(::std::string& str, const ::std::string& oldStr, const ::std::string& newStr);
+};
+}  // namespace conf
