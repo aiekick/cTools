@@ -158,6 +158,16 @@ namespace ct  // cTools
 {
 
 /////////////////////////////////////////////
+////// DATEs Conversions ////////////////////
+/////////////////////////////////////////////
+        
+// convert a string ISO8601 time to epoch time
+bool iso8601ToEpoch(const std::string& vIsoDateTime, const std::string& vTimeFormat, std::time_t& vOutTime);
+
+// convert a epoch time to a string ISO8601 time
+bool epochToISO8601(const std::time_t& vEpochTime, std::string& vOutTime);
+
+/////////////////////////////////////////////
 ////// UTF8 <> WideString ///////////////////
 /////////////////////////////////////////////
 
@@ -249,6 +259,9 @@ CTOOLS_API std::string toStr(const char* fmt, ...);
 
 CTOOLS_API std::string toUpper(const std::string& vStr, const std::locale& vLocale = std::locale());
 CTOOLS_API std::string toLower(const std::string& vStr, const std::locale& vLocale = std::locale());
+
+// convert a string byte content to hex string
+CTOOLS_API std::string toHex(const std::string& vStr);
 
 template <typename T>
 ::std::string toStrFromArray(T* arr, size_t n, char delimiter = ';') {

@@ -49,6 +49,39 @@ SOFTWARE.
 #include <cwchar>
 #endif
 
+bool ct::iso8601ToEpoch(const std::string& vIsoDateTime, const std::string& vTimeFormat, std::time_t& vOutTime) {
+    if (!vIsoDateTime.empty() && !vTimeFormat.empty()) {
+        struct std::tm time = {};
+        std::istringstream ss(vIsoDateTime);
+        ss >> std::get_time(&time, vTimeFormat.c_str());
+        if (ss.good()) {
+            time.tm_hour = 0;
+            time.tm_min = 0;
+            time.tm_sec = 0;
+#ifdef _WIN32
+            vOutTime = _mkgmtime(&time);
+#else
+            vOutTime = timegm(&time);
+#endif
+            return true;
+        }
+    }
+    return false;
+}
+
+bool ct::epochToISO8601(const std::time_t& vEpochTime, std::string& vOutTime) {
+    auto tp = std::chrono::system_clock::from_time_t(vEpochTime);
+    auto tt = std::chrono::system_clock::to_time_t(tp);
+    auto* timeinfo = std::localtime(&tt);
+    std::ostringstream oss;
+    oss << std::put_time(timeinfo, "%Y-%m-%d");
+    if (oss.good()) {
+        vOutTime = oss.str();
+        return true;
+    }
+    return false;
+}
+
 std::string ct::UTF8Encode(const std::wstring& wstr) {
     std::string res;
 #if defined(__WIN32__) || defined(WIN32) || defined(_WIN32) || defined(__WIN64__) || defined(WIN64) || defined(_WIN64) || defined(_MSC_VER)
@@ -125,6 +158,11 @@ bool ct::IsIdEqualTo(const int64_t& vId, char vArr[8]) {
     for (size_t i = 0U; i < str.size(); ++i)
         str[i] = std::tolower(str[i], vLocale);
     return str;
+}
+
+ std::string ct::toHex(const std::string& vStr) {
+    CTOOL_DEBUG_BREAK;
+    return {};
 }
 
 /////////////////////////////////////////////////////////////
