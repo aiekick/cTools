@@ -52,6 +52,8 @@ public:
     virtual bool setFromXml(tinyxml2::XMLElement* vElem, tinyxml2::XMLElement* vParent, const std::string& vUserDatas) = 0;
 
 public:
+    virtual ~ConfigAbstract() = default;
+
     // replace patterns (who can break a xml code) by corresponding escaped pattern
     std::string escapeXmlCode(std::string vDatas);
 

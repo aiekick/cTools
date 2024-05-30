@@ -161,7 +161,14 @@ bool ct::IsIdEqualTo(const int64_t& vId, char vArr[8]) {
 }
 
  std::string ct::toHex(const std::string& vStr) {
-    CTOOL_DEBUG_BREAK;
+    if (!vStr.empty()) {
+        std::stringstream ss;
+        ss << std::setfill('0') << std::setw(2) << std::hex;
+        for (const auto& c : vStr) {
+            ss << (0xff & (unsigned int)c);
+        }
+        return ss.str();
+    }
     return {};
 }
 
