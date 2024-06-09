@@ -52,9 +52,9 @@ SOFTWARE.
 bool ct::iso8601ToEpoch(const std::string& vIsoDateTime, const std::string& vTimeFormat, std::time_t& vOutTime) {
     if (!vIsoDateTime.empty() && !vTimeFormat.empty()) {
         struct std::tm time = {};
-        std::istringstream ss(vIsoDateTime);
-        ss >> std::get_time(&time, vTimeFormat.c_str());
-        if (ss.good()) {
+        std::istringstream iss(vIsoDateTime);
+        iss >> std::get_time(&time, vTimeFormat.c_str());
+        if (!iss.fail()) {
             time.tm_hour = 0;
             time.tm_min = 0;
             time.tm_sec = 0;
@@ -75,7 +75,7 @@ bool ct::epochToISO8601(const std::time_t& vEpochTime, std::string& vOutTime) {
     auto* timeinfo = std::localtime(&tt);
     std::ostringstream oss;
     oss << std::put_time(timeinfo, "%Y-%m-%d");
-    if (oss.good()) {
+    if (!oss.fail()) {
         vOutTime = oss.str();
         return true;
     }
