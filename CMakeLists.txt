@@ -4,12 +4,29 @@ set(PROJECT ctools)
 enable_language(C CXX)
 project(${PROJECT} CXX)
 
-option(USE_GL_VERSION_CHECKER "Use Gl Version Checker class" OFF)
-option(USE_CONFIG_SYSTEM "Use Config Load/Save class" OFF)
-option(USE_GLFW_CLIPBOARD "Use Clipboard via GLFW3 (need glfW3)" OFF)
-option(USE_SDL_CLIPBOARD "Use Clipboard via SDL2 (need SDL2)" OFF)
 option(USE_TESTING_CTOOLS "Enable Ctools Tests" OFF)
+<<<<<<< Updated upstream
 option(USE_SHARED_LIB_CTOOLS  "Enable Ctools Shared Lib" OFF)
+=======
+option(USE_CONFIG_SYSTEM "Use Config Load/Save class" OFF)
+option(USE_CTOOLS_AS_SHARED_LIB "Enable ctools ad Shared Lib" OFF)
+option(USE_GL_VERSION_CHECKER "Use Gl Version Checker class" OFF)
+option(USE_SDL_CLIPBOARD "Use Clipboard via SDL2 (need SDL2)" OFF)
+option(USE_GLFW_CLIPBOARD "Use Clipboard via GLFW3 (need glfW3)" OFF)
+
+if(NOT CMAKE_DEBUG_POSTFIX)
+  set(CMAKE_DEBUG_POSTFIX _debug)
+endif()
+if(NOT CMAKE_RELEASE_POSTFIX)
+  set(CMAKE_RELEASE_POSTFIX)
+endif()
+if(NOT CMAKE_MINSIZEREL_POSTFIX)
+  set(CMAKE_MINSIZEREL_POSTFIX _minsizerel)
+endif()
+if(NOT CMAKE_RELWITHDEBINFO_POSTFIX)
+  set(CMAKE_RELWITHDEBINFO_POSTFIX _reldeb)
+endif()
+>>>>>>> Stashed changes
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -78,7 +95,13 @@ else ()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -std=c++17 -Wunused-parameter -Wno-unknown-pragmas")
 endif ()
 
+<<<<<<< Updated upstream
 if (USE_SHARED_LIB_CTOOLS)
+=======
+set(LIBRARIES_TO_LINK_IN_CTOOLS ${LIBRARIES_TO_LINK_IN_CTOOLS})
+
+if (USE_CTOOLS_AS_SHARED_LIB)
+>>>>>>> Stashed changes
 	set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
 	set(LLVM_USE_CRT_DEBUG MDd CACHE STRING "" FORCE)
 	set(LLVM_USE_CRT_MINSIZEREL MD CACHE STRING "" FORCE)
