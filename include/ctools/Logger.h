@@ -25,8 +25,7 @@ SOFTWARE.
 #pragma once
 #pragma warning(disable : 4251)
 
-#if defined(__WIN32__) || defined(WIN32) || defined(_WIN32) || defined(__WIN64__) || defined(WIN64) || \
-    defined(_WIN64) || defined(_MSC_VER)
+#if defined(__WIN32__) || defined(WIN32) || defined(_WIN32) || defined(__WIN64__) || defined(WIN64) || defined(_WIN64) || defined(_MSC_VER)
 #if defined(ctools_EXPORTS)
 #define CTOOLS_API __declspec(dllexport)
 #elif defined(BUILD_CTOOLS_SHARED_LIBS)
@@ -59,60 +58,42 @@ typedef long long int64;
 #endif
 
 typedef int LogMessageType;
-enum _LogMessageType {
-    LOGGING_MESSAGE_TYPE_INFOS = 0,
-    LOGGING_MESSAGE_TYPE_WARNING,
-    LOGGING_MESSAGE_TYPE_ERROR
-};
+enum _LogMessageType { LOGGING_MESSAGE_TYPE_INFOS = 0, LOGGING_MESSAGE_TYPE_WARNING, LOGGING_MESSAGE_TYPE_ERROR };
 
 #define IsVerboseMode Logger::Instance()->ConsoleVerbose == true
 
 // #define LogVar(s, ...) Logger::Instance()->LogStringWithFunction(std::string(__FUNCTION__), (int)(__LINE__), s,
 // ##__VA_ARGS__)
 
-#define LogVarError(s, ...)                          \
-    Logger::Instance()->LogStringByTypeWithFunction( \
-        LOGGING_MESSAGE_TYPE_ERROR, std::string(__FUNCTION__), (int)(__LINE__), s, ##__VA_ARGS__)
+#define LogVarError(s, ...) Logger::Instance()->LogStringByTypeWithFunction(LOGGING_MESSAGE_TYPE_ERROR, std::string(__FUNCTION__), (int)(__LINE__), s, ##__VA_ARGS__)
 
-#define LogVarWarning(s, ...)                                                                         \
-    Logger::Instance()->LogStringByTypeWithFunction(LOGGING_MESSAGE_TYPE_WARNING, \
-        std::string(__FUNCTION__), (int)(__LINE__), s, ##__VA_ARGS__)
+#define LogVarWarning(s, ...) Logger::Instance()->LogStringByTypeWithFunction(LOGGING_MESSAGE_TYPE_WARNING, std::string(__FUNCTION__), (int)(__LINE__), s, ##__VA_ARGS__)
 
-#define LogVarInfo(s, ...)                           \
-    Logger::Instance()->LogStringByTypeWithFunction( \
-        LOGGING_MESSAGE_TYPE_INFOS, std::string(__FUNCTION__), (int)(__LINE__), s, ##__VA_ARGS__)
+#define LogVarInfo(s, ...) Logger::Instance()->LogStringByTypeWithFunction(LOGGING_MESSAGE_TYPE_INFOS, std::string(__FUNCTION__), (int)(__LINE__), s, ##__VA_ARGS__)
 
-#define LogVarDebugError(s, ...)                          \
-    Logger::Instance()->LogStringByTypeWithFunction_Debug( \
-        LOGGING_MESSAGE_TYPE_ERROR, std::string(__FUNCTION__), (int)(__LINE__), s, ##__VA_ARGS__)
+#define LogVarDebugError(s, ...) \
+    Logger::Instance()->LogStringByTypeWithFunction_Debug(LOGGING_MESSAGE_TYPE_ERROR, std::string(__FUNCTION__), (int)(__LINE__), s, ##__VA_ARGS__)
 
-#define LogVarDebugWarning(s, ...)                        \
-    Logger::Instance()->LogStringByTypeWithFunction_Debug( \
-        LOGGING_MESSAGE_TYPE_WARNING, std::string(__FUNCTION__), (int)(__LINE__), s, ##__VA_ARGS__)
+#define LogVarDebugWarning(s, ...) \
+    Logger::Instance()->LogStringByTypeWithFunction_Debug(LOGGING_MESSAGE_TYPE_WARNING, std::string(__FUNCTION__), (int)(__LINE__), s, ##__VA_ARGS__)
 
-#define LogVarDebugInfo(s, ...)                           \
-    Logger::Instance()->LogStringByTypeWithFunction_Debug( \
-        LOGGING_MESSAGE_TYPE_INFOS, std::string(__FUNCTION__), (int)(__LINE__), s, ##__VA_ARGS__)
+#define LogVarDebugInfo(s, ...) \
+    Logger::Instance()->LogStringByTypeWithFunction_Debug(LOGGING_MESSAGE_TYPE_INFOS, std::string(__FUNCTION__), (int)(__LINE__), s, ##__VA_ARGS__)
 
-#define LogVarLightError(s, ...) \
-    Logger::Instance()->LogSimpleStringByType(LOGGING_MESSAGE_TYPE_ERROR, s, ##__VA_ARGS__)
+#define LogVarLightError(s, ...) Logger::Instance()->LogSimpleStringByType(LOGGING_MESSAGE_TYPE_ERROR, s, ##__VA_ARGS__)
 
-#define LogVarLightWarning(s, ...) \
-    Logger::Instance()->LogSimpleStringByType(LOGGING_MESSAGE_TYPE_WARNING, s, ##__VA_ARGS__)
+#define LogVarLightWarning(s, ...) Logger::Instance()->LogSimpleStringByType(LOGGING_MESSAGE_TYPE_WARNING, s, ##__VA_ARGS__)
 
-#define LogVarLightInfo(s, ...) \
-    Logger::Instance()->LogSimpleStringByType(LOGGING_MESSAGE_TYPE_INFOS, s, ##__VA_ARGS__)
+#define LogVarLightInfo(s, ...) Logger::Instance()->LogSimpleStringByType(LOGGING_MESSAGE_TYPE_INFOS, s, ##__VA_ARGS__)
 
-#define LogVarTag(t, s, ...) \
-    Logger::Instance()->LogStringByTypeWithFunction(t, std::string(__FUNCTION__), (int)(__LINE__), s, ##__VA_ARGS__)
+#define LogVarTag(t, s, ...) Logger::Instance()->LogStringByTypeWithFunction(t, std::string(__FUNCTION__), (int)(__LINE__), s, ##__VA_ARGS__)
 
-#define LogVarLightTag(t, s, ...) \
-    Logger::Instance()->LogSimpleStringByType(t, s, ##__VA_ARGS__)
+#define LogVarLightTag(t, s, ...) Logger::Instance()->LogSimpleStringByType(t, s, ##__VA_ARGS__)
 
-#define LogAssert(a, b, ...)           \
-    if (!(a)) {                        \
+#define LogAssert(a, b, ...)               \
+    if (!(a)) {                            \
         LogVarDebugInfo(b, ##__VA_ARGS__); \
-        assert(a);                     \
+        assert(a);                         \
     }
 
 #ifdef USE_OPENGL
@@ -135,11 +116,7 @@ private:
 
 private:
     void LogString(const LogMessageType* vType, const std::string* vFunction, const int* vLine, const char* vStr);
-    void LogString(const LogMessageType* vType,
-        const std::string* vFunction,
-        const int* vLine,
-        const char* fmt,
-        va_list vArgs);
+    void LogString(const LogMessageType* vType, const std::string* vFunction, const int* vLine, const char* fmt, va_list vArgs);
 
 public:
     static Logger* Instance() {
@@ -158,14 +135,11 @@ public:
     void LogSimpleString(const char* fmt, ...);
     void LogSimpleStringByType(const LogMessageType& vType, const char* fmt, ...);
     void LogStringWithFunction(const std::string& vFunction, const int& vLine, const char* fmt, ...);
-    void LogStringByTypeWithFunction(
-        const LogMessageType& vType, const std::string& vFunction, const int& vLine, const char* fmt, ...);
-    void LogStringByTypeWithFunction_Debug(
-        const LogMessageType& vType, const std::string& vFunction, const int& vLine, const char* fmt, ...);
+    void LogStringByTypeWithFunction(const LogMessageType& vType, const std::string& vFunction, const int& vLine, const char* fmt, ...);
+    void LogStringByTypeWithFunction_Debug(const LogMessageType& vType, const std::string& vFunction, const int& vLine, const char* fmt, ...);
     void LogStringWithFunction_Debug(const std::string& vFunction, const int& vLine, const char* fmt, ...);
 #ifdef USE_OPENGL
-    bool LogGLError(
-        const std::string& vFile, const std::string& vFunc, int vLine, const std::string& vGLFunc = "") const;
+    bool LogGLError(const std::string& vFile, const std::string& vFunc, int vLine, const std::string& vGLFunc = "") const;
 #endif
     void Close();
 

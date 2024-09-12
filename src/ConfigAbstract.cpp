@@ -102,7 +102,7 @@ tinyxml2::XMLError ConfigAbstract::parseConfigDatas(std::string vDatas, const st
 
         if (res == tinyxml2::XMLError::XML_SUCCESS) {
             RecursParsingConfig(doc.FirstChildElement(vFirstElement.c_str()), 0, vUserDatas);
-        } else {
+        } else if (!vDatas.empty()) {
             doc.PrintError();
         }
     } catch (std::exception& ex) {

@@ -145,10 +145,6 @@ using namespace cocos2d;
 #include "Logger.h"
 #endif
 
-#ifdef USE_IMGUI
-#include USE_IMGUI
-#endif
-
 // simple macro for block debuggers
 #if !defined(_DEBUG) && defined(_MSC_VER)
 #define BLOCK_DEBUGGER(ret)  \
@@ -162,6 +158,26 @@ namespace ct  // cTools
 {
 
 /////////////////////////////////////////////
+////// DATEs Conversions ////////////////////
+/////////////////////////////////////////////
+        
+// convert a string ISO8601 time to epoch time
+bool iso8601ToEpoch(const std::string& vIsoDateTime, const std::string& vTimeFormat, std::time_t& vOutTime);
+
+// convert a epoch time to a string ISO8601 time
+bool epochToISO8601(const std::time_t& vEpochTime, std::string& vOutTime);
+
+/////////////////////////////////////////////
+////// UTF8 <> WideString ///////////////////
+/////////////////////////////////////////////
+
+// Convert a wide Unicode String to a UTF8 string
+CTOOLS_API std::string UTF8Encode(const std::wstring& wstr);
+
+// Convert a UTF8 string to a wide Unicode String
+CTOOLS_API std::wstring UTF8Decode(const std::string& str);
+
+/////////////////////////////////////////////
 /////////////////////////////////////////////
 /////////////////////////////////////////////
 
@@ -171,23 +187,9 @@ namespace ct  // cTools
 // and if this is the good class, the magic_number will point to a random memory zone
 // so will not have the good value
 
-inline int64_t EncodeId(const std::string& vArr) {
-    if (vArr.empty() || vArr.size() != 8U) {
-        return 0;
-    }
-    return vArr[0] |                  //
-        (vArr[1] << 8) |              //
-        (vArr[2] << 16) |             //
-        (vArr[3] << 24) |             //
-        ((int64_t)(vArr[4]) << 32) |  //
-        ((int64_t)(vArr[5]) << 40) |  //
-        ((int64_t)(vArr[6]) << 48) |  //
-        ((int64_t)(vArr[7]) << 56);
-}
+CTOOLS_API int64_t EncodeId(const std::string& vArr);
 
-inline bool IsIdEqualTo(const int64_t& vId, char vArr[8]) {
-    return (EncodeId(vArr) == vId);
-}
+CTOOLS_API bool IsIdEqualTo(const int64_t& vId, char vArr[8]);
 
 /////////////////////////////////////////////
 /////////////////////////////////////////////
@@ -258,6 +260,9 @@ CTOOLS_API std::string toStr(const char* fmt, ...);
 CTOOLS_API std::string toUpper(const std::string& vStr, const std::locale& vLocale = std::locale());
 CTOOLS_API std::string toLower(const std::string& vStr, const std::locale& vLocale = std::locale());
 
+// convert a string byte content to hex string
+CTOOLS_API std::string toHex(const std::string& vStr);
+
 template <typename T>
 ::std::string toStrFromArray(T* arr, size_t n, char delimiter = ';') {
     if (arr) {
@@ -278,11 +283,6 @@ template <typename T>
     os << t;
     return os.str();
 }
-
-#ifdef USE_IMGUI
-std::string toStrFromImVec2(ImVec2 v, char delimiter = ';');
-std::string toStrFromImVec4(ImVec4 v, char delimiter = ';');
-#endif
 
 #include <ios>
 template <typename T>
@@ -350,9 +350,9 @@ bool CTOOLS_API isbitset(int32_t vContainer, int32_t vBit);
 // is this bit/bit_group is set and only this one
 bool CTOOLS_API isbitset_exclusive(int32_t vContainer, int32_t vBit);
 // set this bit/bit_group to 1
-void CTOOLS_API setbit(int32_t vContainer, int32_t vBit);
+void CTOOLS_API setbit(int32_t& vContainer, int32_t vBit);
 // set this bit/bit_group to 0
-void CTOOLS_API unsetbit(int32_t vContainer, int32_t vBit);
+void CTOOLS_API unsetbit(int32_t& vContainer, int32_t vBit);
 
 /////////////////////////////////////////////////////////////
 ///////// splitStringToVector ///////////////////////////////
@@ -885,11 +885,6 @@ struct Color {
     std::string GetColor4String() {
         return toStr(r) + ";" + toStr(g) + ";" + toStr(b) + ";" + toStr(a);
     }
-#ifdef USE_IMGUI
-    ImVec4 ToImVec4() {
-        return ImVec4(r, g, b, a);
-    }
-#endif
 };
 typedef Color<uint8_t> ui8Color;
 typedef Color<float> fColor;
@@ -930,12 +925,6 @@ struct vec2 {
         if (s > 1)
             y = result[1];
     }
-#ifdef USE_IMGUI
-    vec2<T>(const ImVec2& vec) {
-        x = (T)vec.x;
-        y = (T)vec.y;
-    }
-#endif
 #ifdef USE_BOX2D
     vec2<T>(const b2Vec2& vec, const float& vRatio = 1.0f) {
         x = (T)vec.x * vRatio;
@@ -1714,7 +1703,7 @@ using u64vec3 = vec3<uint64_t>;
 CTOOLS_API inline bool valid(const fvec3& a) {
     return floatIsValid(a.x) && floatIsValid(a.y) && floatIsValid(a.z);
 }
-// specialization for fvec2
+// specialization for fvec3
 CTOOLS_API inline bool operator==(const fvec3& v, const fvec3& f) {
     return IS_FLOAT_EQUAL(f.x, v.x) && IS_FLOAT_EQUAL(f.y, v.y) && IS_FLOAT_EQUAL(f.z, v.z);
 }
@@ -1744,14 +1733,6 @@ struct vec4 {
     }
     vec4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {
     }
-#ifdef USE_IMGUI
-    vec4<T>(const ImVec4& vec) {
-        x = (T)vec.x;
-        y = (T)vec.y;
-        z = (T)vec.z;
-        w = (T)vec.w;
-    }
-#endif
     vec4(std::string vec, char c = ';', vec4<T>* def = nullptr)  // may be in format "0.2f,0.3f,0.4f,0.8f"
     {
         if (def) {
@@ -2130,40 +2111,9 @@ using u32vec4 = vec4<uint32_t>;
 using u64vec4 = vec4<uint64_t>;
 
 // specialization for float32 test to fvec4
-CTOOLS_API inline bool valid(const fvec4& a) {
+inline bool valid(const fvec4& a) {
     return floatIsValid(a.x) && floatIsValid(a.y) && floatIsValid(a.z) && floatIsValid(a.w);
 }
-
-// specialization for fvec4
-CTOOLS_API inline bool operator==(const fvec4& v, const fvec4& f) {
-    return IS_FLOAT_EQUAL(f.x, v.x) && IS_FLOAT_EQUAL(f.y, v.y) && IS_FLOAT_EQUAL(f.z, v.z) && IS_FLOAT_EQUAL(f.w, v.w);
-}
-CTOOLS_API inline bool operator!=(const fvec4& v, const fvec4& f) {
-    return IS_FLOAT_DIFFERENT(f.x, v.x) || IS_FLOAT_DIFFERENT(f.y, v.y) || IS_FLOAT_DIFFERENT(f.z, v.z) || IS_FLOAT_DIFFERENT(f.w, v.w);
-}
-
-/////////////////////////////////////////////////////////////////////////
-
-#ifdef USE_IMGUI
-CTOOLS_API inline ImVec2 toImVec2(const fvec2& v) {
-    return ImVec2(v.x, v.y);
-}
-CTOOLS_API inline ImVec2 toImVec2(const ivec2& v) {
-    return ImVec2((float)v.x, (float)v.y);
-}
-CTOOLS_API inline ImVec2 toImVec2(const dvec2& v) {
-    return ImVec2((float)v.x, (float)v.y);
-}
-CTOOLS_API inline ImVec4 toImVec4(const fvec4& v) {
-    return ImVec4(v.x, v.y, v.z, v.w);
-}
-CTOOLS_API inline ImVec4 toImVec4(const ivec4& v) {
-    return ImVec4((float)v.x, (float)v.y, (float)v.z, (float)v.w);
-}
-CTOOLS_API inline ImVec4 toImVec4(const dvec4& v) {
-    return ImVec4((float)v.x, (float)v.y, (float)v.z, (float)v.w);
-}
-#endif
 
 /////////////////////////////////////////////////////////////////////////
 template <typename T>
@@ -2539,13 +2489,6 @@ struct AABB  // copy of b2AABB struct
     vec2<T> Size() {
         return vec2<T>(upperBound - lowerBound);
     }
-
-#ifdef USE_IMGUI
-    ImVec4 ToImVec4() {
-        const ImVec4 v = ImVec4(lowerBound.x, lowerBound.y, upperBound.x, upperBound.y);
-        return v;
-    }
-#endif
 };
 typedef AABB<int> iAABB;
 typedef AABB<double> dAABB;
@@ -3226,6 +3169,136 @@ typedef variant<float> fvariant;   // utile pour le type de renvoi des vec2,3,4 
 typedef variant<double> dvariant;  // utile pour le type de renvoi des vec2,3,4 et AABB
 typedef variant<size_t> uvariant;
 typedef variant<int> ivariant;
+
+/////////////////////////////////////////////////////////////
+///////// SPECIALIZATION // VEC2 / VEC3 / VEC4 / QUAT ///////
+/////////////////////////////////////////////////////////////
+
+template <>
+inline bool ct::vec2<float>::operator==(const float& a) {
+    return (IS_FLOAT_EQUAL(x, a) && IS_FLOAT_EQUAL(y, a));
+}
+template <>
+inline bool ct::vec2<float>::operator==(const ct::vec2<float>& v) {
+    return (IS_FLOAT_EQUAL(x, v.x) && IS_FLOAT_EQUAL(y, v.y));
+}
+template <>
+inline bool ct::vec2<float>::operator!=(const float& a) {
+    return (IS_FLOAT_DIFFERENT(x, a) || IS_FLOAT_DIFFERENT(y, a));
+}
+template <>
+inline bool ct::vec2<float>::operator!=(const ct::vec2<float>& v) {
+    return (IS_FLOAT_DIFFERENT(x, v.x) || IS_FLOAT_DIFFERENT(y, v.y));
+}
+
+template <>
+inline bool ct::vec2<double>::operator==(const double& a) {
+    return (IS_DOUBLE_EQUAL(x, a) && IS_DOUBLE_EQUAL(y, a));
+}
+template <>
+inline bool ct::vec2<double>::operator==(const ct::vec2<double>& v) {
+    return (IS_DOUBLE_EQUAL(x, v.x) && IS_DOUBLE_EQUAL(y, v.y));
+}
+template <>
+inline bool ct::vec2<double>::operator!=(const double& a) {
+    return (IS_DOUBLE_DIFFERENT(x, a) || IS_DOUBLE_DIFFERENT(y, a));
+}
+template <>
+inline bool ct::vec2<double>::operator!=(const ct::vec2<double>& v) {
+    return (IS_DOUBLE_DIFFERENT(x, v.x) || IS_DOUBLE_DIFFERENT(y, v.y));
+}
+
+template <>
+inline bool ct::vec3<float>::operator==(const float& a) {
+    return (IS_FLOAT_EQUAL(x, a) && IS_FLOAT_EQUAL(y, a) && IS_FLOAT_EQUAL(z, a));
+}
+template <>
+inline bool ct::vec3<float>::operator==(const ct::vec3<float>& v) {
+    return (IS_FLOAT_EQUAL(x, v.x) && IS_FLOAT_EQUAL(y, v.y) && IS_FLOAT_EQUAL(z, v.z));
+}
+template <>
+inline bool ct::vec3<float>::operator!=(const float& a) {
+    return (IS_FLOAT_DIFFERENT(x, a) || IS_FLOAT_DIFFERENT(y, a) || IS_FLOAT_DIFFERENT(z, a));
+}
+template <>
+inline bool ct::vec3<float>::operator!=(const ct::vec3<float>& v) {
+    return (IS_FLOAT_DIFFERENT(x, v.x) || IS_FLOAT_DIFFERENT(y, v.y) || IS_FLOAT_DIFFERENT(z, v.z));
+}
+
+template <>
+inline bool ct::vec3<double>::operator==(const double& a) {
+    return (IS_DOUBLE_EQUAL(x, a) && IS_DOUBLE_EQUAL(y, a) && IS_DOUBLE_EQUAL(z, a));
+}
+template <>
+inline bool ct::vec3<double>::operator==(const ct::vec3<double>& v) {
+    return (IS_DOUBLE_EQUAL(x, v.x) && IS_DOUBLE_EQUAL(y, v.y) && IS_DOUBLE_EQUAL(z, v.z));
+}
+template <>
+inline bool ct::vec3<double>::operator!=(const double& a) {
+    return (IS_DOUBLE_DIFFERENT(x, a) || IS_DOUBLE_DIFFERENT(y, a) || IS_DOUBLE_DIFFERENT(z, a));
+}
+template <>
+inline bool ct::vec3<double>::operator!=(const ct::vec3<double>& v) {
+    return (IS_DOUBLE_DIFFERENT(x, v.x) || IS_DOUBLE_DIFFERENT(y, v.y) || IS_DOUBLE_DIFFERENT(z, v.z));
+}
+
+template <>
+inline bool ct::vec4<float>::operator==(const float& a) {
+    return (IS_FLOAT_EQUAL(x, a) && IS_FLOAT_EQUAL(y, a) && IS_FLOAT_EQUAL(z, a) && IS_FLOAT_EQUAL(w, a));
+}
+template <>
+inline bool ct::vec4<float>::operator==(const ct::vec4<float>& v) {
+    return (IS_FLOAT_EQUAL(x, v.x) && IS_FLOAT_EQUAL(y, v.y) && IS_FLOAT_EQUAL(z, v.z) && IS_FLOAT_EQUAL(w, v.w));
+}
+template <>
+inline bool ct::vec4<float>::operator!=(const float& a) {
+    return (IS_FLOAT_DIFFERENT(x, a) || IS_FLOAT_DIFFERENT(y, a) || IS_FLOAT_DIFFERENT(z, a) || IS_FLOAT_DIFFERENT(w, a));
+}
+template <>
+inline bool ct::vec4<float>::operator!=(const ct::vec4<float>& v) {
+    return (IS_FLOAT_DIFFERENT(x, v.x) || IS_FLOAT_DIFFERENT(y, v.y) || IS_FLOAT_DIFFERENT(z, v.z) || IS_FLOAT_DIFFERENT(w, v.w));
+}
+
+template <>
+inline bool ct::vec4<double>::operator==(const double& a) {
+    return (IS_DOUBLE_EQUAL(x, a) && IS_DOUBLE_EQUAL(y, a) && IS_DOUBLE_EQUAL(z, a) && IS_DOUBLE_EQUAL(w, a));
+}
+template <>
+inline bool ct::vec4<double>::operator==(const ct::vec4<double>& v) {
+    return (IS_DOUBLE_EQUAL(x, v.x) && IS_DOUBLE_EQUAL(y, v.y) && IS_DOUBLE_EQUAL(z, v.z) && IS_DOUBLE_EQUAL(w, v.w));
+}
+template <>
+inline bool ct::vec4<double>::operator!=(const double& a) {
+    return (IS_DOUBLE_DIFFERENT(x, a) || IS_DOUBLE_DIFFERENT(y, a) || IS_DOUBLE_DIFFERENT(z, a) || IS_DOUBLE_DIFFERENT(w, a));
+}
+template <>
+inline bool ct::vec4<double>::operator!=(const ct::vec4<double>& v) {
+    return (IS_DOUBLE_DIFFERENT(x, v.x) || IS_DOUBLE_DIFFERENT(y, v.y) || IS_DOUBLE_DIFFERENT(z, v.z) || IS_DOUBLE_DIFFERENT(w, v.w));
+}
+
+template <>
+inline void ct::quat<float>::normalize() {
+    float n = sqrt(x * x + y * y + z * z + w * w);
+    if (IS_FLOAT_EQUAL(n, 0.0f)) {
+        return;
+    }
+    x /= n;
+    y /= n;
+    z /= n;
+    w /= n;
+}
+
+template <>
+inline void ct::quat<double>::normalize() {
+    double n = sqrt(x * x + y * y + z * z + w * w);
+    if (IS_DOUBLE_EQUAL(n, 0.0)) {
+        return;
+    }
+    x /= n;
+    y /= n;
+    z /= n;
+    w /= n;
+}
 
 /////////////////////////////////////////////////////////////
 ///////// GetNewBufferFromList //////////////////////////////
