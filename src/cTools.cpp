@@ -117,9 +117,8 @@ std::wstring ct::UTF8Decode(const std::string& str) {
 }
 
 int64_t ct::EncodeId(const std::string& vArr) {
-    if (vArr.empty() || vArr.size() != 8U) {
-        return 0;
-    }
+    assert(!vArr.empty());
+    assert(vArr.size() != 8U);
     return vArr[0] |                  //
         (vArr[1] << 8) |              //
         (vArr[2] << 16) |             //
