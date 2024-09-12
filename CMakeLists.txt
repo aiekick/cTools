@@ -1,13 +1,10 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.20)
 
 set(PROJECT ctools)
 enable_language(C CXX)
 project(${PROJECT} CXX)
 
 option(USE_TESTING_CTOOLS "Enable Ctools Tests" OFF)
-<<<<<<< Updated upstream
-option(USE_SHARED_LIB_CTOOLS  "Enable Ctools Shared Lib" OFF)
-=======
 option(USE_CONFIG_SYSTEM "Use Config Load/Save class" OFF)
 option(USE_CTOOLS_AS_SHARED_LIB "Enable ctools ad Shared Lib" OFF)
 option(USE_GL_VERSION_CHECKER "Use Gl Version Checker class" OFF)
@@ -26,7 +23,6 @@ endif()
 if(NOT CMAKE_RELWITHDEBINFO_POSTFIX)
   set(CMAKE_RELWITHDEBINFO_POSTFIX _reldeb)
 endif()
->>>>>>> Stashed changes
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -85,7 +81,7 @@ elseif(WIN32)
 endif()
 
 if(MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /std:c++17")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17")
 	add_definitions(-D__STDC__)
 	add_definitions(-DMSVC)
 	add_definitions(-DNOMINMAX)
@@ -95,13 +91,9 @@ else ()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -std=c++17 -Wunused-parameter -Wno-unknown-pragmas")
 endif ()
 
-<<<<<<< Updated upstream
-if (USE_SHARED_LIB_CTOOLS)
-=======
 set(LIBRARIES_TO_LINK_IN_CTOOLS ${LIBRARIES_TO_LINK_IN_CTOOLS})
 
 if (USE_CTOOLS_AS_SHARED_LIB)
->>>>>>> Stashed changes
 	set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
 	set(LLVM_USE_CRT_DEBUG MDd CACHE STRING "" FORCE)
 	set(LLVM_USE_CRT_MINSIZEREL MD CACHE STRING "" FORCE)
@@ -118,12 +110,6 @@ if (USE_CTOOLS_AS_SHARED_LIB)
 	target_compile_definitions(${PROJECT} INTERFACE BUILD_CTOOLS_SHARED_LIBS)
 	set_target_properties(${PROJECT} PROPERTIES	RUNTIME_OUTPUT_DIRECTORY "${FINAL_BIN_DIR}")
 	set_target_properties(${PROJECT} PROPERTIES POSITION_INDEPENDENT_CODE ON)
-	target_link_libraries(${PROJECT} ${GLAD_LIBRARIES} ${TINYXML2_LIBRARIES})
-	if (USE_GLFW_CLIPBOARD)
-		target_link_libraries(${PROJECT} glfw)
-	elseif(USE_SDL_CLIPBOARD)
-		target_link_libraries(${PROJECT} SDL2)
-	endif()
 else()
 	set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 	set(LLVM_USE_CRT_DEBUG MTd CACHE STRING "" FORCE)
@@ -140,7 +126,7 @@ else()
 		${GLVERSIONCHECKER_INC})
 endif()
 
-include_directories(.)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set_target_properties(${PROJECT} PROPERTIES LINKER_LANGUAGE CXX)
 
@@ -154,13 +140,26 @@ target_include_directories(${PROJECT} PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/include
 	${GLAD_INCLUDE_DIR}
 	${TINYXML2_INCLUDE_DIR}
+	${LIBRARIES_TO_INCLUDE_IN_CTOOLS}
 )
 
-set(${PROJECT}_Output_Name "${PROJECT}$<$<CONFIG:Debug>:d>")
-set_target_properties(${PROJECT} PROPERTIES	OUTPUT_NAME "${${PROJECT}_Output_Name}")
+set(CTOOLS_LIBRARIES 
+	${GLAD_LIBRARIES}
+	${TINYXML2_LIBRARIES} 
+	${LIBRARIES_TO_LINK_IN_CTOOLS}
+)
+if (USE_GLFW_CLIPBOARD)
+	set(CTOOLS_LIBRARIES ${CTOOLS_LIBRARIES} glfw)
+elseif(USE_SDL_CLIPBOARD)
+	set(CTOOLS_LIBRARIES ${CTOOLS_LIBRARIES} SDL2)
+endif()
+
+target_link_libraries(${PROJECT} 
+	${CTOOLS_LIBRARIES} 
+)
 
 set(CTOOLS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include PARENT_SCOPE)
-set(CTOOLS_LIBRARIES ${PROJECT} PARENT_SCOPE)
+set(CTOOLS_LIBRARIES ${CTOOLS_LIBRARIES} ${PROJECT} PARENT_SCOPE)
 set(CTOOLS_LIB_DIR ${CMAKE_CURRENT_BINARY_DIR} PARENT_SCOPE)
 
 #############################################################
@@ -175,6 +174,4 @@ if(USE_TESTING_CTOOLS)
 	set(LLVM_USE_CRT_RELEASE MT CACHE STRING "" FORCE)
 	set(LLVM_USE_CRT_RELWITHDEBINFO MT CACHE STRING "" FORCE)
 	set(USE_MSVC_RUNTIME_LIBRARY_DLL OFF CACHE BOOL "" FORCE)
-	set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-	set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "cmakeTargets")
 endif()
